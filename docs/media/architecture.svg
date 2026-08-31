@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 860" width="100%" height="100%" font-family="'PingFang SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0a0e1a"/>
+      <stop offset="100%" stop-color="#1e3a5f"/>
+    </linearGradient>
+    <linearGradient id="appGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00d4ff"/>
+      <stop offset="100%" stop-color="#00b4d8"/>
+    </linearGradient>
+    <linearGradient id="platGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#ea8a00"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="860" fill="url(#bgGradient)"/>
+  <rect width="1200" height="860" fill="none" stroke="#3b82f6" stroke-opacity="0.15" stroke-width="1"/>
+
+  <!-- 标题 -->
+  <text x="600" y="52" text-anchor="middle" font-size="30" font-weight="bold" fill="#ffffff">平台总体架构</text>
+  <text x="600" y="80" text-anchor="middle" font-size="16" fill="#94a3b8">应用层 — 平台层 — 硬件感知与协议对接层 · 国产操作系统贯穿底层</text>
+
+  <!-- ═══ 应用层 ═══ -->
+  <rect x="40" y="100" width="1120" height="250" rx="14" fill="#0d1421" stroke="#00d4ff" stroke-opacity="0.5" stroke-width="1.5"/>
+  <rect x="40" y="100" width="1120" height="40" rx="14" fill="url(#appGrad)"/>
+  <rect x="40" y="126" width="1120" height="14" fill="url(#appGrad)"/>
+  <text x="60" y="127" font-size="19" font-weight="bold" fill="#0a0e1a">应用层 · 面向用户的直接价值界面</text>
+
+  <!-- 应用域卡片 -->
+  <g>
+    <rect x="60" y="152" width="262" height="92" rx="10" fill="#111a2c" stroke="#00d4ff" stroke-opacity="0.4"/>
+    <text x="75" y="178" font-size="16" font-weight="bold" fill="#00d4ff">安全监测域</text>
+    <text x="75" y="202" font-size="13" fill="#cbd5e1">温湿度监控 · 红外照明</text>
+    <text x="75" y="224" font-size="13" fill="#cbd5e1">危气监测 · AGV避障 · 货物计数</text>
+
+    <rect x="338" y="152" width="262" height="92" rx="10" fill="#111a2c" stroke="#00d4ff" stroke-opacity="0.4"/>
+    <text x="353" y="178" font-size="16" font-weight="bold" fill="#00d4ff">可视化与控制域</text>
+    <text x="353" y="202" font-size="13" fill="#cbd5e1">数字可视化大屏</text>
+    <text x="353" y="224" font-size="13" fill="#cbd5e1">远程控制台 · 报警应急联动</text>
+
+    <rect x="616" y="152" width="262" height="92" rx="10" fill="#111a2c" stroke="#00d4ff" stroke-opacity="0.4"/>
+    <text x="631" y="178" font-size="16" font-weight="bold" fill="#00d4ff">智能分析域</text>
+    <text x="631" y="202" font-size="13" fill="#cbd5e1">AI智能体应用（多类）</text>
+    <text x="631" y="224" font-size="13" fill="#cbd5e1">视觉AI应用（火焰/行为识别）</text>
+
+    <rect x="894" y="152" width="246" height="92" rx="10" fill="#111a2c" stroke="#00d4ff" stroke-opacity="0.4"/>
+    <text x="909" y="178" font-size="16" font-weight="bold" fill="#00d4ff">生产运营域</text>
+    <text x="909" y="202" font-size="13" fill="#cbd5e1">报表统计</text>
+    <text x="909" y="224" font-size="13" fill="#cbd5e1">人员安全管理</text>
+
+    <rect x="60" y="256" width="524" height="80" rx="10" fill="#111a2c" stroke="#00d4ff" stroke-opacity="0.4"/>
+    <text x="75" y="282" font-size="16" font-weight="bold" fill="#00d4ff">设备与能源域</text>
+    <text x="75" y="308" font-size="13" fill="#cbd5e1">设备管理应用 · 能耗与双碳应用</text>
+
+    <rect x="616" y="256" width="524" height="80" rx="10" fill="#111a2c" stroke="#00d4ff" stroke-opacity="0.4"/>
+    <text x="631" y="282" font-size="16" font-weight="bold" fill="#00d4ff">知识支撑域</text>
+    <text x="631" y="308" font-size="13" fill="#cbd5e1">工艺知识库 · 向量化 · RAG 检索 · 支撑智能体决策</text>
+  </g>
+
+  <!-- 应用生态机制横条 -->
+  <rect x="60" y="346" width="1080" height="0" rx="0" fill="none"/>
+  <text x="600" y="344" text-anchor="middle" font-size="13" fill="#00d4ff" font-weight="bold">应用生态机制：应用商店（挂载/卸载/升级）· 低代码画布 · 开放 API —— 新增业务场景只需挂载新应用</text>
+
+  <!-- 层间箭头 -->
+  <g stroke="#94a3b8" stroke-width="2">
+    <line x1="600" y1="352" x2="600" y2="378" marker-end="url(#arrow)"/>
+  </g>
+
+  <!-- ═══ 平台层 ═══ -->
+  <rect x="40" y="384" width="1120" height="180" rx="14" fill="#0d1421" stroke="#f59e0b" stroke-opacity="0.5" stroke-width="1.5"/>
+  <rect x="40" y="384" width="1120" height="40" rx="14" fill="url(#platGrad)"/>
+  <rect x="40" y="410" width="1120" height="14" fill="url(#platGrad)"/>
+  <text x="60" y="411" font-size="19" font-weight="bold" fill="#0a0e1a">平台层 · 标准化服务（向下屏蔽硬件差异，向上支撑应用）</text>
+
+  <g font-size="13.5" fill="#cbd5e1">
+    <text x="60" y="448">设备域：设备管理（设备影子/台账/在线状态）</text>
+    <text x="60" y="474">数据域：时序数据库 TDengine · 关系库 PostgreSQL · 缓存 Redis</text>
+    <text x="60" y="500">消息域：EMQX（MQTT）· 主题分级 data/alarm/cmd/ack</text>
+    <text x="60" y="526">规则域：规则引擎（阈值 / 滑动窗口 / 趋势斜率预测）</text>
+
+    <text x="620" y="448">AI 域：大模型推理 vLLM/Ollama · 视觉推理 ONNX Runtime</text>
+    <text x="620" y="474">AI 域：向量检索 Milvus/Qdrant · 智能体编排（ReAct）</text>
+    <text x="620" y="500">应用域：低代码画布 · 开放 API · 应用商店</text>
+    <text x="620" y="526">安全域：认证鉴权 · 国密 SM2/SM3/SM4 · 审计留痕</text>
+    <text x="60" y="552" fill="#94a3b8">运行域：Docker/K8s 容器化 · Spring Cloud 微服务 · Prometheus 监控 · 断网续传</text>
+  </g>
+
+  <!-- 层间箭头 -->
+  <g stroke="#94a3b8" stroke-width="2">
+    <line x1="600" y1="566" x2="600" y2="592" marker-end="url(#arrow)"/>
+  </g>
+
+  <!-- ═══ 硬件协议对接层 ═══ -->
+  <rect x="40" y="598" width="1120" height="140" rx="14" fill="#0d1421" stroke="#10b981" stroke-opacity="0.5" stroke-width="1.5"/>
+  <rect x="40" y="598" width="1120" height="40" rx="14" fill="#10b981"/>
+  <rect x="40" y="624" width="1120" height="14" fill="#10b981"/>
+  <text x="60" y="625" font-size="19" font-weight="bold" fill="#0a0e1a">硬件感知与协议对接层 · 驱动插件生态（兼容大多数 · 开发解决少数）</text>
+
+  <g font-size="13.5" fill="#cbd5e1">
+    <text x="60" y="662">工业总线/控制：Modbus RTU/TCP · OPC UA · PROFINET · EtherNet/IP · EtherCAT</text>
+    <text x="60" y="688">视频/视觉：海康/大华 SDK · RTSP/ONVIF · GB28181</text>
+    <text x="620" y="662">气体/环保：烟气分析仪 · SO₂/CO 传感器 · 天然气检漏 · HJ212</text>
+    <text x="620" y="688">无线物联网：LoRa · NB-IoT · 4G/5G · ZigBee · WiFi/蓝牙</text>
+    <text x="60" y="714" fill="#10b981">Driver SDK：插件化驱动开发框架 → 新设备快速接入，无需修改平台核心</text>
+  </g>
+
+  <!-- ═══ 国产 OS 底座 ═══ -->
+  <rect x="40" y="756" width="1120" height="72" rx="12" fill="#071022" stroke="#00d4ff" stroke-opacity="0.6" stroke-width="2"/>
+  <text x="60" y="790" font-size="17" font-weight="bold" fill="#00d4ff">国产操作系统底座</text>
+  <text x="300" y="790" font-size="14" fill="#e2e8f0">服务器侧：统信 UOS · 麒麟 OS（工业版·PREEMPT_RT）</text>
+  <text x="660" y="790" font-size="14" fill="#e2e8f0">设备侧：OpenHarmony · 诚迈 HongZOS（RK3568）</text>
+  <text x="300" y="814" font-size="12.5" fill="#94a3b8">开发：Docker 容器化模拟加速迭代　交付：真机部署验证 + 《国产 OS 适配报告》</text>
+</svg>

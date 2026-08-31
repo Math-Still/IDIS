@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="100%" height="100%" font-family="'PingFang SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bgGradient2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0a0e1a"/>
+      <stop offset="100%" stop-color="#12294a"/>
+    </linearGradient>
+    <linearGradient id="topGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00d4ff"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="800" fill="url(#bgGradient2)"/>
+
+  <!-- 顶部标题 -->
+  <rect x="40" y="30" width="1120" height="64" rx="12" fill="url(#topGrad)"/>
+  <text x="600" y="70" text-anchor="middle" font-size="26" font-weight="bold" fill="#0a0e1a">应用层全景 · 六大业务域 · 按需挂载 · 随需求生长</text>
+
+  <!-- 业务域卡片：3x2 网格 -->
+  <!-- 域1 安全监测 -->
+  <g>
+    <rect x="40" y="120" width="560" height="200" rx="14" fill="#0d1421" stroke="#00d4ff" stroke-opacity="0.5" stroke-width="1.5"/>
+    <rect x="40" y="120" width="560" height="46" rx="14" fill="#00d4ff"/>
+    <rect x="40" y="152" width="560" height="14" fill="#00d4ff"/>
+    <text x="60" y="150" font-size="19" font-weight="bold" fill="#0a0e1a">① 安全监测域（题目必做）</text>
+    <text x="60" y="196" font-size="14.5" fill="#00d4ff" font-weight="bold">温湿度智能监控</text>
+    <text x="60" y="220" font-size="13" fill="#cbd5e1">精矿库/电解车间环境监测 · 联动除湿/通风/加热 · 采集 ≤1s</text>
+    <text x="60" y="250" font-size="14.5" fill="#00d4ff" font-weight="bold">红外感应照明</text>
+    <text x="60" y="274" font-size="13" fill="#cbd5e1">人员感应自动照明 · 无人延时关灯 · 开灯 ≤500ms</text>
+    <text x="60" y="304" font-size="14.5" fill="#00d4ff" font-weight="bold">危气监测 · AGV 避障 · 货物计数</text>
+    <text x="60" y="328" font-size="13" fill="#cbd5e1">SO₂/CO/天然气三级预警联动 · 多路超声波分级避障 · 光电计数 ≥99.5%</text>
+  </g>
+
+  <!-- 域2 可视化与控制 -->
+  <g>
+    <rect x="620" y="120" width="540" height="200" rx="14" fill="#0d1421" stroke="#3b82f6" stroke-opacity="0.5" stroke-width="1.5"/>
+    <rect x="620" y="120" width="540" height="46" rx="14" fill="#3b82f6"/>
+    <rect x="620" y="152" width="540" height="14" fill="#3b82f6"/>
+    <text x="640" y="150" font-size="19" font-weight="bold" fill="#ffffff">② 可视化与控制域</text>
+    <text x="640" y="196" font-size="14.5" fill="#60a5fa" font-weight="bold">数字可视化大屏</text>
+    <text x="640" y="220" font-size="13" fill="#cbd5e1">产线态势 · 危气仪表盘 · 报警中心 · AGV轨迹 · 3D车间 · 刷新 ≤1s</text>
+    <text x="640" y="250" font-size="14.5" fill="#60a5fa" font-weight="bold">远程控制台</text>
+    <text x="640" y="274" font-size="13" fill="#cbd5e1">Web/移动端远程控制 · 权限分级 · 操作审计 · 指令 ≤2s</text>
+    <text x="640" y="304" font-size="14.5" fill="#60a5fa" font-weight="bold">报警应急联动</text>
+    <text x="640" y="328" font-size="13" fill="#cbd5e1">三级报警 · 多渠道推送 · 联动序列（排风→声光→断电）· 处置闭环</text>
+  </g>
+
+  <!-- 域3 智能分析 -->
+  <g>
+    <rect x="40" y="336" width="560" height="210" rx="14" fill="#0d1421" stroke="#f59e0b" stroke-opacity="0.5" stroke-width="1.5"/>
+    <rect x="40" y="336" width="560" height="46" rx="14" fill="#f59e0b"/>
+    <rect x="40" y="368" width="560" height="14" fill="#f59e0b"/>
+    <text x="60" y="366" font-size="19" font-weight="bold" fill="#0a0e1a">③ 智能分析域</text>
+    <text x="60" y="410" font-size="14.5" fill="#fbbf24" font-weight="bold">AI 智能体应用（多类）</text>
+    <text x="60" y="434" font-size="13" fill="#cbd5e1">工艺数字员工（五工序）· 设备预测性维护</text>
+    <text x="60" y="458" font-size="13" fill="#cbd5e1">能耗优化 · 环保合规 · 安全巡检（ReAct 范式）</text>
+    <text x="60" y="488" font-size="14.5" fill="#fbbf24" font-weight="bold">视觉 AI 应用</text>
+    <text x="60" y="512" font-size="13" fill="#cbd5e1">火焰视觉识别（辅助终点判断）· 安全行为识别（安全帽/危区/倒地）</text>
+    <text x="60" y="536" font-size="12.5" fill="#94a3b8">边缘推理 ≥15fps（RK3568 NPU）· ONNX 导出</text>
+  </g>
+
+  <!-- 域4 生产运营 -->
+  <g>
+    <rect x="620" y="336" width="540" height="210" rx="14" fill="#0d1421" stroke="#10b981" stroke-opacity="0.5" stroke-width="1.5"/>
+    <rect x="620" y="336" width="540" height="46" rx="14" fill="#10b981"/>
+    <rect x="620" y="368" width="540" height="14" fill="#10b981"/>
+    <text x="640" y="366" font-size="19" font-weight="bold" fill="#0a0e1a">④ 生产运营域</text>
+    <text x="640" y="410" font-size="14.5" fill="#34d399" font-weight="bold">报表与统计</text>
+    <text x="640" y="434" font-size="13" fill="#cbd5e1">产量/报警/能耗报表 · 班次统计 · CSV/Excel 导出</text>
+    <text x="640" y="458" font-size="13" fill="#cbd5e1">阳极板/阴极铜产量 · 库存看板联动</text>
+    <text x="640" y="488" font-size="14.5" fill="#34d399" font-weight="bold">人员安全管理</text>
+    <text x="640" y="512" font-size="13" fill="#cbd5e1">电子围栏 · 人员定位 · 巡检轨迹 · 危区闯入报警</text>
+  </g>
+
+  <!-- 域5 设备与能源 -->
+  <g>
+    <rect x="40" y="562" width="560" height="205" rx="14" fill="#0d1421" stroke="#a855f7" stroke-opacity="0.5" stroke-width="1.5"/>
+    <rect x="40" y="562" width="560" height="46" rx="14" fill="#a855f7"/>
+    <rect x="40" y="594" width="560" height="14" fill="#a855f7"/>
+    <text x="60" y="592" font-size="19" font-weight="bold" fill="#ffffff">⑤ 设备与能源域</text>
+    <text x="60" y="636" font-size="14.5" fill="#c084fc" font-weight="bold">设备管理应用</text>
+    <text x="60" y="660" font-size="13" fill="#cbd5e1">设备台账 · 点巡检 · 维修工单 · 备件管理</text>
+    <text x="60" y="690" font-size="14.5" fill="#c084fc" font-weight="bold">能耗与双碳应用</text>
+    <text x="60" y="714" font-size="13" fill="#cbd5e1">能耗监测 · 能效看板 · 碳排放核算 · 节能建议</text>
+    <text x="60" y="744" font-size="12.5" fill="#94a3b8">配合设备预测性维护智能体实现预测维护闭环</text>
+  </g>
+
+  <!-- 域6 知识支撑 -->
+  <g>
+    <rect x="620" y="562" width="540" height="205" rx="14" fill="#0d1421" stroke="#f43f5e" stroke-opacity="0.5" stroke-width="1.5"/>
+    <rect x="620" y="562" width="540" height="46" rx="14" fill="#f43f5e"/>
+    <rect x="620" y="594" width="540" height="14" fill="#f43f5e"/>
+    <text x="640" y="592" font-size="19" font-weight="bold" fill="#ffffff">⑥ 知识支撑域</text>
+    <text x="640" y="636" font-size="14.5" fill="#fb7185" font-weight="bold">工艺知识库</text>
+    <text x="640" y="660" font-size="13" fill="#cbd5e1">工艺规程/操作规程/历史案例 向量化入库</text>
+    <text x="640" y="690" font-size="13" fill="#cbd5e1">RAG 检索增强 · 支撑智能体决策有据可依</text>
+    <text x="640" y="720" font-size="12.5" fill="#94a3b8">文档格式：PDF/Word/TXT/HTML · 相似度检索</text>
+  </g>
+
+  <!-- 底部生态机制 -->
+  <rect x="40" y="782" width="1120" height="0" rx="0" fill="none"/>
+  <text x="600" y="790" text-anchor="middle" font-size="15" fill="#00d4ff" font-weight="bold">应用商店 · 低代码画布 · 开放 API —— 新增业务场景只需挂载新应用，无需改动平台与底层设备</text>
+</svg>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="100%" height="100%" font-family="'PingFang SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bgGradient3" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0a0e1a"/>
+      <stop offset="100%" stop-color="#16213e"/>
+    </linearGradient>
+    <marker id="arrow3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="640" fill="url(#bgGradient3)"/>
+
+  <text x="600" y="48" text-anchor="middle" font-size="27" font-weight="bold" fill="#ffffff">危气监测应用 · 端到端数据流（秒级闭环）</text>
+  <text x="600" y="76" text-anchor="middle" font-size="15" fill="#94a3b8">SO₂ / CO / 天然气传感器 → 三级预警 → 联动处置 → 大屏/远程</text>
+
+  <!-- 第1步 感知 -->
+  <g>
+    <rect x="40" y="110" width="200" height="150" rx="12" fill="#0d1421" stroke="#00d4ff" stroke-opacity="0.5"/>
+    <text x="140" y="145" text-anchor="middle" font-size="16" font-weight="bold" fill="#00d4ff">① 感知</text>
+    <text x="140" y="175" text-anchor="middle" font-size="13" fill="#cbd5e1">SO₂/CO/天然气</text>
+    <text x="140" y="197" text-anchor="middle" font-size="13" fill="#cbd5e1">电化学传感器</text>
+    <text x="140" y="222" text-anchor="middle" font-size="12" fill="#94a3b8">500ms 采样</text>
+    <text x="140" y="245" text-anchor="middle" font-size="12" fill="#10b981">设备侧：HongZOS/RK3568</text>
+  </g>
+
+  <line x1="240" y1="185" x2="295" y2="185" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arrow3)"/>
+
+  <!-- 第2步 接入 -->
+  <g>
+    <rect x="300" y="110" width="200" height="150" rx="12" fill="#0d1421" stroke="#3b82f6" stroke-opacity="0.5"/>
+    <text x="400" y="145" text-anchor="middle" font-size="16" font-weight="bold" fill="#60a5fa">② 驱动接入</text>
+    <text x="400" y="175" text-anchor="middle" font-size="13" fill="#cbd5e1">气体传感器驱动插件</text>
+    <text x="400" y="197" text-anchor="middle" font-size="13" fill="#cbd5e1">RS485/4-20mA 采集</text>
+    <text x="400" y="222" text-anchor="middle" font-size="12" fill="#94a3b8">统一设备模型</text>
+    <text x="400" y="245" text-anchor="middle" font-size="12" fill="#94a3b8">测点/属性/事件</text>
+  </g>
+
+  <line x1="500" y1="185" x2="555" y2="185" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arrow3)"/>
+
+  <!-- 第3步 平台处理 -->
+  <g>
+    <rect x="560" y="110" width="250" height="150" rx="12" fill="#0d1421" stroke="#f59e0b" stroke-opacity="0.5"/>
+    <text x="685" y="145" text-anchor="middle" font-size="16" font-weight="bold" fill="#fbbf24">③ 平台处理</text>
+    <text x="685" y="175" text-anchor="middle" font-size="13" fill="#cbd5e1">滤波校准 → 坏值剔除</text>
+    <text x="685" y="197" text-anchor="middle" font-size="13" fill="#cbd5e1">规则引擎：三级阈值</text>
+    <text x="685" y="222" text-anchor="middle" font-size="12" fill="#94a3b8">趋势斜率预测预警</text>
+    <text x="685" y="245" text-anchor="middle" font-size="12" fill="#94a3b8">TDengine 入库留痕</text>
+  </g>
+
+  <line x1="810" y1="185" x2="865" y2="185" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arrow3)"/>
+
+  <!-- 第4步 联动处置 -->
+  <g>
+    <rect x="870" y="110" width="290" height="150" rx="12" fill="#0d1421" stroke="#f43f5e" stroke-opacity="0.5"/>
+    <text x="1015" y="145" text-anchor="middle" font-size="16" font-weight="bold" fill="#fb7185">④ 联动处置（≤1s）</text>
+    <text x="1015" y="175" text-anchor="middle" font-size="13" fill="#cbd5e1">排风机 → 声光报警 → 断电</text>
+    <text x="1015" y="197" text-anchor="middle" font-size="13" fill="#cbd5e1">安全序列自动执行</text>
+    <text x="1015" y="222" text-anchor="middle" font-size="12" fill="#94a3b8">中高风险需人工审批</text>
+    <text x="1015" y="245" text-anchor="middle" font-size="12" fill="#94a3b8">全程留痕审计</text>
+  </g>
+
+  <!-- 分级阈值说明 -->
+  <rect x="40" y="290" width="1120" height="110" rx="12" fill="#0d1421" stroke="#f59e0b" stroke-opacity="0.4"/>
+  <text x="60" y="322" font-size="16" font-weight="bold" fill="#fbbf24">三级阈值分级策略（以 CO 为例，ppm）</text>
+  <g font-size="13.5">
+    <rect x="60" y="340" width="330" height="44" rx="8" fill="#111a2c"/>
+    <text x="80" y="369" fill="#fbbf24" font-weight="bold">提示 &gt;35</text>
+    <text x="200" y="369" fill="#cbd5e1">大屏黄色提示 · 记录日志</text>
+    <rect x="405" y="340" width="330" height="44" rx="8" fill="#111a2c"/>
+    <text x="425" y="369" fill="#fb923c" font-weight="bold">预警 &gt;100</text>
+    <text x="560" y="369" fill="#cbd5e1">开启排风 · 通知值班人员</text>
+    <rect x="750" y="340" width="390" height="44" rx="8" fill="#111a2c"/>
+    <text x="770" y="369" fill="#f43f5e" font-weight="bold">报警 &gt;200</text>
+    <text x="910" y="369" fill="#cbd5e1">排风+声光+断电 · 远程推送</text>
+  </g>
+
+  <!-- 下游呈现 -->
+  <g>
+    <rect x="40" y="430" width="540" height="160" rx="12" fill="#0d1421" stroke="#00d4ff" stroke-opacity="0.4"/>
+    <text x="60" y="465" font-size="16" font-weight="bold" fill="#00d4ff">⑤ 大屏呈现</text>
+    <text x="60" y="495" font-size="13.5" fill="#cbd5e1">危气仪表盘 + 趋势曲线</text>
+    <text x="60" y="520" font-size="13.5" fill="#cbd5e1">报警弹窗 + 声光提醒</text>
+    <text x="60" y="545" font-size="13.5" fill="#cbd5e1">联动状态与处置闭环可视化</text>
+    <text x="60" y="570" font-size="12.5" fill="#94a3b8">WebSocket 增量推送 · 刷新 ≤1s</text>
+
+    <rect x="620" y="430" width="540" height="160" rx="12" fill="#0d1421" stroke="#3b82f6" stroke-opacity="0.4"/>
+    <text x="640" y="465" font-size="16" font-weight="bold" fill="#60a5fa">⑥ 远程处置</text>
+    <text x="640" y="495" font-size="13.5" fill="#cbd5e1">值班人员手机收到推送</text>
+    <text x="640" y="520" font-size="13.5" fill="#cbd5e1">一键远程开启排风/报警复位</text>
+    <text x="640" y="545" font-size="13.5" fill="#cbd5e1">指令幂等 + 超时重试</text>
+    <text x="640" y="570" font-size="12.5" fill="#94a3b8">HTTPS/WebSocket · 权限分级 · 审计留痕</text>
+  </g>
+</svg>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" width="100%" height="100%" font-family="'PingFang SC','Microsoft YaHei',sans-serif">
+  <defs>
+    <linearGradient id="bgGradient4" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0a0e1a"/>
+      <stop offset="100%" stop-color="#1e3a5f"/>
+    </linearGradient>
+    <marker id="arrow4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="760" fill="url(#bgGradient4)"/>
+
+  <text x="600" y="48" text-anchor="middle" font-size="27" font-weight="bold" fill="#ffffff">物理部署拓扑 · 端—边—云协同</text>
+  <text x="600" y="76" text-anchor="middle" font-size="15" fill="#94a3b8">平台层服务器（国产OS）→ 边缘网关（HongZOS/OpenHarmony）→ 工业设备（多协议接入）</text>
+
+  <!-- ═══ 云/服务器侧 ═══ -->
+  <rect x="40" y="100" width="1120" height="180" rx="14" fill="#0d1421" stroke="#3b82f6" stroke-opacity="0.5" stroke-width="1.5"/>
+  <rect x="40" y="100" width="1120" height="40" rx="14" fill="#3b82f6"/>
+  <rect x="40" y="126" width="1120" height="14" fill="#3b82f6"/>
+  <text x="60" y="127" font-size="18" font-weight="bold" fill="#ffffff">云 / 服务器侧 · 平台层（国产操作系统：麒麟 OS 工业版 / 统信 UOS）</text>
+
+  <g>
+    <rect x="60" y="152" width="250" height="112" rx="10" fill="#111a2c" stroke="#3b82f6" stroke-opacity="0.4"/>
+    <text x="78" y="180" font-size="15" font-weight="bold" fill="#60a5fa">平台服务集群</text>
+    <text x="78" y="206" font-size="12.5" fill="#cbd5e1">MQTT · TDengine · 规则引擎</text>
+    <text x="78" y="228" font-size="12.5" fill="#cbd5e1">AI推理 · 智能体编排</text>
+    <text x="78" y="250" font-size="12" fill="#94a3b8">Docker/K8s 容器化部署</text>
+
+    <rect x="330" y="152" width="250" height="112" rx="10" fill="#111a2c" stroke="#3b82f6" stroke-opacity="0.4"/>
+    <text x="348" y="180" font-size="15" font-weight="bold" fill="#60a5fa">可视化与控制</text>
+    <text x="348" y="206" font-size="12.5" fill="#cbd5e1">数字可视化大屏</text>
+    <text x="348" y="228" font-size="12.5" fill="#cbd5e1">远程控制台（Web/移动端）</text>
+    <text x="348" y="250" font-size="12" fill="#94a3b8">WebSocket 增量推送</text>
+
+    <rect x="600" y="152" width="250" height="112" rx="10" fill="#111a2c" stroke="#3b82f6" stroke-opacity="0.4"/>
+    <text x="618" y="180" font-size="15" font-weight="bold" fill="#60a5fa">AI 智能体服务</text>
+    <text x="618" y="206" font-size="12.5" fill="#cbd5e1">工艺数字员工 · 预测性维护</text>
+    <text x="618" y="228" font-size="12.5" fill="#cbd5e1">能耗优化 · 环保合规</text>
+    <text x="618" y="250" font-size="12" fill="#94a3b8">vLLM/Ollama · 向量库 RAG</text>
+
+    <rect x="870" y="152" width="270" height="112" rx="10" fill="#111a2c" stroke="#3b82f6" stroke-opacity="0.4"/>
+    <text x="888" y="180" font-size="15" font-weight="bold" fill="#60a5fa">安全与管理</text>
+    <text x="888" y="206" font-size="12.5" fill="#cbd5e1">认证鉴权 · 国密加密</text>
+    <text x="888" y="228" font-size="12.5" fill="#cbd5e1">操作审计 · 断网续传</text>
+    <text x="888" y="250" font-size="12" fill="#94a3b8">Prometheus 监控</text>
+  </g>
+
+  <!-- 云边连接 -->
+  <line x1="600" y1="282" x2="600" y2="318" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arrow4)"/>
+  <text x="620" y="308" font-size="12.5" fill="#94a3b8">MQTT over TLS / 国密 · QoS1 · 主题分级</text>
+
+  <!-- ═══ 边缘侧 ═══ -->
+  <rect x="40" y="324" width="1120" height="180" rx="14" fill="#0d1421" stroke="#00d4ff" stroke-opacity="0.5" stroke-width="1.5"/>
+  <rect x="40" y="324" width="1120" height="40" rx="14" fill="#00d4ff"/>
+  <rect x="40" y="350" width="1120" height="14" fill="#00d4ff"/>
+  <text x="60" y="351" font-size="18" font-weight="bold" fill="#0a0e1a">边缘侧 · 智能边缘网关（国产操作系统：诚迈 HongZOS / OpenHarmony · RK3568）</text>
+
+  <g>
+    <rect x="60" y="376" width="320" height="112" rx="10" fill="#111a2c" stroke="#00d4ff" stroke-opacity="0.4"/>
+    <text x="78" y="404" font-size="15" font-weight="bold" fill="#00d4ff">驱动插件运行时</text>
+    <text x="78" y="430" font-size="12.5" fill="#cbd5e1">Modbus / OPC UA / 视频 / 气体</text>
+    <text x="78" y="452" font-size="12.5" fill="#cbd5e1">协议驱动插件热加载</text>
+    <text x="78" y="474" font-size="12" fill="#94a3b8">本地缓存 · 断网续传</text>
+
+    <rect x="400" y="376" width="320" height="112" rx="10" fill="#111a2c" stroke="#00d4ff" stroke-opacity="0.4"/>
+    <text x="418" y="404" font-size="15" font-weight="bold" fill="#00d4ff">边缘采集与处理</text>
+    <text x="418" y="430" font-size="12.5" fill="#cbd5e1">实时采集 · 滤波校准 · 坏值剔除</text>
+    <text x="418" y="452" font-size="12.5" fill="#cbd5e1">本地规则（边端自治）</text>
+    <text x="418" y="474" font-size="12" fill="#94a3b8">高优先级实时任务</text>
+
+    <rect x="740" y="376" width="400" height="112" rx="10" fill="#111a2c" stroke="#00d4ff" stroke-opacity="0.4"/>
+    <text x="758" y="404" font-size="15" font-weight="bold" fill="#00d4ff">边缘 AI 推理（NPU）</text>
+    <text x="758" y="430" font-size="12.5" fill="#cbd5e1">视觉模型 ONNX/RKNN 部署</text>
+    <text x="758" y="452" font-size="12.5" fill="#cbd5e1">火焰识别 · 安全行为识别 ≥15fps</text>
+    <text x="758" y="474" font-size="12" fill="#94a3b8">AGV 车载控制器（避障毫秒级）</text>
+  </g>
+
+  <!-- 边端连接 -->
+  <line x1="600" y1="506" x2="600" y2="542" stroke="#94a3b8" stroke-width="2.5" marker-end="url(#arrow4)"/>
+  <text x="620" y="532" font-size="12.5" fill="#94a3b8">RS485 / I2C / GPIO / 以太网 / LoRa / 4G</text>
+
+  <!-- ═══ 设备侧 ═══ -->
+  <rect x="40" y="548" width="1120" height="190" rx="14" fill="#0d1421" stroke="#10b981" stroke-opacity="0.5" stroke-width="1.5"/>
+  <rect x="40" y="548" width="1120" height="40" rx="14" fill="#10b981"/>
+  <rect x="40" y="574" width="1120" height="14" fill="#10b981"/>
+  <text x="60" y="575" font-size="18" font-weight="bold" fill="#0a0e1a">设备侧 · 工业硬件（驱动插件生态 · 即插即用）</text>
+
+  <g font-size="13">
+    <rect x="60" y="600" width="200" height="120" rx="10" fill="#111a2c" stroke="#10b981" stroke-opacity="0.4"/>
+    <text x="160" y="630" text-anchor="middle" font-size="14.5" font-weight="bold" fill="#34d399">环境传感</text>
+    <text x="160" y="656" text-anchor="middle" font-size="12.5" fill="#cbd5e1">温湿度 · 危气</text>
+    <text x="160" y="678" text-anchor="middle" font-size="12.5" fill="#cbd5e1">SO₂/CO/天然气</text>
+    <text x="160" y="700" text-anchor="middle" font-size="12" fill="#94a3b8">红外感应 · 光电</text>
+
+    <rect x="280" y="600" width="200" height="120" rx="10" fill="#111a2c" stroke="#10b981" stroke-opacity="0.4"/>
+    <text x="380" y="630" text-anchor="middle" font-size="14.5" font-weight="bold" fill="#34d399">视觉设备</text>
+    <text x="380" y="656" text-anchor="middle" font-size="12.5" fill="#cbd5e1">工业相机（火焰识别）</text>
+    <text x="380" y="678" text-anchor="middle" font-size="12.5" fill="#cbd5e1">摄像头（行为识别）</text>
+    <text x="380" y="700" text-anchor="middle" font-size="12" fill="#94a3b8">海康/大华 SDK · RTSP</text>
+
+    <rect x="500" y="600" width="200" height="120" rx="10" fill="#111a2c" stroke="#10b981" stroke-opacity="0.4"/>
+    <text x="600" y="630" text-anchor="middle" font-size="14.5" font-weight="bold" fill="#34d399">AGV 搬运</text>
+    <text x="600" y="656" text-anchor="middle" font-size="12.5" fill="#cbd5e1">阳极板/阴极铜搬运</text>
+    <text x="600" y="678" text-anchor="middle" font-size="12.5" fill="#cbd5e1">超声波避障 · 循迹</text>
+    <text x="600" y="700" text-anchor="middle" font-size="12" fill="#94a3b8">车载控制 · 无线通信</text>
+
+    <rect x="720" y="600" width="200" height="120" rx="10" fill="#111a2c" stroke="#10b981" stroke-opacity="0.4"/>
+    <text x="820" y="630" text-anchor="middle" font-size="14.5" font-weight="bold" fill="#34d399">控制系统</text>
+    <text x="820" y="656" text-anchor="middle" font-size="12.5" fill="#cbd5e1">DCS / PLC（旁路接入）</text>
+    <text x="820" y="678" text-anchor="middle" font-size="12.5" fill="#cbd5e1">继电器模组 · 排风/照明</text>
+    <text x="820" y="700" text-anchor="middle" font-size="12" fill="#94a3b8">OPC UA / Modbus</text>
+
+    <rect x="940" y="600" width="200" height="120" rx="10" fill="#111a2c" stroke="#10b981" stroke-opacity="0.4"/>
+    <text x="1040" y="630" text-anchor="middle" font-size="14.5" font-weight="bold" fill="#34d399">环保仪表</text>
+    <text x="1040" y="656" text-anchor="middle" font-size="12.5" fill="#cbd5e1">烟气分析仪</text>
+    <text x="1040" y="678" text-anchor="middle" font-size="12.5" fill="#cbd5e1">HJ212 环保上报</text>
+    <text x="1040" y="700" text-anchor="middle" font-size="12" fill="#94a3b8">无线节点 LoRa/NB-IoT</text>
+  </g>
+
+  <text x="600" y="744" text-anchor="middle" font-size="14" fill="#00d4ff" font-weight="bold">兼容大多数硬件 · 未兼容设备通过 Driver SDK 快速开发接入 · 不停产旁路部署</text>
+</svg>
