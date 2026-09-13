@@ -1,4 +1,57 @@
+# OS / editor
 .DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Python helper artifacts
 __pycache__/
-*.pyc
+*.py[cod]
 .venv/
+
+# Node / frontend
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+.vite/
+coverage/
+*.tsbuildinfo
+
+# CMake / native build
+build/
+build-*/
+backend-cpp/build*/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+Testing/
+
+# Runtime / generated data
+data/
+*.sqlite
+*.sqlite3
+*.db
+*.log
+*.core
+core
+
+# Local credentials and environment
+.env
+.env.*
+!.env.example
+deploy/local/.env
+backend-cpp/config/auth.local.json
+
+# Packages / archives
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+
+# Temporary output
+output/
+evidence/
+tmp/
+temp/

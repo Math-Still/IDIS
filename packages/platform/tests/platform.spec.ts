@@ -1,0 +1,2 @@
+import{describe,expect,it}from'vitest';import{OpenHarmonyMockAdapter}from'../src/openharmony-mock';
+describe('OpenHarmonyMockAdapter',()=>{it('does not pretend SoftBus already exists',async()=>{const a=new OpenHarmonyMockAdapter();expect(await a.getPlatform()).toBe('openharmony');expect(await a.hasCapability('runtime.info')).toBe(true);expect(await a.hasCapability('softbus.discovery')).toBe(false);expect((await a.health()).bridgeReady).toBe(false);});});

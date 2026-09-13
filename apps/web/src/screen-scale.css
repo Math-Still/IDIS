@@ -1,0 +1,47 @@
+/* One shared type scale for screen labels, readings and controls. */
+.twin-screen--executive{--screen-label:clamp(15px,.76vw,27px);--screen-small:clamp(12px,.6vw,21px);--screen-heading:clamp(20px,1vw,35px);--screen-value:clamp(28px,1.35vw,48px)}
+.twin-screen--executive .twin-screen-title>strong{font-size:clamp(30px,1.4vw,49px)!important}
+.twin-screen--executive :is(.twin-info-section>header>span,.executive-bottom-panel>header span,.twin-center-heading>div strong){font-size:var(--screen-heading)!important;line-height:1.2}
+.twin-screen--executive :is(.industrial-gauge-title,.linear-gauge-head>span,.executive-process-rail button>span,.key-equipment-list strong,.executive-safety-grid span,.twin-alarm-list strong,.status-matrix-item span,.copper-zone-label>span){font-size:var(--screen-label)!important;line-height:1.3}
+.twin-screen--executive :is(.industrial-gauge-reading strong,.linear-gauge-head strong,.executive-safety-grid strong){font-size:var(--screen-value)!important;max-width:none!important;line-height:1.1}
+.twin-screen--executive :is(.industrial-gauge-foot,.industrial-gauge-foot b,.industrial-gauge-reading em,.linear-gauge-head em,.linear-gauge-scale,.linear-gauge-scale small,.executive-process-rail button>b,.key-equipment-list span,.key-equipment-list>a>b,.twin-alarm-list span,.twin-alarm-list time,.status-matrix-item strong,.copper-zone-label>b,.twin-control-panel>header span,.twin-control-panel>header strong,.twin-control-panel>header>b,.twin-screen-context span,.twin-screen-clock>span){font-size:var(--screen-small)!important;line-height:1.3}
+.twin-screen--executive .twin-screen-context strong{font-size:var(--screen-label)!important;line-height:1.3}
+.twin-screen--executive .twin-screen-context{height:auto!important;overflow:visible}
+.twin-screen--executive :is(.executive-kpi-stack>div:first-child>strong,.executive-bottom-production>div:last-child strong){font-size:var(--screen-value)!important}
+.twin-screen--executive :is(.executive-kpi-stack>div:first-child>span,.executive-bottom-production>div:last-child span,.executive-bottom-production>div:last-child small){font-size:var(--screen-small)!important}
+.twin-screen--executive .executive-production-context{display:none!important}
+.twin-screen--executive .industrial-semi-gauge{display:flex!important;flex-direction:column;align-items:stretch;justify-content:center;gap:5px;padding:10px!important}
+.twin-screen--executive .industrial-gauge-title{height:auto!important;flex-shrink:0}
+.twin-screen--executive .industrial-semi-gauge svg{position:static!important;width:100%!important;height:clamp(70px,5vw,172px)!important;flex:0 1 auto;min-height:45px;transform:none!important}
+.twin-screen--executive .industrial-gauge-reading{position:static!important;transform:none!important;flex-shrink:0;margin-top:-12px}
+.twin-screen--executive .industrial-gauge-foot{position:static!important;margin-top:auto;flex-shrink:0}
+.twin-screen--executive .industrial-gauge-foot>span{display:none}
+.twin-screen--executive .industrial-gauge-foot>b{margin-left:auto}
+.twin-screen--executive .linear-gauge-head{flex-wrap:wrap;gap:5px}
+.twin-screen--executive .linear-gauge-head>span{white-space:normal;overflow:visible;text-overflow:clip}
+.twin-screen--executive .twin-control-buttons button{font-size:var(--screen-small)!important;height:clamp(44px,2.1vw,74px)!important;white-space:normal;line-height:1.2}
+.twin-screen--executive .copper-zone-label{padding:10px 16px!important;min-width:140px}
+.twin-screen--executive .twin-focus-summary>small{display:none}
+.twin-screen--executive .twin-info-section>header>b,.twin-screen--executive .executive-bottom-panel>header>b{display:none}
+@media(min-width:2400px) and (min-height:1000px){
+ .twin-screen.twin-screen--executive{grid-template-rows:110px minmax(0,1fr) 260px 34px!important}
+ .twin-screen--executive .twin-info-section>header{height:62px!important}
+ .twin-screen--executive .executive-bottom-panel>header{height:52px!important}
+ .twin-screen--executive .twin-side-left{display:flex!important;flex-direction:column}
+ .twin-screen--executive .executive-production{flex:0 0 290px!important}
+ .twin-screen--executive .executive-production-body{height:calc(100% - 62px)!important}
+ .twin-screen--executive .executive-process-overview{flex:1 1 auto!important;min-height:260px}
+ .twin-screen--executive .executive-process-rail{height:calc(100% - 62px)!important}
+ .twin-screen--executive .executive-key-equipment{flex:0 0 280px!important}
+ .twin-screen--executive .key-equipment-list{display:flex!important;flex-direction:column;justify-content:space-evenly;height:calc(100% - 62px)!important}
+ .twin-screen--executive .key-equipment-list a{height:auto!important;min-height:58px!important}
+ .twin-screen--executive .executive-safety-monitor{flex:0 0 150px!important}
+ .twin-screen--executive .executive-safety-grid{height:calc(100% - 62px)!important}
+ .twin-screen--executive .executive-alarm-panel{flex:0 0 200px!important}
+ .twin-screen--executive .executive-control-panel{flex:0 0 150px!important}
+ .twin-screen--executive .executive-gauge-layout{height:calc(100% - 62px)!important}
+ .twin-screen--executive :is(.executive-bottom-production,.executive-bottom-lines,.executive-bottom-gauges,.bottom-process-panel>.industrial-status-matrix){height:calc(100% - 52px)!important}
+ .twin-screen--executive .executive-bottom-panel .industrial-semi-gauge svg{height:95px!important}
+ .twin-screen--executive .executive-bottom-panel .industrial-gauge-foot{display:none!important}
+ .twin-screen--executive .executive-bottom-panel .industrial-gauge-reading strong{font-size:36px!important}
+}

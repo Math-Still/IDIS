@@ -1,0 +1,41 @@
+{
+  "apiBaseUrl": "http://127.0.0.1:8000",
+  "wsBaseUrl": "ws://127.0.0.1:8000/ws",
+  "environment": "demo",
+  "siteId": "demo-local",
+  "backendApiVersion": "v1",
+  "dataMode": "auto",
+  "realtime": {
+    "staleAfterMs": 10000,
+    "badAfterMs": 60000,
+    "reconnectBaseMs": 1000,
+    "reconnectMaxMs": 30000,
+    "reconnectJitterRatio": 0.2,
+    "commandTimeoutMs": 15000,
+    "stableConnectionMs": 10000,
+    "messageSilenceReconnectMs": 45000
+  },
+  "deployment": {
+    "platformTarget": "generic-browser",
+    "platformLabel": "Demo host",
+    "hardwareProfile": "not-recorded",
+    "deploymentId": "demo-local"
+  },
+  "benchmark": {
+    "enabled": true,
+    "pingPath": "benchmark/ping",
+    "iterations": 30,
+    "warmupIterations": 3,
+    "intervalMs": 100,
+    "requestTimeoutMs": 5000
+  },
+  "faultInjection": {
+    "enabled": true,
+    "allowInFactory": false
+  },
+  "transport": {
+    "httpRequestTimeoutMs": 8000,
+    "maxJsonResponseBytes": 2097152,
+    "maxRealtimeMessageBytes": 524288
+  }
+}

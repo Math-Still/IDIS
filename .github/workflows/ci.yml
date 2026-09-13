@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.16.0'
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm run check
+
+  cpp-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install native dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build libboost-json-dev libsqlite3-dev libssl-dev
+      - name: Configure
+        run: cmake -S backend-cpp -B build/backend -G Ninja
+      - name: Build
+        run: cmake --build build/backend -j2
+      - name: Test
+        run: ctest --test-dir build/backend --output-on-failure

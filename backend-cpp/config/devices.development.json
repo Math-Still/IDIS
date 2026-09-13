@@ -1,0 +1,1644 @@
+{
+  "schemaVersion": "1.1",
+  "site": "southwest-copper-smart-factory",
+  "devices": [
+    {
+      "id": "env-01",
+      "name": "精矿配料站",
+      "scenario": "temperature_humidity",
+      "location": "原料配料区",
+      "osNode": "Edge-01",
+      "adapter": "simulated",
+      "connection": {
+        "interfaceType": "RS-485",
+        "protocol": "Modbus RTU",
+        "endpoint": "SIMULATED://env-01",
+        "driver": "simulated.modbus",
+        "parameters": {
+          "baud": 9600,
+          "dataBits": 8,
+          "stopBits": 1,
+          "parity": "N",
+          "address": 1
+        }
+      },
+      "tags": [
+        "environment",
+        "temperature",
+        "humidity",
+        "copper-process"
+      ],
+      "points": [
+        {
+          "pointId": "temperature",
+          "label": "温度",
+          "unit": "℃",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "source": {
+            "register": 0
+          },
+          "simulation": {
+            "kind": "sine",
+            "base": 26.5,
+            "amplitude": 0.35,
+            "periodSteps": 9
+          },
+          "limits": {
+            "warningLow": 10,
+            "warningHigh": 35,
+            "alarmLow": 5,
+            "alarmHigh": 40,
+            "deadband": 0.5
+          }
+        },
+        {
+          "pointId": "humidity",
+          "label": "湿度",
+          "unit": "%RH",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "source": {
+            "register": 1
+          },
+          "simulation": {
+            "kind": "sine",
+            "base": 58.0,
+            "amplitude": 0.9,
+            "periodSteps": 13
+          },
+          "limits": {
+            "warningLow": 25,
+            "warningHigh": 80,
+            "alarmLow": 15,
+            "alarmHigh": 90,
+            "deadband": 2
+          }
+        },
+        {
+          "pointId": "feedRate",
+          "label": "精矿给料",
+          "unit": "t/h",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 142,
+            "amplitude": 4.5,
+            "periodSeconds": 900,
+            "phase": 0
+          }
+        },
+        {
+          "pointId": "moisture",
+          "label": "入炉水分",
+          "unit": "%",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 0.24,
+            "amplitude": 0.025,
+            "periodSeconds": 1100,
+            "phase": 1
+          }
+        },
+        {
+          "pointId": "copperGrade",
+          "label": "精矿含铜",
+          "unit": "%",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 26.8,
+            "amplitude": 0.3,
+            "periodSeconds": 1800,
+            "phase": 0.5
+          }
+        },
+        {
+          "pointId": "siloLevel",
+          "label": "料仓料位",
+          "unit": "%",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 68,
+            "amplitude": 5,
+            "periodSeconds": 2400,
+            "phase": 2
+          }
+        },
+        {
+          "pointId": "beltSpeed",
+          "label": "皮带速度",
+          "unit": "m/s",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 1.4,
+            "amplitude": 0.04,
+            "periodSeconds": 900,
+            "phase": 0
+          }
+        },
+        {
+          "pointId": "fluxRate",
+          "label": "熔剂给料",
+          "unit": "t/h",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 8.7,
+            "amplitude": 0.28,
+            "periodSeconds": 900,
+            "phase": 0
+          }
+        }
+      ],
+      "metadata": {
+        "simulationCommunication": {
+          "latencyMsP50": 8,
+          "latencyMsP95": 13,
+          "latencyMsP99": 18,
+          "jitterMs": 3,
+          "messageRatePerMin": 60
+        }
+      },
+      "commands": {
+        "device.selfTest": {
+          "displayName": "设备自检",
+          "requiredPermission": "command.issue",
+          "executionClass": "NORMAL",
+          "reasonRequired": false,
+          "parameterSchema": {
+            "type": "none",
+            "required": false
+          },
+          "mapping": {
+            "simulation": "selfTest"
+          }
+        },
+        "device.feedback-fail": {
+          "displayName": "反馈异常",
+          "requiredPermission": "command.issue",
+          "executionClass": "NORMAL",
+          "reasonRequired": false,
+          "parameterSchema": {
+            "type": "none",
+            "required": false
+          },
+          "mapping": {
+            "simulation": "feedbackFail"
+          },
+          "metadata": {
+            "developmentOnly": true
+          }
+        },
+        "device.feedback-timeout": {
+          "displayName": "反馈超时",
+          "requiredPermission": "command.issue",
+          "executionClass": "NORMAL",
+          "reasonRequired": false,
+          "parameterSchema": {
+            "type": "none",
+            "required": false
+          },
+          "mapping": {
+            "simulation": "feedbackTimeout"
+          },
+          "metadata": {
+            "developmentOnly": true
+          }
+        },
+        "device.setLevel": {
+          "displayName": "设定值",
+          "requiredPermission": "command.issue",
+          "executionClass": "NORMAL",
+          "reasonRequired": false,
+          "parameterSchema": {
+            "type": "number",
+            "required": true,
+            "minimum": 0,
+            "maximum": 100
+          },
+          "mapping": {
+            "simulation": "setLevel"
+          },
+          "metadata": {
+            "developmentOnly": true
+          }
+        }
+      }
+    },
+    {
+      "id": "env-02",
+      "name": "1号闪速熔炼炉",
+      "scenario": "temperature_humidity",
+      "location": "熔炼主厂房",
+      "osNode": "Edge-01",
+      "adapter": "simulated",
+      "connection": {
+        "interfaceType": "RS-485",
+        "protocol": "Modbus RTU",
+        "endpoint": "SIMULATED://env-02",
+        "driver": "simulated.modbus",
+        "parameters": {
+          "baud": 9600,
+          "dataBits": 8,
+          "stopBits": 1,
+          "parity": "N",
+          "address": 1,
+          "deviceId": "env-02"
+        }
+      },
+      "tags": [
+        "environment",
+        "temperature",
+        "humidity",
+        "copper-process"
+      ],
+      "points": [
+        {
+          "pointId": "temperature",
+          "label": "温度",
+          "unit": "℃",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "source": {
+            "register": 10
+          },
+          "simulation": {
+            "kind": "sine",
+            "base": 31.2,
+            "amplitude": 0.25,
+            "periodSteps": 11
+          },
+          "limits": {
+            "warningLow": 10,
+            "warningHigh": 35,
+            "alarmLow": 5,
+            "alarmHigh": 40,
+            "deadband": 0.5
+          }
+        },
+        {
+          "pointId": "humidity",
+          "label": "湿度",
+          "unit": "%RH",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "source": {
+            "register": 11
+          },
+          "simulation": {
+            "kind": "sine",
+            "base": 66.0,
+            "amplitude": 0.7,
+            "periodSteps": 15
+          },
+          "limits": {
+            "warningLow": 25,
+            "warningHigh": 80,
+            "alarmLow": 15,
+            "alarmHigh": 90,
+            "deadband": 2
+          }
+        },
+        {
+          "pointId": "bathTemperature",
+          "label": "熔池温度",
+          "unit": "℃",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 1290,
+            "amplitude": 9,
+            "periodSeconds": 840,
+            "phase": 0.5
+          }
+        },
+        {
+          "pointId": "oxygenEnrichment",
+          "label": "富氧浓度",
+          "unit": "%",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 72,
+            "amplitude": 0.65,
+            "periodSeconds": 900,
+            "phase": 0
+          }
+        },
+        {
+          "pointId": "furnacePressure",
+          "label": "炉膛负压",
+          "unit": "Pa",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": -48,
+            "amplitude": 5,
+            "periodSeconds": 660,
+            "phase": 1
+          }
+        },
+        {
+          "pointId": "matteGrade",
+          "label": "冰铜品位",
+          "unit": "%",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 62,
+            "amplitude": 0.7,
+            "periodSeconds": 1500,
+            "phase": 0.8
+          }
+        },
+        {
+          "pointId": "offgasTemperature",
+          "label": "出口烟温",
+          "unit": "℃",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 1175,
+            "amplitude": 12,
+            "periodSeconds": 840,
+            "phase": 0.6
+          }
+        },
+        {
+          "pointId": "coolingFlow",
+          "label": "冷却水量",
+          "unit": "m³/h",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 860,
+            "amplitude": 12,
+            "periodSeconds": 1000,
+            "phase": 1
+          }
+        }
+      ],
+      "metadata": {
+        "simulationCommunication": {
+          "latencyMsP50": 8,
+          "latencyMsP95": 13,
+          "latencyMsP99": 18,
+          "jitterMs": 3,
+          "messageRatePerMin": 60
+        }
+      },
+      "commands": {
+        "device.selfTest": {
+          "displayName": "设备自检",
+          "requiredPermission": "command.issue",
+          "executionClass": "NORMAL",
+          "reasonRequired": false,
+          "parameterSchema": {
+            "type": "none",
+            "required": false
+          },
+          "mapping": {
+            "simulation": "selfTest"
+          }
+        },
+        "device.feedback-fail": {
+          "displayName": "反馈异常",
+          "requiredPermission": "command.issue",
+          "executionClass": "NORMAL",
+          "reasonRequired": false,
+          "parameterSchema": {
+            "type": "none",
+            "required": false
+          },
+          "mapping": {
+            "simulation": "feedbackFail"
+          },
+          "metadata": {
+            "developmentOnly": true
+          }
+        },
+        "device.feedback-timeout": {
+          "displayName": "反馈超时",
+          "requiredPermission": "command.issue",
+          "executionClass": "NORMAL",
+          "reasonRequired": false,
+          "parameterSchema": {
+            "type": "none",
+            "required": false
+          },
+          "mapping": {
+            "simulation": "feedbackTimeout"
+          },
+          "metadata": {
+            "developmentOnly": true
+          }
+        },
+        "device.setLevel": {
+          "displayName": "设定值",
+          "requiredPermission": "command.issue",
+          "executionClass": "NORMAL",
+          "reasonRequired": false,
+          "parameterSchema": {
+            "type": "number",
+            "required": true,
+            "minimum": 0,
+            "maximum": 100
+          },
+          "mapping": {
+            "simulation": "setLevel"
+          },
+          "metadata": {
+            "developmentOnly": true
+          }
+        }
+      }
+    },
+    {
+      "id": "light-01",
+      "name": "循环水与供氧站",
+      "scenario": "pir_lighting",
+      "location": "能源动力区",
+      "osNode": "Edge-01",
+      "adapter": "simulated",
+      "connection": {
+        "interfaceType": "DI/DO",
+        "protocol": "Discrete I/O",
+        "endpoint": "SIMULATED://light-01",
+        "driver": "simulated.dio",
+        "parameters": {
+          "inputChannel": 0,
+          "outputChannel": 1
+        }
+      },
+      "tags": [
+        "pir",
+        "lighting",
+        "copper-process"
+      ],
+      "points": [
+        {
+          "pointId": "occupied",
+          "label": "感应状态",
+          "valueType": "boolean",
+          "samplePeriodMs": 1000,
+          "source": {
+            "channel": 0
+          },
+          "simulation": {
+            "kind": "toggle",
+            "periodSteps": 30
+          }
+        },
+        {
+          "pointId": "lightState",
+          "label": "照明状态",
+          "valueType": "boolean",
+          "samplePeriodMs": 1000,
+          "source": {
+            "coil": 2
+          },
+          "simulation": {
+            "kind": "toggle",
+            "periodSteps": 45
+          }
+        },
+        {
+          "pointId": "lightMode",
+          "label": "控制模式",
+          "valueType": "string",
+          "samplePeriodMs": 1000,
+          "source": {
+            "register": 3
+          },
+          "simulation": {
+            "kind": "constant",
+            "value": "AUTO"
+          }
+        },
+        {
+          "pointId": "power",
+          "label": "全厂有功功率",
+          "unit": "MW",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 28.6,
+            "amplitude": 0.75,
+            "periodSeconds": 900,
+            "phase": 0.1
+          }
+        },
+        {
+          "pointId": "waterPressure",
+          "label": "供水压力",
+          "unit": "MPa",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 0.42,
+            "amplitude": 0.012,
+            "periodSeconds": 1100,
+            "phase": 0.5
+          }
+        },
+        {
+          "pointId": "returnTemperature",
+          "label": "回水温度",
+          "unit": "℃",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 33.4,
+            "amplitude": 0.7,
+            "periodSeconds": 1400,
+            "phase": 1,
+            "warningHigh": 33.7,
+            "warningDeadband": 0.2
+          }
+        },
+        {
+          "pointId": "oxygenPressure",
+          "label": "氧气管压",
+          "unit": "MPa",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 0.65,
+            "amplitude": 0.015,
+            "periodSeconds": 900,
+            "phase": 0.2
+          }
+        },
+        {
+          "pointId": "pumpFrequency",
+          "label": "水泵频率",
+          "unit": "Hz",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 46.5,
+            "amplitude": 0.5,
+            "periodSeconds": 1100,
+            "phase": 0.5
+          }
+        },
+        {
+          "pointId": "waterFlow",
+          "label": "循环水量",
+          "unit": "m³/h",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 1840,
+            "amplitude": 22,
+            "periodSeconds": 1000,
+            "phase": 1
+          }
+        }
+      ],
+      "metadata": {
+        "simulationCommunication": {
+          "latencyMsP50": 6,
+          "latencyMsP95": 10,
+          "latencyMsP99": 14,
+          "jitterMs": 2,
+          "messageRatePerMin": 20
+        }
+      },
+      "commands": {
+        "device.selfTest": {
+          "displayName": "设备自检",
+          "requiredPermission": "command.issue",
+          "executionClass": "NORMAL",
+          "reasonRequired": false,
+          "parameterSchema": {
+            "type": "none",
+            "required": false
+          },
+          "mapping": {
+            "simulation": "selfTest"
+          }
+        }
+      }
+    },
+    {
+      "id": "safety-01",
+      "name": "1号PS转炉",
+      "scenario": "hazardous_gas",
+      "location": "吹炼转炉区",
+      "osNode": "Edge-02",
+      "adapter": "simulated",
+      "connection": {
+        "interfaceType": "RS-485",
+        "protocol": "Modbus RTU",
+        "endpoint": "SIMULATED://safety-01",
+        "driver": "simulated.modbus",
+        "parameters": {
+          "baud": 9600,
+          "address": 3
+        }
+      },
+      "tags": [
+        "safety",
+        "gas",
+        "copper-process"
+      ],
+      "points": [
+        {
+          "pointId": "level",
+          "label": "气体浓度",
+          "unit": "ppm",
+          "valueType": "number",
+          "samplePeriodMs": 500,
+          "source": {
+            "register": 10
+          },
+          "simulation": {
+            "kind": "sine",
+            "base": 12.0,
+            "amplitude": 0.55,
+            "periodSteps": 7
+          },
+          "limits": {
+            "warningHigh": 25,
+            "alarmHigh": 50,
+            "deadband": 2
+          }
+        },
+        {
+          "pointId": "fanRunning",
+          "label": "应急通风",
+          "valueType": "boolean",
+          "samplePeriodMs": 500,
+          "source": {
+            "coil": 20
+          },
+          "simulation": {
+            "kind": "constant",
+            "value": false
+          }
+        },
+        {
+          "pointId": "bathTemperature",
+          "label": "铜液温度",
+          "unit": "℃",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 1218,
+            "amplitude": 13,
+            "periodSeconds": 1200,
+            "phase": 0.3
+          }
+        },
+        {
+          "pointId": "blastFlow",
+          "label": "鼓风流量",
+          "unit": "Nm³/h",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 28500,
+            "amplitude": 620,
+            "periodSeconds": 900,
+            "phase": 0.2
+          }
+        },
+        {
+          "pointId": "oxygenEnrichment",
+          "label": "富氧浓度",
+          "unit": "%",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 28,
+            "amplitude": 0.4,
+            "periodSeconds": 900,
+            "phase": 0.2
+          }
+        },
+        {
+          "pointId": "hoodPressure",
+          "label": "烟罩负压",
+          "unit": "Pa",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": -86,
+            "amplitude": 7,
+            "periodSeconds": 700,
+            "phase": 1
+          }
+        },
+        {
+          "pointId": "offgasSO2",
+          "label": "烟气SO₂",
+          "unit": "%",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 9.2,
+            "amplitude": 0.65,
+            "periodSeconds": 1200,
+            "phase": 0.3
+          }
+        },
+        {
+          "pointId": "coolingFlow",
+          "label": "冷却水量",
+          "unit": "m³/h",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 320,
+            "amplitude": 5,
+            "periodSeconds": 1000,
+            "phase": 0.6
+          }
+        }
+      ],
+      "metadata": {
+        "simulationCommunication": {
+          "latencyMsP50": 7,
+          "latencyMsP95": 12,
+          "latencyMsP99": 16,
+          "jitterMs": 3,
+          "messageRatePerMin": 120
+        }
+      },
+      "commands": {
+        "device.selfTest": {
+          "displayName": "设备自检",
+          "requiredPermission": "command.issue",
+          "executionClass": "NORMAL",
+          "reasonRequired": false,
+          "parameterSchema": {
+            "type": "none",
+            "required": false
+          },
+          "mapping": {
+            "simulation": "selfTest"
+          }
+        },
+        "device.emergencyStop": {
+          "displayName": "紧急停机",
+          "requiredPermission": "command.emergency",
+          "executionClass": "EMERGENCY",
+          "reasonRequired": true,
+          "parameterSchema": {
+            "type": "none",
+            "required": false
+          },
+          "mapping": {
+            "simulation": "emergencyStop"
+          }
+        },
+        "device.start": {
+          "displayName": "应急通风启动",
+          "requiredPermission": "command.issue",
+          "executionClass": "NORMAL",
+          "reasonRequired": true,
+          "parameterSchema": {
+            "type": "none",
+            "required": false
+          },
+          "mapping": {
+            "simulation": "startFan"
+          }
+        },
+        "device.stop": {
+          "displayName": "应急通风停止",
+          "requiredPermission": "command.issue",
+          "executionClass": "NORMAL",
+          "reasonRequired": true,
+          "parameterSchema": {
+            "type": "none",
+            "required": false
+          },
+          "mapping": {
+            "simulation": "stopFan"
+          }
+        }
+      }
+    },
+    {
+      "id": "motion-01",
+      "name": "AGV 避障感知节点",
+      "scenario": "agv_obstacle",
+      "location": "原料转运通道",
+      "osNode": "Edge-02",
+      "adapter": "simulated",
+      "connection": {
+        "interfaceType": "UART",
+        "protocol": "Vendor Serial Frame",
+        "endpoint": "SIMULATED://motion-01",
+        "driver": "simulated.serial",
+        "parameters": {
+          "baud": 115200
+        }
+      },
+      "tags": [
+        "motion",
+        "agv",
+        "ultrasonic"
+      ],
+      "points": [
+        {
+          "pointId": "distance",
+          "label": "前向障碍距离",
+          "unit": "cm",
+          "valueType": "number",
+          "samplePeriodMs": 250,
+          "source": {
+            "frameField": "distance"
+          },
+          "simulation": {
+            "kind": "sine",
+            "base": 80.0,
+            "amplitude": 7.0,
+            "periodSteps": 5
+          },
+          "limits": {
+            "warningLow": 0.8,
+            "alarmLow": 0.4,
+            "deadband": 0.05
+          }
+        },
+        {
+          "pointId": "motionState",
+          "label": "车辆状态",
+          "valueType": "string",
+          "samplePeriodMs": 500,
+          "source": {
+            "register": 11
+          },
+          "simulation": {
+            "kind": "constant",
+            "value": "RUNNING"
+          }
+        },
+        {
+          "pointId": "speed",
+          "label": "运行速度",
+          "unit": "m/s",
+          "valueType": "number",
+          "samplePeriodMs": 500,
+          "source": {
+            "register": 12
+          },
+          "simulation": {
+            "kind": "sine",
+            "base": 1.15,
+            "amplitude": 0.12,
+            "periodSteps": 9
+          }
+        },
+        {
+          "pointId": "position",
+          "label": "当前位置",
+          "valueType": "string",
+          "samplePeriodMs": 1000,
+          "source": {
+            "register": 13
+          },
+          "simulation": {
+            "kind": "constant",
+            "value": "原料通道 A-12"
+          }
+        },
+        {
+          "pointId": "task",
+          "label": "当前任务",
+          "valueType": "string",
+          "samplePeriodMs": 1000,
+          "source": {
+            "register": 14
+          },
+          "simulation": {
+            "kind": "constant",
+            "value": "原料转运"
+          }
+        }
+      ],
+      "metadata": {
+        "simulationCommunication": {
+          "latencyMsP50": 9,
+          "latencyMsP95": 86,
+          "latencyMsP99": 124,
+          "jitterMs": 24,
+          "messageRatePerMin": 180,
+          "quality": "UNCERTAIN",
+          "reconnectCount": 2,
+          "errorCount": 3
+        }
+      },
+      "commands": {
+        "device.selfTest": {
+          "displayName": "设备自检",
+          "requiredPermission": "command.issue",
+          "executionClass": "NORMAL",
+          "reasonRequired": false,
+          "parameterSchema": {
+            "type": "none",
+            "required": false
+          },
+          "mapping": {
+            "simulation": "selfTest"
+          }
+        }
+      }
+    },
+    {
+      "id": "count-01",
+      "name": "1号阳极浇铸机",
+      "scenario": "goods_counting",
+      "location": "阳极浇铸区",
+      "osNode": "Edge-03",
+      "adapter": "simulated",
+      "connection": {
+        "interfaceType": "DI/HSC",
+        "protocol": "High Speed Counter",
+        "endpoint": "SIMULATED://count-01",
+        "driver": "simulated.counter",
+        "parameters": {
+          "channel": 2
+        }
+      },
+      "tags": [
+        "count",
+        "photoelectric",
+        "copper-process"
+      ],
+      "points": [
+        {
+          "pointId": "totalCount",
+          "label": "累计计数",
+          "unit": "件",
+          "valueType": "integer",
+          "samplePeriodMs": 1000,
+          "source": {
+            "counter": 2
+          },
+          "simulation": {
+            "kind": "counter",
+            "base": 1000,
+            "step": 1
+          }
+        },
+        {
+          "pointId": "rate",
+          "label": "当前速率",
+          "unit": "件/min",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "source": {
+            "register": 21
+          },
+          "simulation": {
+            "kind": "sine",
+            "base": 42,
+            "amplitude": 5,
+            "periodSteps": 8
+          }
+        },
+        {
+          "pointId": "target",
+          "label": "班次目标",
+          "unit": "件",
+          "valueType": "number",
+          "samplePeriodMs": 5000,
+          "source": {
+            "register": 22
+          },
+          "simulation": {
+            "kind": "constant",
+            "value": 22000
+          }
+        },
+        {
+          "pointId": "castingTemperature",
+          "label": "浇铸温度",
+          "unit": "℃",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 1158,
+            "amplitude": 5,
+            "periodSeconds": 1000,
+            "phase": 0.2
+          }
+        },
+        {
+          "pointId": "productionRate",
+          "label": "阳极铜产量",
+          "unit": "t/h",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 34.8,
+            "amplitude": 1.1,
+            "periodSeconds": 900,
+            "phase": 0
+          }
+        },
+        {
+          "pointId": "anodeWeight",
+          "label": "单板重量",
+          "unit": "kg",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 375,
+            "amplitude": 1.5,
+            "periodSeconds": 1200,
+            "phase": 1
+          }
+        },
+        {
+          "pointId": "yieldRate",
+          "label": "合格率",
+          "unit": "%",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 99.1,
+            "amplitude": 0.15,
+            "periodSeconds": 1800,
+            "phase": 0.7
+          }
+        },
+        {
+          "pointId": "wheelSpeed",
+          "label": "浇铸轮速",
+          "unit": "r/min",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 0.78,
+            "amplitude": 0.015,
+            "periodSeconds": 900,
+            "phase": 0
+          }
+        },
+        {
+          "pointId": "shiftOutput",
+          "label": "本班阳极铜",
+          "unit": "t",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "processTotal",
+            "base": 34.8,
+            "amplitude": 1.1,
+            "periodSeconds": 900,
+            "phase": 0
+          }
+        },
+        {
+          "pointId": "shiftTarget",
+          "label": "班次计划",
+          "unit": "t",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "constant",
+            "value": 280
+          }
+        }
+      ],
+      "metadata": {
+        "simulationCommunication": {
+          "latencyMsP50": 5,
+          "latencyMsP95": 9,
+          "latencyMsP99": 12,
+          "jitterMs": 2,
+          "messageRatePerMin": 40
+        }
+      },
+      "commands": {
+        "device.selfTest": {
+          "displayName": "设备自检",
+          "requiredPermission": "command.issue",
+          "executionClass": "NORMAL",
+          "reasonRequired": false,
+          "parameterSchema": {
+            "type": "none",
+            "required": false
+          },
+          "mapping": {
+            "simulation": "selfTest"
+          }
+        }
+      }
+    },
+    {
+      "id": "light-02",
+      "name": "烟气净化制酸系统",
+      "scenario": "pir_lighting",
+      "location": "烟气制酸区",
+      "osNode": "Edge-01",
+      "adapter": "simulated",
+      "connection": {
+        "interfaceType": "DI/DO",
+        "protocol": "Discrete I/O",
+        "endpoint": "SIMULATED://light-02",
+        "driver": "simulated.dio",
+        "parameters": {
+          "inputChannel": 0,
+          "outputChannel": 1
+        }
+      },
+      "tags": [
+        "pir",
+        "lighting",
+        "copper-process"
+      ],
+      "points": [
+        {
+          "pointId": "occupied",
+          "label": "感应状态",
+          "valueType": "boolean",
+          "samplePeriodMs": 1000,
+          "source": {
+            "channel": 0
+          },
+          "simulation": {
+            "kind": "toggle",
+            "periodSteps": 45
+          }
+        },
+        {
+          "pointId": "lightState",
+          "label": "照明状态",
+          "valueType": "boolean",
+          "samplePeriodMs": 1000,
+          "source": {
+            "coil": 2
+          },
+          "simulation": {
+            "kind": "toggle",
+            "periodSteps": 45
+          }
+        },
+        {
+          "pointId": "lightMode",
+          "label": "控制模式",
+          "valueType": "string",
+          "samplePeriodMs": 1000,
+          "source": {
+            "register": 3
+          },
+          "simulation": {
+            "kind": "constant",
+            "value": "AUTO"
+          }
+        },
+        {
+          "pointId": "inletSO2",
+          "label": "入口SO₂",
+          "unit": "%",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 10.8,
+            "amplitude": 0.55,
+            "periodSeconds": 1200,
+            "phase": 0.5
+          }
+        },
+        {
+          "pointId": "acidConcentration",
+          "label": "成品酸浓度",
+          "unit": "%",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 98.35,
+            "amplitude": 0.09,
+            "periodSeconds": 1600,
+            "phase": 1
+          }
+        },
+        {
+          "pointId": "conversionTemperature",
+          "label": "转化器温度",
+          "unit": "℃",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 432,
+            "amplitude": 3.5,
+            "periodSeconds": 1100,
+            "phase": 0.4
+          }
+        },
+        {
+          "pointId": "tailSO2",
+          "label": "尾气SO₂",
+          "unit": "mg/Nm³",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 68,
+            "amplitude": 7,
+            "periodSeconds": 1300,
+            "phase": 1
+          }
+        },
+        {
+          "pointId": "filterPressure",
+          "label": "除尘压差",
+          "unit": "kPa",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 1.68,
+            "amplitude": 0.12,
+            "periodSeconds": 1000,
+            "phase": 0.7,
+            "warningHigh": 1.74,
+            "warningDeadband": 0.04
+          }
+        },
+        {
+          "pointId": "acidRate",
+          "label": "产酸速率",
+          "unit": "t/h",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 112,
+            "amplitude": 3,
+            "periodSeconds": 900,
+            "phase": 0.2
+          }
+        }
+      ],
+      "metadata": {
+        "simulationCommunication": {
+          "latencyMsP50": 6,
+          "latencyMsP95": 10,
+          "latencyMsP99": 14,
+          "jitterMs": 2,
+          "messageRatePerMin": 20
+        }
+      },
+      "commands": {
+        "device.selfTest": {
+          "displayName": "设备自检",
+          "requiredPermission": "command.issue",
+          "executionClass": "NORMAL",
+          "reasonRequired": false,
+          "parameterSchema": {
+            "type": "none",
+            "required": false
+          },
+          "mapping": {
+            "simulation": "selfTest"
+          }
+        }
+      }
+    },
+    {
+      "id": "safety-02",
+      "name": "1号阳极炉",
+      "scenario": "hazardous_gas",
+      "location": "精炼阳极炉区",
+      "osNode": "Edge-02",
+      "adapter": "simulated",
+      "connection": {
+        "interfaceType": "RS-485",
+        "protocol": "Modbus RTU",
+        "endpoint": "SIMULATED://safety-02",
+        "driver": "simulated.modbus",
+        "parameters": {
+          "baud": 9600,
+          "address": 3
+        }
+      },
+      "tags": [
+        "safety",
+        "gas",
+        "copper-process"
+      ],
+      "points": [
+        {
+          "pointId": "level",
+          "label": "气体浓度",
+          "unit": "ppm",
+          "valueType": "number",
+          "samplePeriodMs": 500,
+          "source": {
+            "register": 10
+          },
+          "simulation": {
+            "kind": "sine",
+            "base": 28.4,
+            "amplitude": 0.9,
+            "periodSteps": 10
+          },
+          "limits": {
+            "warningHigh": 25,
+            "alarmHigh": 50,
+            "deadband": 2
+          }
+        },
+        {
+          "pointId": "fanRunning",
+          "label": "应急通风",
+          "valueType": "boolean",
+          "samplePeriodMs": 500,
+          "source": {
+            "coil": 20
+          },
+          "simulation": {
+            "kind": "constant",
+            "value": false
+          }
+        },
+        {
+          "pointId": "bathTemperature",
+          "label": "铜液温度",
+          "unit": "℃",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 1180,
+            "amplitude": 7,
+            "periodSeconds": 1100,
+            "phase": 1
+          }
+        },
+        {
+          "pointId": "oxygenContent",
+          "label": "铜液含氧",
+          "unit": "%",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 0.12,
+            "amplitude": 0.015,
+            "periodSeconds": 1600,
+            "phase": 1
+          }
+        },
+        {
+          "pointId": "gasFlow",
+          "label": "燃气流量",
+          "unit": "Nm³/h",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 620,
+            "amplitude": 18,
+            "periodSeconds": 1100,
+            "phase": 1
+          }
+        },
+        {
+          "pointId": "furnacePressure",
+          "label": "炉膛负压",
+          "unit": "Pa",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": -32,
+            "amplitude": 3,
+            "periodSeconds": 900,
+            "phase": 0.7
+          }
+        },
+        {
+          "pointId": "copperPurity",
+          "label": "铜液纯度",
+          "unit": "%",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 99.35,
+            "amplitude": 0.04,
+            "periodSeconds": 1800,
+            "phase": 2
+          }
+        },
+        {
+          "pointId": "holdingMass",
+          "label": "在炉铜量",
+          "unit": "t",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 248,
+            "amplitude": 3,
+            "periodSeconds": 2400,
+            "phase": 0.1
+          }
+        }
+      ],
+      "metadata": {
+        "simulationCommunication": {
+          "latencyMsP50": 7,
+          "latencyMsP95": 12,
+          "latencyMsP99": 16,
+          "jitterMs": 3,
+          "messageRatePerMin": 120
+        }
+      },
+      "commands": {
+        "device.selfTest": {
+          "displayName": "设备自检",
+          "requiredPermission": "command.issue",
+          "executionClass": "NORMAL",
+          "reasonRequired": false,
+          "parameterSchema": {
+            "type": "none",
+            "required": false
+          },
+          "mapping": {
+            "simulation": "selfTest"
+          }
+        }
+      }
+    },
+    {
+      "id": "count-02",
+      "name": "阳极板称重转运线",
+      "scenario": "goods_counting",
+      "location": "阳极浇铸成品区",
+      "osNode": "Edge-03",
+      "adapter": "simulated",
+      "connection": {
+        "interfaceType": "DI/HSC",
+        "protocol": "High Speed Counter",
+        "endpoint": "SIMULATED://count-02",
+        "driver": "simulated.counter",
+        "parameters": {
+          "channel": 2
+        }
+      },
+      "tags": [
+        "count",
+        "photoelectric",
+        "copper-process"
+      ],
+      "points": [
+        {
+          "pointId": "totalCount",
+          "label": "累计计数",
+          "unit": "件",
+          "valueType": "integer",
+          "samplePeriodMs": 1000,
+          "source": {
+            "counter": 2
+          },
+          "simulation": {
+            "kind": "counter",
+            "base": 860,
+            "step": 2
+          }
+        },
+        {
+          "pointId": "rate",
+          "label": "当前速率",
+          "unit": "件/min",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "source": {
+            "register": 21
+          },
+          "simulation": {
+            "kind": "sine",
+            "base": 42,
+            "amplitude": 5,
+            "periodSteps": 8
+          }
+        },
+        {
+          "pointId": "target",
+          "label": "班次目标",
+          "unit": "件",
+          "valueType": "number",
+          "samplePeriodMs": 5000,
+          "source": {
+            "register": 22
+          },
+          "simulation": {
+            "kind": "constant",
+            "value": 22000
+          }
+        },
+        {
+          "pointId": "transferRate",
+          "label": "转运速率",
+          "unit": "t/h",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 34.6,
+            "amplitude": 1,
+            "periodSeconds": 900,
+            "phase": 0.1
+          }
+        },
+        {
+          "pointId": "bufferMass",
+          "label": "成品缓冲量",
+          "unit": "t",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 18.5,
+            "amplitude": 2,
+            "periodSeconds": 1500,
+            "phase": 0.2
+          }
+        },
+        {
+          "pointId": "averageWeight",
+          "label": "平均板重",
+          "unit": "kg",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "simulation": {
+            "kind": "process",
+            "base": 375,
+            "amplitude": 1.2,
+            "periodSeconds": 1200,
+            "phase": 1
+          }
+        }
+      ],
+      "metadata": {
+        "simulationCommunication": {
+          "latencyMsP50": 5,
+          "latencyMsP95": 9,
+          "latencyMsP99": 12,
+          "jitterMs": 2,
+          "messageRatePerMin": 40
+        }
+      },
+      "commands": {
+        "device.selfTest": {
+          "displayName": "设备自检",
+          "requiredPermission": "command.issue",
+          "executionClass": "NORMAL",
+          "reasonRequired": false,
+          "parameterSchema": {
+            "type": "none",
+            "required": false
+          },
+          "mapping": {
+            "simulation": "selfTest"
+          }
+        }
+      }
+    }
+  ]
+}

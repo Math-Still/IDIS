@@ -1,0 +1,4 @@
+export type PlatformErrorCode='PLATFORM_UNSUPPORTED'|'CAPABILITY_UNSUPPORTED'|'PERMISSION_DENIED'|'NETWORK_UNAVAILABLE'|'BRIDGE_TIMEOUT'|'BRIDGE_PROTOCOL_ERROR'|'NATIVE_ERROR'|'RESOURCE_LOAD_ERROR'|'VERSION_INCOMPATIBLE'|'UNKNOWN';
+export interface PlatformErrorPayload{code:PlatformErrorCode;message:string;details?:unknown;recoverable:boolean;}
+export class PlatformError extends Error{readonly code:PlatformErrorCode;readonly details?:unknown;readonly recoverable:boolean;constructor(p:PlatformErrorPayload){super(p.message);this.name='PlatformError';this.code=p.code;this.details=p.details;this.recoverable=p.recoverable;}toPayload():PlatformErrorPayload{return{code:this.code,message:this.message,details:this.details,recoverable:this.recoverable};}}
+export const unsupportedCapability=(capability:string)=>new PlatformError({code:'CAPABILITY_UNSUPPORTED',message:`Capability is not available: ${capability}`,details:{capability},recoverable:true});

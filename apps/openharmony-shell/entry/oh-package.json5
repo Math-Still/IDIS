@@ -1,0 +1,9 @@
+{
+  "name": "entry",
+  "version": "0.4.2",
+  "description": "Entry module for smart factory shell",
+  "main": "",
+  "author": "",
+  "license": "",
+  "dependencies": {}
+}

@@ -1,0 +1,4 @@
+<script setup lang="ts">import{compatibilityTargets}from'../compatibility';
+function stateLabel(value:string){return /verified/i.test(value)?'已适配':/ready|supported|compatible/i.test(value)?'可接入':'待确认';}
+</script>
+<template><section class="operator-page"><p class="eyebrow">系统适配</p><h1>国产系统适配</h1><p class="lead">查看各目标系统的运行方式、组件支持和接入状态。</p><div class="compat-grid"><article v-for="t in compatibilityTargets" :key="t.key" class="panel"><div class="card-head"><div><h2>{{t.name}}</h2><p>{{t.host}}</p></div><span class="status-pill tone-info">{{stateLabel(t.verification)}}</span></div><dl class="kv-list"><div><dt>Web 界面</dt><dd>{{t.webCore}}</dd></div><div><dt>桌面外壳</dt><dd>{{t.shell}}</dd></div><div><dt>系统接口</dt><dd>{{t.native}}</dd></div></dl><h3>接入项目</h3><ul><li v-for="e in t.requiredEvidence" :key="e">{{e}}</li></ul></article></div></section></template>

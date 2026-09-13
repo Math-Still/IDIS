@@ -1,0 +1,30 @@
+name: smart-factory-final-local
+services:
+  smart-factory:
+    build:
+      context: ../..
+      dockerfile: dev/docker/Dockerfile
+    image: smart-factory-final-local:20260913-v18
+    container_name: smart-factory-final-local
+    init: true
+    ports:
+      - "127.0.0.1:8001:8000"
+    environment:
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      DEEPSEEK_BASE_URL: ${DEEPSEEK_BASE_URL:-https://api.deepseek.com}
+      DEEPSEEK_MODEL: ${DEEPSEEK_MODEL:-deepseek-chat}
+    volumes:
+      - ./runtime-config.local.json:/opt/smart-factory/web/runtime-config.json:ro
+      - smart-factory-final-data:/opt/smart-factory/data
+      - ./backend.local.conf:/opt/smart-factory/backend.conf:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8000/v1/benchmark/ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 24
+      start_period: 10s
+volumes:
+  smart-factory-final-data:
+    name: smart-factory-final-local-data
+

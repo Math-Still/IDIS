@@ -1,0 +1,48 @@
+{
+  "schemaVersion": "1.1",
+  "site": "REPLACE_WITH_FACTORY_SITE",
+  "devices": [
+    {
+      "id": "REPLACE_DEVICE_ID",
+      "name": "REPLACE_DEVICE_NAME",
+      "scenario": "temperature_humidity",
+      "location": "REPLACE_AREA",
+      "osNode": "REPLACE_OS_NODE",
+      "adapter": "target",
+      "connection": {
+        "interfaceType": "REPLACE_INTERFACE",
+        "protocol": "REPLACE_PROTOCOL",
+        "endpoint": "REPLACE_ENDPOINT",
+        "driver": "REPLACE_DRIVER_ID",
+        "parameters": {}
+      },
+      "tags": [],
+      "points": [
+        {
+          "pointId": "REPLACE_POINT_ID",
+          "label": "REPLACE_POINT_LABEL",
+          "unit": "",
+          "valueType": "number",
+          "samplePeriodMs": 1000,
+          "source": {}
+        }
+      ],
+      "commands": {
+        "device.selfTest": {
+          "displayName": "设备自检",
+          "requiredPermission": "command.issue",
+          "executionClass": "NORMAL",
+          "reasonRequired": false,
+          "parameterSchema": {
+            "type": "none",
+            "required": false
+          },
+          "mapping": {
+            "REPLACE_WITH_TARGET_MAPPING": true
+          }
+        }
+      },
+      "metadata": {}
+    }
+  ]
+}

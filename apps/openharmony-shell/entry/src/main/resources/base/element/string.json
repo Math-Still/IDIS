@@ -1,0 +1,24 @@
+{
+  "string": [
+    {
+      "name": "app_name",
+      "value": "智慧工厂平台"
+    },
+    {
+      "name": "module_desc",
+      "value": "国产操作系统智慧工厂跨平台前端壳"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "智慧工厂平台入口"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "智慧工厂平台"
+    },
+    {
+      "name": "distributed_permission",
+      "value": "用于发现并监听已授权的分布式设备状态"
+    }
+  ]
+}

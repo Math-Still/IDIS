@@ -1,0 +1,42 @@
+{
+  "apiBaseUrl": "https://factory-gateway.example.invalid",
+  "wsBaseUrl": "wss://factory-gateway.example.invalid/ws",
+  "environment": "factory",
+  "siteId": "factory-site-01",
+  "backendApiVersion": "v1",
+  "dataMode": "backend",
+  "realtime": {
+    "staleAfterMs": 10000,
+    "badAfterMs": 60000,
+    "reconnectBaseMs": 1000,
+    "reconnectMaxMs": 30000,
+    "reconnectJitterRatio": 0.2,
+    "commandTimeoutMs": 15000,
+    "stableConnectionMs": 10000,
+    "messageSilenceReconnectMs": 45000
+  },
+  "deployment": {
+    "platformTarget": "domestic-os-native",
+    "platformLabel": "REPLACE_WITH_TARGET_DOMESTIC_OS",
+    "hardwareProfile": "REPLACE_WITH_CPU_BOARD_MEMORY",
+    "deploymentId": "factory-site-01"
+  },
+  "benchmark": {
+    "enabled": false,
+    "pingPath": "benchmark/ping",
+    "iterations": 30,
+    "warmupIterations": 3,
+    "intervalMs": 100,
+    "requestTimeoutMs": 5000
+  },
+  "faultInjection": {
+    "enabled": false,
+    "allowInFactory": false
+  },
+  "transport": {
+    "httpRequestTimeoutMs": 8000,
+    "maxJsonResponseBytes": 2097152,
+    "maxRealtimeMessageBytes": 524288,
+    "allowPlaintextForIsolatedLab": false
+  }
+}

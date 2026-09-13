@@ -1,0 +1,4 @@
+{
+  "prepared": false,
+  "message": "BUILD NOT PREPARED: run npm run build:shell-web with a validated runtime config before HAP build."
+}

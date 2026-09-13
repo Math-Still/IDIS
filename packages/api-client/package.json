@@ -1,0 +1,13 @@
+{
+  "name": "@smart-factory/api-client",
+  "version": "1.8.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@smart-factory/contracts": "*",
+    "@smart-factory/domain": "*"
+  }
+}

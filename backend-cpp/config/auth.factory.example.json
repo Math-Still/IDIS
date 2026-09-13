@@ -1,0 +1,12 @@
+{
+  "schema": "smart-factory-auth-users/v1",
+  "users": [
+    {
+      "id": "REPLACE_WITH_USER_ID",
+      "displayName": "REPLACE_WITH_DISPLAY_NAME",
+      "role": "ADMINISTRATOR",
+      "tokenSha256": "REPLACE_WITH_64_HEX_SHA256_OF_RANDOM_TOKEN",
+      "enabled": true
+    }
+  ]
+}

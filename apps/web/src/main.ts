@@ -1,0 +1,2 @@
+import{createApp}from'vue';import{createPinia}from'pinia';import App from'./App.vue';import{router}from'./router';import{useSiteStore}from'./stores/site';import'./styles.css';import'./color-theme.css';import'./dashboard-theme.css';import'./product-final.css';import'./screen-refined.css';const app=createApp(App);const pinia=createPinia();app.use(pinia);app.use(router);const site=useSiteStore(pinia);void site.initialize();app.mount('#app');window.addEventListener('beforeunload',()=>site.shutdown());
+import './screen-scale.css';

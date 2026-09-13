@@ -1,0 +1,9 @@
+{
+  "name": "@smart-factory/shared",
+  "version": "1.8.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}

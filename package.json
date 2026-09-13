@@ -1,0 +1,33 @@
+{
+  "name": "smart-factory-hybrid-runtime-platform",
+  "version": "1.8.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w @smart-factory/web",
+    "build": "npm run build -w @smart-factory/web",
+    "typecheck": "npm run typecheck -w @smart-factory/web",
+    "test": "vitest run",
+    "check": "npm run typecheck && npm run test && npm run build",
+    "docker:build": "docker build -f dev/docker/Dockerfile -t idis:1.8.0 .",
+    "docker:up": "docker compose -f deploy/local/docker-compose.yml up -d --build",
+    "docker:down": "docker compose -f deploy/local/docker-compose.yml down",
+    "docker:logs": "docker compose -f deploy/local/docker-compose.yml logs -f --tail=200"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "6.0.1",
+    "typescript": "5.9.2",
+    "vite": "7.3.6",
+    "vitest": "3.2.7",
+    "vue-tsc": "3.0.6",
+    "jsdom": "26.1.0"
+  },
+  "engines": {
+    "node": "^20.19.0 || ^22.12.0",
+    "npm": ">=10"
+  },
+  "packageManager": "npm@10.9.2"
+}

@@ -1,0 +1,52 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@smart-factory/contracts": [
+        "packages/contracts/src/index.ts"
+      ],
+      "@smart-factory/shared": [
+        "packages/shared/src/index.ts"
+      ],
+      "@smart-factory/platform": [
+        "packages/platform/src/index.ts"
+      ],
+      "@smart-factory/domain": [
+        "packages/domain/src/index.ts"
+      ],
+      "@smart-factory/api-client": [
+        "packages/api-client/src/index.ts"
+      ],
+      "@smart-factory/benchmark": [
+        "packages/benchmark/src/index.ts"
+      ]
+    }
+  },
+  "include": [
+    "packages/contracts/src/**/*.ts",
+    "packages/shared/src/**/*.ts",
+    "packages/platform/src/**/*.ts",
+    "packages/domain/src/**/*.ts",
+    "packages/api-client/src/**/*.ts",
+    "packages/benchmark/src/**/*.ts",
+    "apps/web/src/mock/**/*.ts",
+    "apps/web/src/runtime-config.ts",
+    "apps/web/src/services/**/*.ts",
+    "apps/web/src/compatibility.ts",
+    "types/static-vue-stubs.d.ts",
+    "types/static-vitest-stubs.d.ts",
+    "apps/web/src/stores/**/*.ts",
+    "apps/web/src/composables/**/*.ts",
+    "apps/web/src/platform.ts",
+    "apps/web/src/utils/**/*.ts",
+    "apps/web/src/trend-types.ts",
+    "apps/web/src/components/digital-twin/**/*.ts"
+  ]
+}

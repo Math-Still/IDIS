@@ -1,0 +1,445 @@
+/* 1.8.0 presentation screen refinement.
+   Goal: royal-blue industrial exhibition wall with large, readable typography.
+   This file intentionally loads after product-final.css and only overrides /screen. */
+
+:root{
+  --screen-v18-bg-0:#06143f;
+  --screen-v18-bg-1:#081c55;
+  --screen-v18-bg-2:#0b2467;
+  --screen-v18-panel:#0a245f;
+  --screen-v18-panel-2:#0d2d73;
+  --screen-v18-panel-3:#10377f;
+  --screen-v18-line:rgba(119,174,255,.22);
+  --screen-v18-line-strong:rgba(119,174,255,.38);
+  --screen-v18-text:#f4f8ff;
+  --screen-v18-sub:#c2d5f4;
+  --screen-v18-muted:#87a9d8;
+  --screen-v18-blue:#62b3ff;
+  --screen-v18-cyan:#53d7e8;
+  --screen-v18-copper:#cc8b4a;
+  --screen-v18-normal:#4bd58b;
+  --screen-v18-warning:#f2c34f;
+  --screen-v18-alarm:#ff626b;
+  --screen-v18-offline:#7890b5;
+  --screen-v18-shadow:0 12px 34px rgba(0,8,38,.24);
+}
+
+.twin-screen.twin-screen--executive{
+  min-height:0;
+  grid-template-rows:clamp(72px,7.7vh,88px) minmax(0,1fr) clamp(158px,17.2vh,196px) 26px;
+  background:
+    radial-gradient(ellipse at 50% 9%,rgba(72,131,229,.16),transparent 38%),
+    linear-gradient(180deg,var(--screen-v18-bg-2) 0%,var(--screen-v18-bg-1) 34%,var(--screen-v18-bg-0) 100%);
+  color:var(--screen-v18-text);
+  font-size:clamp(15px,1.45vh,18px);
+}
+.twin-screen.twin-screen--executive::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.012) 1px,transparent 1px);
+  background-size:80px 80px;
+  mask-image:linear-gradient(180deg,rgba(0,0,0,.45),transparent 68%);
+}
+.twin-screen.twin-screen--executive>*{position:relative;z-index:1}
+
+/* Header: stronger hierarchy, less tiny metadata. */
+.twin-screen--executive .twin-screen-header{
+  grid-template-columns:minmax(330px,1.05fr) minmax(620px,2.35fr) minmax(150px,.52fr) minmax(178px,.58fr);
+  gap:14px;padding:0 18px;
+  background:linear-gradient(180deg,rgba(12,40,106,.98),rgba(7,27,76,.98));
+  border-bottom:1px solid var(--screen-v18-line-strong);
+  box-shadow:0 6px 22px rgba(0,12,55,.18);
+}
+.twin-screen--executive .twin-screen-title{grid-template-columns:1fr;grid-template-rows:auto auto auto;align-content:center;row-gap:2px}
+.twin-screen--executive .twin-screen-title>span{font-size:clamp(12px,1.12vh,14px);color:#8fc7ff;letter-spacing:.12em;font-weight:600}
+.twin-screen--executive .twin-screen-title>strong{font-size:clamp(29px,3.15vh,36px);font-weight:720;letter-spacing:.015em;color:#fff;line-height:1.05;text-shadow:0 2px 12px rgba(0,0,0,.22)}
+.twin-screen--executive .twin-screen-title>small{grid-column:auto;margin-top:3px;font-size:clamp(12px,1.15vh,14px);color:#8eadd8}
+.twin-screen--executive .twin-screen-context{
+  height:clamp(50px,5.4vh,60px);border:1px solid rgba(119,174,255,.16);border-radius:6px;overflow:hidden;
+  background:rgba(7,28,79,.42);
+}
+.twin-screen--executive .twin-screen-context>div{display:flex;flex-direction:column;justify-content:center;padding:4px 16px;border-right:1px solid rgba(119,174,255,.14)}
+.twin-screen--executive .twin-screen-context span{font-size:clamp(12px,1.18vh,14px);color:#83a7d8}
+.twin-screen--executive .twin-screen-context strong{font-size:clamp(18px,1.95vh,23px);font-weight:700;color:#f7faff;margin-top:3px}
+.twin-screen--executive .twin-screen-context strong[data-state] i{width:8px;height:8px;background:var(--screen-v18-normal)}
+.twin-screen--executive .twin-screen-context strong[data-state=attention] i{background:var(--screen-v18-warning)}
+.twin-screen--executive .twin-screen-context strong[data-state=alarm] i{background:var(--screen-v18-alarm)}
+.twin-screen--executive .twin-screen-context strong[data-alert=true]{color:#ff7d85}
+.twin-screen--executive .twin-screen-clock>strong{font-size:clamp(23px,2.45vh,28px);font-weight:700;color:#fff}
+.twin-screen--executive .twin-screen-clock>span,.twin-screen--executive .twin-screen-clock>small{font-size:clamp(12px,1.12vh,14px);color:#92b0d8}
+.twin-screen--executive .twin-screen-actions{gap:8px}
+.twin-screen--executive .twin-screen-actions button,.twin-screen--executive .twin-screen-actions a{
+  height:clamp(38px,4.15vh,46px);font-size:clamp(13px,1.28vh,15px);font-weight:600;
+  color:#dceaff;border:1px solid rgba(117,176,255,.40);border-radius:5px;background:rgba(16,57,133,.70);
+}
+.twin-screen--executive .twin-screen-actions button:hover,.twin-screen--executive .twin-screen-actions a:hover{background:#174894;border-color:#75b8ff;color:#fff}
+
+/* Main canvas. Side panels are deliberately darker than the blue foundation. */
+.twin-screen-main--executive{
+  grid-template-columns:minmax(330px,19.5vw) minmax(0,1fr) minmax(410px,23vw);
+  gap:0;background:transparent;border-bottom:1px solid var(--screen-v18-line);
+}
+.twin-screen--executive .twin-side{
+  background:linear-gradient(180deg,rgba(8,31,86,.92),rgba(5,24,67,.94));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.015);
+}
+.twin-screen--executive .twin-side-left{border-right:1px solid var(--screen-v18-line-strong)}
+.twin-screen--executive .twin-side-right{border-left:1px solid var(--screen-v18-line-strong)}
+.twin-screen--executive .twin-info-section{padding:0 14px;border-bottom:1px solid var(--screen-v18-line);background:transparent}
+.twin-screen--executive .twin-info-section>header{height:clamp(44px,4.8vh,54px);border-bottom:1px solid rgba(119,174,255,.16)}
+.twin-screen--executive .twin-info-section>header>span{font-size:clamp(18px,1.85vh,21px);font-weight:700;color:#f2f7ff;padding-left:12px}
+.twin-screen--executive .twin-info-section>header>span::before{top:5px;width:3px;height:17px;border-radius:2px;background:var(--screen-v18-copper)}
+.twin-screen--executive .twin-info-section>header>b{font-size:clamp(11px,1.0vh,13px);letter-spacing:.08em;color:#6f96cb}
+
+/* Left rail. */
+.executive-production{flex:0 0 clamp(220px,24.5vh,278px)}
+.executive-production-body{height:calc(100% - clamp(44px,4.8vh,54px));grid-template-columns:minmax(132px,.9fr) minmax(0,1.1fr)}
+.executive-production-body>.industrial-semi-gauge{border-right:1px solid var(--screen-v18-line);padding:10px 8px 7px}
+.executive-production-body>.industrial-semi-gauge .industrial-gauge-title{font-size:clamp(14px,1.35vh,16px);height:28px}
+.executive-production-body>.industrial-semi-gauge svg{top:38px;height:112px}
+.executive-production-body>.industrial-semi-gauge .industrial-gauge-reading{top:93px}
+.executive-production-body>.industrial-semi-gauge .industrial-gauge-reading strong{font-size:clamp(29px,3.0vh,36px)}
+.executive-production-body>.industrial-semi-gauge .industrial-gauge-reading em{font-size:13px}
+.executive-production-body>.industrial-semi-gauge .industrial-gauge-foot{font-size:12px;bottom:11px}
+.executive-kpi-stack>div:first-child{padding:16px 14px;border-bottom:1px solid var(--screen-v18-line);background:rgba(19,62,139,.16)}
+.executive-kpi-stack>div:first-child>span{font-size:clamp(14px,1.35vh,16px);color:#99b7df}
+.executive-kpi-stack>div:first-child>strong{font-size:clamp(34px,3.55vh,42px);font-weight:720;color:#fff;margin-top:8px}
+.executive-kpi-stack>div:first-child small{font-size:14px;color:#91acd2}
+.executive-production-context{display:block!important;margin:7px 0 0!important;font-size:12px!important;color:#7698c8!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.executive-kpi-stack>.industrial-linear-gauge{padding:16px 14px}
+
+.executive-process-overview{flex:0 0 clamp(225px,24vh,270px)}
+.executive-process-rail{height:calc(100% - clamp(44px,4.8vh,54px))}
+.executive-process-rail button{grid-template-columns:10px minmax(82px,.9fr) minmax(0,1fr);gap:10px;padding:0 10px;border-bottom:1px solid rgba(119,174,255,.10)}
+.executive-process-rail button:hover,.executive-process-rail button.is-active{background:rgba(40,105,204,.18);box-shadow:inset 3px 0 0 var(--screen-v18-blue)}
+.executive-process-rail button>i{width:8px;height:8px;background:var(--screen-v18-normal)}
+.executive-process-rail button[data-status=warning]>i{background:var(--screen-v18-warning)}
+.executive-process-rail button[data-status=alarm]>i{background:var(--screen-v18-alarm)}
+.executive-process-rail button[data-status=offline]>i{background:var(--screen-v18-offline)}
+.executive-process-rail button>span{font-size:clamp(15px,1.42vh,17px);font-weight:600;color:#e2edff}
+.executive-process-rail button>b{font-size:clamp(13px,1.24vh,15px);color:#8da9d0}
+
+.executive-key-equipment{flex:1 1 auto;min-height:160px}
+.executive-key-equipment .key-equipment-list{height:calc(100% - clamp(44px,4.8vh,54px))}
+.executive-key-equipment .key-equipment-list a{min-height:0;height:33.333%;padding:8px 10px;border-bottom:1px solid rgba(119,174,255,.10)}
+.executive-key-equipment .key-equipment-list a:hover{background:rgba(40,105,204,.16)}
+.executive-key-equipment .key-equipment-list strong{font-size:clamp(14px,1.36vh,16px);color:#edf5ff}
+.executive-key-equipment .key-equipment-list span{font-size:clamp(12px,1.14vh,14px);color:#7f9fcf;margin-top:4px}
+.executive-key-equipment .key-equipment-list>a>b{font-size:clamp(13px,1.18vh,14px);color:#a9c1e3}
+
+/* Factory is the primary visual. No thick card frame. */
+.twin-center-stage--hero{background:#071a4d;box-shadow:var(--screen-v18-shadow)}
+.twin-center-stage--hero::before{
+  background:linear-gradient(180deg,rgba(4,17,55,.56) 0%,rgba(4,17,55,.08) 18%,transparent 62%,rgba(3,13,42,.22) 100%);z-index:2
+}
+.twin-center-stage--hero .twin-center-heading{z-index:10;top:18px;left:22px;right:22px}
+.twin-center-stage--hero .twin-center-heading>div span{font-size:clamp(12px,1.05vh,13px);color:#8eb6ea;letter-spacing:.12em}
+.twin-center-stage--hero .twin-center-heading>div strong{font-size:clamp(22px,2.25vh,27px);font-weight:720;color:#fff;margin-top:4px;text-shadow:0 2px 10px rgba(0,0,0,.38)}
+.twin-center-stage--hero .twin-center-heading>small{font-size:clamp(12px,1.1vh,14px);color:#9fbae0;background:rgba(5,27,76,.55);padding:6px 9px;border-radius:4px}
+.copper-twin-image{background:#071a4d}
+.copper-twin-canvas{height:100%;width:100%;max-height:none;aspect-ratio:auto;background:#071a4d;box-shadow:none}
+.copper-twin-picture{position:absolute;inset:0;display:block}
+.copper-twin-hero{width:100%;height:100%;object-fit:cover;object-position:center;filter:saturate(.86) contrast(1.08) brightness(.83) hue-rotate(-3deg)}
+.copper-twin-image-shade{background:radial-gradient(circle at 50% 49%,transparent 45%,rgba(5,19,58,.14) 72%,rgba(3,13,42,.38) 100%),linear-gradient(180deg,rgba(6,25,70,.10),transparent 28%,transparent 72%,rgba(4,15,46,.22))}
+.copper-twin-hotspot .hotspot-outline{inset:4px;border-radius:5px}
+.copper-twin-hotspot:hover .hotspot-outline,.copper-twin-hotspot.is-hover .hotspot-outline{border-color:rgba(83,215,232,.56);background:rgba(83,215,232,.045);box-shadow:inset 0 0 34px rgba(83,215,232,.06)}
+.copper-twin-hotspot.is-active .hotspot-outline{border-color:rgba(204,139,74,.78);background:rgba(204,139,74,.045);box-shadow:inset 0 0 38px rgba(204,139,74,.08)}
+.copper-zone-label{
+  min-width:128px;padding:8px 11px;grid-template-columns:9px auto;gap:2px 7px;
+  border:1px solid rgba(112,177,255,.52);border-radius:5px;
+  background:linear-gradient(180deg,rgba(10,45,116,.93),rgba(7,33,92,.94));
+  box-shadow:0 5px 16px rgba(0,11,48,.30);backdrop-filter:blur(3px)
+}
+.copper-zone-label>i{width:8px;height:8px;background:var(--screen-v18-normal)}
+.copper-zone-label>span{font-size:clamp(13px,1.25vh,15px);font-weight:750;color:#f7faff}
+.copper-zone-label>b{font-size:clamp(10px,.95vh,12px);color:#9ebee8}
+.copper-zone-label[data-status=warning]>i{background:var(--screen-v18-warning)}
+.copper-zone-label[data-status=alarm]>i{background:var(--screen-v18-alarm)}
+.copper-zone-label[data-status=offline]>i{background:var(--screen-v18-offline)}
+.copper-zone-label.is-active{border-color:var(--screen-v18-copper);background:linear-gradient(180deg,rgba(25,61,129,.97),rgba(11,40,99,.97));box-shadow:0 0 0 1px rgba(204,139,74,.18),0 5px 18px rgba(0,11,48,.35)}
+.copper-twin-status-dots i{width:10px;height:10px;background:var(--screen-v18-normal);border:2px solid #071b50;box-shadow:0 0 0 2px rgba(75,213,139,.18)}
+.copper-twin-status-dots i[data-status=warning]{background:var(--screen-v18-warning)}
+.copper-twin-status-dots i[data-status=alarm]{background:var(--screen-v18-alarm)}
+.copper-twin-status-dots i[data-status=offline]{background:var(--screen-v18-offline)}
+.copper-twin-status-dots i.is-active{width:13px;height:13px;box-shadow:0 0 0 4px rgba(204,139,74,.24)}
+.twin-focus-summary--image{left:20px;bottom:18px;width:min(300px,31%);padding:12px 14px;border:1px solid rgba(112,177,255,.32);border-left:3px solid var(--screen-v18-copper);border-radius:5px;background:rgba(5,27,76,.84);backdrop-filter:blur(6px)}
+.twin-focus-summary--image>span{font-size:clamp(13px,1.18vh,14px);color:#9cb9e1}
+.twin-focus-summary--image>strong{font-size:clamp(20px,2.0vh,24px);color:#fff;margin-top:3px}
+.twin-focus-summary--image>small,.twin-focus-summary--image>b{font-size:clamp(11px,1.0vh,13px);color:#8faed7}
+.twin-legend--image{right:18px;bottom:18px;padding:7px 10px;gap:14px;border:1px solid rgba(112,177,255,.22);border-radius:4px;background:rgba(5,27,76,.75);font-size:clamp(11px,1.0vh,13px);color:#a7c0e2}
+
+/* Right rail: two major dials + four linear metrics. No dead blue rectangle. */
+.executive-process-metrics{flex:1 1 auto;min-height:0}
+.executive-gauge-layout{height:calc(100% - clamp(44px,4.8vh,54px));display:grid;grid-template-rows:minmax(158px,1.05fr) minmax(126px,.95fr);overflow:hidden}
+.executive-semi-gauges{height:auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:1fr;border-bottom:1px solid var(--screen-v18-line)}
+.executive-semi-gauges>.industrial-semi-gauge{height:100%;min-height:0;padding:10px 9px 8px;border-right:1px solid var(--screen-v18-line);border-bottom:0}
+.executive-semi-gauges>.industrial-semi-gauge:last-child{border-right:0}
+.executive-semi-gauges>.industrial-semi-gauge .industrial-gauge-title{height:27px;font-size:clamp(14px,1.35vh,16px)}
+.executive-semi-gauges>.industrial-semi-gauge svg{top:38px;height:106px}
+.executive-semi-gauges>.industrial-semi-gauge .industrial-gauge-reading{top:90px}
+.executive-semi-gauges>.industrial-semi-gauge .industrial-gauge-reading strong{font-size:clamp(28px,2.85vh,34px)}
+.executive-semi-gauges>.industrial-semi-gauge .industrial-gauge-reading em{font-size:12px}
+.executive-semi-gauges>.industrial-semi-gauge .industrial-gauge-foot{font-size:11px;bottom:8px}
+.executive-process-lines{min-height:0;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));overflow:hidden}
+.executive-process-lines>.industrial-linear-gauge{min-height:0;padding:10px 12px;border-right:1px solid var(--screen-v18-line);border-bottom:1px solid var(--screen-v18-line)}
+.executive-process-lines>.industrial-linear-gauge:nth-child(2n){border-right:0}.executive-process-lines>.industrial-linear-gauge:nth-last-child(-n+2){border-bottom:0}
+.process-gauge-empty{font-size:15px;color:#8facd4}
+
+.executive-safety-monitor{flex:0 0 clamp(112px,12.3vh,138px)}
+.executive-safety-grid{height:calc(100% - clamp(44px,4.8vh,54px));background:rgba(18,59,132,.12)}
+.executive-safety-grid>div{border-right:1px solid var(--screen-v18-line)}
+.executive-safety-grid span{font-size:clamp(13px,1.2vh,15px);color:#9bb8e0}
+.executive-safety-grid strong{font-size:clamp(27px,2.75vh,33px);font-weight:720;color:#fff}
+.executive-safety-grid strong[data-alert=true]{color:var(--screen-v18-alarm)}
+.executive-safety-grid strong[data-warning=true]{color:var(--screen-v18-warning)}
+
+.executive-alarm-panel{flex:0 0 clamp(142px,15.5vh,176px)}
+.executive-alarm-panel .twin-alarm-list{height:calc(100% - clamp(44px,4.8vh,54px))}
+.executive-alarm-panel .twin-alarm-list article{height:50%;padding:8px 5px;grid-template-columns:5px minmax(0,1fr) auto;gap:8px}
+.executive-alarm-panel .twin-alarm-list article>i{height:34px}
+.executive-alarm-panel .twin-alarm-list strong{font-size:clamp(14px,1.35vh,16px);color:#eef5ff}
+.executive-alarm-panel .twin-alarm-list span,.executive-alarm-panel .twin-alarm-list time{font-size:clamp(11px,1.02vh,13px);color:#86a5cf}
+.executive-control-panel{flex:0 0 clamp(120px,13.2vh,150px);padding:10px 13px 12px;border-top:1px solid rgba(255,98,107,.32);background:linear-gradient(180deg,rgba(10,39,96,.90),rgba(8,31,78,.94))}
+.executive-control-panel>header span{font-size:12px;color:#8ca9d1}.executive-control-panel>header strong,.executive-control-panel>header>b{font-size:13px;color:#e8f1ff}
+.executive-control-panel .twin-control-buttons{gap:7px;margin-top:10px}
+.executive-control-panel .twin-control-buttons button{height:clamp(38px,4.2vh,46px);font-size:clamp(12px,1.15vh,14px);border-radius:4px}
+.executive-control-panel .twin-control-buttons .start{border-color:rgba(75,213,139,.52);background:rgba(75,213,139,.09);color:#83e9b5}
+.executive-control-panel .twin-control-buttons .stop{border-color:rgba(242,195,79,.52);background:rgba(242,195,79,.08);color:#f6d77d}
+.executive-control-panel .twin-control-buttons .emergency{border-color:#ff7b82;background:#b93b4a;color:#fff}
+
+/* Gauge visual language. Cleaner, brighter values, much larger captions. */
+.twin-screen--executive .industrial-semi-gauge,.twin-screen--executive .industrial-linear-gauge{--gauge-accent:var(--screen-v18-blue);--gauge-soft:rgba(98,179,255,.14);color:#dfeaff;background:transparent}
+.twin-screen--executive .industrial-semi-gauge[data-tone=normal],.twin-screen--executive .industrial-linear-gauge[data-tone=normal]{--gauge-accent:var(--screen-v18-normal);--gauge-soft:rgba(75,213,139,.14)}
+.twin-screen--executive .industrial-semi-gauge[data-tone=warning],.twin-screen--executive .industrial-linear-gauge[data-tone=warning]{--gauge-accent:var(--screen-v18-warning);--gauge-soft:rgba(242,195,79,.15)}
+.twin-screen--executive .industrial-semi-gauge[data-tone=alarm],.twin-screen--executive .industrial-linear-gauge[data-tone=alarm]{--gauge-accent:var(--screen-v18-alarm);--gauge-soft:rgba(255,98,107,.15)}
+.twin-screen--executive .industrial-gauge-title{color:#b6cae8;font-weight:600}
+.twin-screen--executive .industrial-gauge-reading strong{color:#fff;font-weight:740;text-shadow:0 2px 8px rgba(0,0,0,.18)}
+.twin-screen--executive .industrial-gauge-reading em{color:#a8c0e2}
+.twin-screen--executive .gauge-scale-track{stroke:rgba(133,174,230,.20)}
+.twin-screen--executive .gauge-ticks line{stroke:rgba(180,207,244,.32)}
+.twin-screen--executive .gauge-pointer{stroke:#f6f9ff;stroke-width:1.6}
+.twin-screen--executive .gauge-hub{fill:#fff;stroke:rgba(8,30,84,.95);stroke-width:2}
+.twin-screen--executive .gauge-min,.twin-screen--executive .gauge-max{fill:#799bd0;font-size:9px}
+.twin-screen--executive .industrial-gauge-foot{color:#7899c9}.twin-screen--executive .industrial-gauge-foot b{color:#9bb7de}
+.twin-screen--executive .linear-gauge-head>span{font-size:clamp(14px,1.28vh,16px);color:#a9c1e3}
+.twin-screen--executive .linear-gauge-head strong{font-size:clamp(23px,2.25vh,28px);font-weight:720;color:#fff}
+.twin-screen--executive .linear-gauge-head em{font-size:12px;color:#9fb6d9}
+.twin-screen--executive .linear-gauge-track{height:8px;background:rgba(142,178,225,.16);border-radius:3px}
+.twin-screen--executive .linear-gauge-value{background:linear-gradient(90deg,#4c94ee,var(--gauge-accent));border-radius:3px}
+.twin-screen--executive .linear-gauge-marker{width:3px;background:#fff;box-shadow:0 0 0 1px rgba(5,24,70,.75)}
+.twin-screen--executive .linear-gauge-scale,.twin-screen--executive .linear-gauge-scale small{font-size:clamp(10px,.95vh,12px);color:#7191be}
+
+/* Bottom band: larger, less dense, clear group boundaries. */
+.twin-bottom-instruments--executive{
+  grid-template-columns:1.02fr 1.08fr 1.04fr 1.22fr;
+  background:linear-gradient(180deg,rgba(8,31,86,.98),rgba(5,23,64,.98));
+  border-top:1px solid var(--screen-v18-line-strong);
+}
+.twin-bottom-instruments--executive .executive-bottom-panel{background:transparent;border-right:1px solid var(--screen-v18-line)}
+.twin-bottom-instruments--executive .executive-bottom-panel>header{height:clamp(38px,4.05vh,46px);padding:0 13px;border-bottom:1px solid rgba(119,174,255,.15)}
+.twin-bottom-instruments--executive .executive-bottom-panel>header span{font-size:clamp(17px,1.65vh,19px);font-weight:700;color:#f0f6ff}
+.twin-bottom-instruments--executive .executive-bottom-panel>header b{font-size:11px;color:#688bc0}
+.executive-bottom-production,.executive-bottom-lines,.executive-bottom-gauges,.twin-bottom-instruments--executive .bottom-process-panel>.industrial-status-matrix{height:calc(100% - clamp(38px,4.05vh,46px))}
+.executive-bottom-production{grid-template-columns:minmax(135px,.8fr) minmax(0,1.2fr)}
+.executive-bottom-production>.industrial-semi-gauge svg{top:25px;height:82px}
+.executive-bottom-production>.industrial-semi-gauge .industrial-gauge-reading{top:66px}
+.executive-bottom-production>.industrial-semi-gauge .industrial-gauge-reading strong{font-size:clamp(20px,2vh,24px)}
+.executive-bottom-production>.industrial-semi-gauge .industrial-gauge-title{font-size:13px}
+.executive-bottom-production>div:last-child{padding:12px 14px;border-left:1px solid var(--screen-v18-line);background:rgba(18,59,132,.10)}
+.executive-bottom-production>div:last-child span{font-size:14px;color:#9cb7dc}
+.executive-bottom-production>div:last-child strong{font-size:clamp(31px,3.1vh,37px);font-weight:720;color:#fff;margin-top:8px}
+.executive-bottom-production>div:last-child small{font-size:13px;color:#8ca7cf}
+.executive-bottom-lines{grid-template-rows:1fr 1fr}
+.executive-bottom-lines>.industrial-linear-gauge{padding:10px 14px}.executive-bottom-lines>.industrial-linear-gauge:first-child{border-bottom:1px solid var(--screen-v18-line)}
+.executive-bottom-gauges{grid-template-columns:repeat(2,minmax(0,1fr))}
+.executive-bottom-gauges>.industrial-semi-gauge{border-right:1px solid var(--screen-v18-line)}
+.executive-bottom-gauges>.industrial-semi-gauge:last-child{border-right:0}
+.executive-bottom-gauges>.industrial-semi-gauge .industrial-gauge-title{font-size:13px}
+.executive-bottom-gauges>.industrial-semi-gauge svg{top:24px;height:80px}
+.executive-bottom-gauges>.industrial-semi-gauge .industrial-gauge-reading{top:64px}
+.executive-bottom-gauges>.industrial-semi-gauge .industrial-gauge-reading strong{font-size:clamp(20px,2.0vh,24px)}
+.twin-bottom-instruments--executive .bottom-process-panel>.industrial-status-matrix{padding:6px;gap:0;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr))}
+.twin-bottom-instruments--executive .status-matrix-item{padding:5px 9px;border-color:rgba(119,174,255,.10)}
+.twin-bottom-instruments--executive .status-matrix-item i{width:8px;height:8px}
+.twin-bottom-instruments--executive .status-matrix-item span,.twin-bottom-instruments--executive .status-matrix-item strong{font-size:clamp(12px,1.15vh,14px)}
+
+.twin-screen-footer--executive{padding:0 14px;gap:20px;background:#041033;color:#6f90be;font-size:11px}
+.twin-screen-footer--executive i[data-state=normal]{background:var(--screen-v18-normal)}
+
+/* 21:9: preserve three-column composition and grow the hero. */
+@media (min-aspect-ratio:19/9) and (max-aspect-ratio:27.99/9){
+  .twin-screen-main--executive{grid-template-columns:minmax(420px,20vw) minmax(0,60vw) minmax(440px,20vw)}
+  .twin-screen--executive .twin-screen-header{grid-template-columns:minmax(390px,1.05fr) minmax(780px,2.55fr) 190px 198px;padding:0 20px}
+  .twin-center-stage--hero .twin-center-heading>div strong{font-size:26px}
+  .copper-zone-label{min-width:134px}
+}
+
+/* 32:9 / panoramic LED layout. Wide space is spent on readable information,
+   not on shrinking type or stretching the plant image. */
+@media (min-width:3000px) and (min-aspect-ratio:28/9){
+  .twin-screen.twin-screen--executive{
+    grid-template-rows:88px minmax(0,1fr) 172px 28px;
+    font-size:19px;
+  }
+  .twin-screen--executive .twin-screen-header{grid-template-columns:minmax(520px,1.02fr) minmax(1350px,2.7fr) 240px 240px;gap:20px;padding:0 26px}
+  .twin-screen--executive .twin-screen-title>span{font-size:14px}.twin-screen--executive .twin-screen-title>strong{font-size:40px}.twin-screen--executive .twin-screen-title>small{font-size:14px}
+  .twin-screen--executive .twin-screen-context{height:60px}.twin-screen--executive .twin-screen-context>div{padding:5px 24px}.twin-screen--executive .twin-screen-context span{font-size:15px}.twin-screen--executive .twin-screen-context strong{font-size:24px}
+  .twin-screen--executive .twin-screen-clock>strong{font-size:30px}.twin-screen--executive .twin-screen-clock>span,.twin-screen--executive .twin-screen-clock>small{font-size:14px}.twin-screen--executive .twin-screen-actions button,.twin-screen--executive .twin-screen-actions a{height:44px;font-size:15px}
+
+  .twin-screen-main--executive{grid-template-columns:minmax(900px,29vw) minmax(1450px,42vw) minmax(900px,29vw)}
+  .twin-screen--executive .twin-info-section{padding:0 18px}.twin-screen--executive .twin-info-section>header{height:52px}.twin-screen--executive .twin-info-section>header>span{font-size:22px}.twin-screen--executive .twin-info-section>header>b{font-size:12px}
+
+  .twin-side-left{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:280px minmax(0,1fr)}
+  .twin-side-left>.executive-production{grid-column:1;grid-row:1;flex:none;border-right:1px solid var(--screen-v18-line)}
+  .twin-side-left>.executive-process-overview{grid-column:2;grid-row:1;flex:none;border-bottom:1px solid var(--screen-v18-line)}
+  .twin-side-left>.executive-key-equipment{grid-column:1/-1;grid-row:2;flex:none;min-height:0}
+  .executive-production-body{height:calc(100% - 52px);grid-template-columns:minmax(180px,.9fr) minmax(0,1.1fr)}
+  .executive-production-body>.industrial-semi-gauge .industrial-gauge-title{font-size:16px}.executive-production-body>.industrial-semi-gauge svg{top:38px;height:120px}.executive-production-body>.industrial-semi-gauge .industrial-gauge-reading{top:98px}.executive-production-body>.industrial-semi-gauge .industrial-gauge-reading strong{font-size:38px}.executive-kpi-stack>div:first-child>span{font-size:16px}.executive-kpi-stack>div:first-child>strong{font-size:44px}
+  .executive-process-rail{height:calc(100% - 52px)}.executive-process-rail button{padding:0 14px;grid-template-columns:10px minmax(110px,.9fr) minmax(0,1fr)}.executive-process-rail button>span{font-size:17px}.executive-process-rail button>b{font-size:15px}
+  .executive-key-equipment .key-equipment-list{height:calc(100% - 52px);display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+  .executive-key-equipment .key-equipment-list a{height:100%;padding:12px 16px;border-right:1px solid var(--screen-v18-line);border-bottom:0}.executive-key-equipment .key-equipment-list a:last-child{border-right:0}.executive-key-equipment .key-equipment-list strong{font-size:18px}.executive-key-equipment .key-equipment-list span,.executive-key-equipment .key-equipment-list>a>b{font-size:15px}
+
+  .twin-center-stage--hero .twin-center-heading{top:20px;left:24px;right:24px}.twin-center-stage--hero .twin-center-heading>div span{font-size:14px}.twin-center-stage--hero .twin-center-heading>div strong{font-size:30px}.twin-center-stage--hero .twin-center-heading>small{font-size:15px}
+  .copper-twin-picture>.copper-twin-hero{object-fit:cover;object-position:center;filter:saturate(.88) contrast(1.08) brightness(.84) hue-rotate(-3deg)}
+  .copper-twin-hotspots,.copper-twin-zone-labels,.copper-twin-status-dots{left:4.6099%;right:auto;width:90.7801%;top:0;bottom:0}
+  .copper-zone-label{min-width:158px;padding:9px 13px}.copper-zone-label>span{font-size:17px}.copper-zone-label>b{font-size:13px}.copper-zone-label>i{width:9px;height:9px}
+  .twin-focus-summary--image{left:22px;bottom:20px;width:min(350px,29%);padding:14px 16px}.twin-focus-summary--image>span{font-size:15px}.twin-focus-summary--image>strong{font-size:25px}.twin-focus-summary--image>small,.twin-focus-summary--image>b{font-size:13px}
+  .twin-legend--image{right:22px;bottom:20px;font-size:13px}
+
+  .twin-side-right{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(390px,.85fr);grid-template-rows:160px minmax(150px,1fr) 150px}
+  .twin-side-right>.executive-process-metrics{grid-column:1;grid-row:1/-1;flex:none;min-height:0;border-right:1px solid var(--screen-v18-line);border-bottom:0}
+  .twin-side-right>.executive-safety-monitor{grid-column:2;grid-row:1;flex:none}
+  .twin-side-right>.executive-alarm-panel{grid-column:2;grid-row:2;flex:none;min-height:0}
+  .twin-side-right>.executive-control-panel{grid-column:2;grid-row:3;flex:none;min-height:0;border-top:0}
+  .executive-gauge-layout{height:calc(100% - 52px);grid-template-rows:minmax(210px,1.05fr) minmax(180px,.95fr)}
+  .executive-semi-gauges>.industrial-semi-gauge .industrial-gauge-title{font-size:18px}.executive-semi-gauges>.industrial-semi-gauge svg{top:48px;height:145px}.executive-semi-gauges>.industrial-semi-gauge .industrial-gauge-reading{top:116px}.executive-semi-gauges>.industrial-semi-gauge .industrial-gauge-reading strong{font-size:42px}.executive-semi-gauges>.industrial-semi-gauge .industrial-gauge-foot{font-size:13px}
+  .executive-process-lines>.industrial-linear-gauge{padding:14px 16px}.twin-screen--executive .linear-gauge-head>span{font-size:17px}.twin-screen--executive .linear-gauge-head strong{font-size:30px}.twin-screen--executive .linear-gauge-scale,.twin-screen--executive .linear-gauge-scale small{font-size:12px}
+  .executive-safety-grid{height:calc(100% - 52px)}.executive-safety-grid span{font-size:15px}.executive-safety-grid strong{font-size:34px}
+  .executive-alarm-panel .twin-alarm-list{height:calc(100% - 52px)}.executive-alarm-panel .twin-alarm-list strong{font-size:17px}.executive-alarm-panel .twin-alarm-list span,.executive-alarm-panel .twin-alarm-list time{font-size:14px}
+  .executive-control-panel{padding:12px 16px}.executive-control-panel>header span{font-size:13px}.executive-control-panel>header strong,.executive-control-panel>header>b{font-size:14px}.executive-control-panel .twin-control-buttons button{height:42px;font-size:14px}
+
+  .twin-bottom-instruments--executive{grid-template-columns:1fr 1.1fr 1.05fr 1.45fr}
+  .twin-bottom-instruments--executive .executive-bottom-panel>header{height:42px;padding:0 16px}.twin-bottom-instruments--executive .executive-bottom-panel>header span{font-size:20px}
+  .executive-bottom-production,.executive-bottom-lines,.executive-bottom-gauges,.twin-bottom-instruments--executive .bottom-process-panel>.industrial-status-matrix{height:calc(100% - 42px)}
+  .executive-bottom-production{grid-template-columns:minmax(170px,.78fr) minmax(0,1.22fr)}.executive-bottom-production>div:last-child span{font-size:16px}.executive-bottom-production>div:last-child strong{font-size:40px}
+  .executive-bottom-lines{grid-template-columns:1fr 1fr;grid-template-rows:1fr}.executive-bottom-lines>.industrial-linear-gauge:first-child{border-bottom:0;border-right:1px solid var(--screen-v18-line)}
+  .executive-bottom-gauges>.industrial-semi-gauge .industrial-gauge-title{font-size:15px}.executive-bottom-gauges>.industrial-semi-gauge .industrial-gauge-reading strong{font-size:27px}
+  .twin-bottom-instruments--executive .bottom-process-panel>.industrial-status-matrix{grid-template-columns:repeat(6,minmax(0,1fr));grid-template-rows:1fr;padding:6px}.twin-bottom-instruments--executive .status-matrix-item{grid-template-columns:8px minmax(0,1fr);grid-template-rows:auto auto;align-content:center;padding:8px 11px}.twin-bottom-instruments--executive .status-matrix-item i{grid-row:1/3}.twin-bottom-instruments--executive .status-matrix-item span{font-size:15px}.twin-bottom-instruments--executive .status-matrix-item strong{font-size:13px;color:#8eaed8}
+  .twin-screen-footer--executive{font-size:12px;padding:0 22px;gap:26px}
+}
+
+/* Mid-height desktop capture / 1080p browser with toolbars. Keep large type,
+   reduce panel heights so 900-ish pixel viewports do not overflow. */
+@media (min-height:821px) and (max-height:960px) and (max-aspect-ratio:27.99/9){
+  .twin-screen.twin-screen--executive{grid-template-rows:68px minmax(0,1fr) 145px 24px}
+  .twin-screen--executive .twin-screen-header{grid-template-columns:minmax(300px,1.02fr) minmax(590px,2.3fr) 145px 172px;gap:10px;padding:0 13px}
+  .twin-screen--executive .twin-screen-title>strong{font-size:29px}.twin-screen--executive .twin-screen-title>span{font-size:12px}.twin-screen--executive .twin-screen-title>small{font-size:11px}
+  .twin-screen--executive .twin-screen-context{height:48px}.twin-screen--executive .twin-screen-context>div{padding:3px 11px}.twin-screen--executive .twin-screen-context span{font-size:12px}.twin-screen--executive .twin-screen-context strong{font-size:18px}
+  .twin-screen--executive .twin-screen-clock>strong{font-size:22px}.twin-screen--executive .twin-screen-actions button,.twin-screen--executive .twin-screen-actions a{height:35px;font-size:12px}
+  .twin-screen-main--executive{grid-template-columns:minmax(305px,19.5vw) minmax(0,1fr) minmax(365px,22.5vw)}
+  .twin-screen--executive .twin-info-section>header{height:40px}.twin-screen--executive .twin-info-section>header>span{font-size:17px}
+  .executive-production{flex-basis:200px}.executive-production-body{height:calc(100% - 40px)}.executive-production-body>.industrial-semi-gauge svg{top:30px;height:92px}.executive-production-body>.industrial-semi-gauge .industrial-gauge-reading{top:74px}.executive-production-body>.industrial-semi-gauge .industrial-gauge-reading strong{font-size:27px}.executive-production-body>.industrial-semi-gauge .industrial-gauge-foot{font-size:10px}.executive-kpi-stack>div:first-child{padding:11px}.executive-kpi-stack>div:first-child>strong{font-size:31px}
+  .executive-process-overview{flex-basis:200px}.executive-process-rail{height:calc(100% - 40px)}.executive-process-rail button>span{font-size:14px}.executive-process-rail button>b{font-size:12px}
+  .executive-key-equipment .key-equipment-list{height:calc(100% - 40px)}.executive-key-equipment .key-equipment-list strong{font-size:13px}.executive-key-equipment .key-equipment-list span,.executive-key-equipment .key-equipment-list>a>b{font-size:11px}
+  .executive-safety-monitor{flex-basis:100px}.executive-alarm-panel{flex-basis:128px}.executive-control-panel{flex-basis:105px}
+  .executive-gauge-layout{height:calc(100% - 40px);grid-template-rows:minmax(135px,1.05fr) minmax(105px,.95fr)}.executive-semi-gauges>.industrial-semi-gauge svg{top:29px;height:84px}.executive-semi-gauges>.industrial-semi-gauge .industrial-gauge-reading{top:70px}.executive-semi-gauges>.industrial-semi-gauge .industrial-gauge-reading strong{font-size:24px}.executive-semi-gauges>.industrial-semi-gauge .industrial-gauge-foot{font-size:9.5px}.executive-process-lines>.industrial-linear-gauge{padding:7px 9px}.twin-screen--executive .linear-gauge-head>span{font-size:12px}.twin-screen--executive .linear-gauge-head strong{font-size:19px}.twin-screen--executive .linear-gauge-scale,.twin-screen--executive .linear-gauge-scale small{font-size:9px}
+  .executive-safety-grid{height:calc(100% - 40px)}.executive-safety-grid span{font-size:12px}.executive-safety-grid strong{font-size:23px}.executive-alarm-panel .twin-alarm-list{height:calc(100% - 40px)}.executive-alarm-panel .twin-alarm-list strong{font-size:12px}.executive-alarm-panel .twin-alarm-list span,.executive-alarm-panel .twin-alarm-list time{font-size:10px}.executive-control-panel .twin-control-buttons{margin-top:6px}.executive-control-panel .twin-control-buttons button{height:32px;font-size:10px}
+  .twin-bottom-instruments--executive .executive-bottom-panel>header{height:31px;padding:0 9px}.twin-bottom-instruments--executive .executive-bottom-panel>header span{font-size:14px}.twin-bottom-instruments--executive .executive-bottom-panel>header b{display:none}.executive-bottom-production,.executive-bottom-lines,.executive-bottom-gauges,.twin-bottom-instruments--executive .bottom-process-panel>.industrial-status-matrix{height:calc(100% - 31px)}.executive-bottom-production>.industrial-semi-gauge .industrial-gauge-title,.executive-bottom-production>.industrial-semi-gauge .industrial-gauge-foot,.executive-bottom-gauges>.industrial-semi-gauge .industrial-gauge-foot{display:none}.executive-bottom-production>.industrial-semi-gauge svg,.executive-bottom-gauges>.industrial-semi-gauge svg{top:14px;height:62px}.executive-bottom-production>.industrial-semi-gauge .industrial-gauge-reading,.executive-bottom-gauges>.industrial-semi-gauge .industrial-gauge-reading{top:44px}.executive-bottom-production>div:last-child{padding:7px 10px}.executive-bottom-production>div:last-child span{font-size:11px}.executive-bottom-production>div:last-child strong{font-size:23px}.twin-bottom-instruments--executive .status-matrix-item span,.twin-bottom-instruments--executive .status-matrix-item strong{font-size:10px}
+}
+
+/* 1366×768 / low-height safety mode: remove secondary copy instead of making
+   core information microscopic. */
+@media (max-height:820px){
+  .twin-screen.twin-screen--executive{grid-template-rows:62px minmax(0,1fr) 126px 20px;font-size:14px}
+  .twin-screen--executive .twin-screen-header{grid-template-columns:minmax(235px,1fr) minmax(470px,2fr) 130px 145px;gap:8px;padding:0 9px}
+  .twin-screen--executive .twin-screen-title>span,.twin-screen--executive .twin-screen-title>small{display:none}.twin-screen--executive .twin-screen-title>strong{font-size:24px}
+  .twin-screen--executive .twin-screen-context{height:44px}.twin-screen--executive .twin-screen-context>div{padding:3px 8px}.twin-screen--executive .twin-screen-context span{font-size:11px}.twin-screen--executive .twin-screen-context strong{font-size:16px}
+  .twin-screen--executive .twin-screen-clock>strong{font-size:20px}.twin-screen--executive .twin-screen-clock>span{font-size:11px}.twin-screen--executive .twin-screen-clock>small{display:none}.twin-screen--executive .twin-screen-actions button,.twin-screen--executive .twin-screen-actions a{height:32px;font-size:11px}
+  .twin-screen-main--executive{grid-template-columns:minmax(260px,19vw) minmax(0,1fr) minmax(300px,22vw)}
+  .twin-screen--executive .twin-info-section{padding:0 8px}.twin-screen--executive .twin-info-section>header{height:34px}.twin-screen--executive .twin-info-section>header>span{font-size:15px}.twin-screen--executive .twin-info-section>header>b{display:none}
+  .executive-production{flex-basis:170px}.executive-production-body{height:calc(100% - 34px);grid-template-columns:95px minmax(0,1fr)}.executive-production-body>.industrial-semi-gauge .industrial-gauge-title{font-size:11px;height:18px}.executive-production-body>.industrial-semi-gauge svg{top:25px;height:70px}.executive-production-body>.industrial-semi-gauge .industrial-gauge-reading{top:58px}.executive-production-body>.industrial-semi-gauge .industrial-gauge-reading strong{font-size:20px}.executive-production-body>.industrial-semi-gauge .industrial-gauge-foot{display:none}.executive-kpi-stack>div:first-child{padding:8px}.executive-kpi-stack>div:first-child>span{font-size:11px}.executive-kpi-stack>div:first-child>strong{font-size:25px}.executive-production-context{display:none!important}.executive-kpi-stack>.industrial-linear-gauge{padding:6px 8px}
+  .executive-process-overview{flex-basis:158px}.executive-process-rail{height:calc(100% - 34px)}.executive-process-rail button{padding:0 5px;gap:5px;grid-template-columns:7px minmax(56px,.9fr) minmax(0,1fr)}.executive-process-rail button>span{font-size:11px}.executive-process-rail button>b{font-size:10px}
+  .executive-key-equipment .key-equipment-list{height:calc(100% - 34px)}.executive-key-equipment .key-equipment-list strong{font-size:11px}.executive-key-equipment .key-equipment-list span{display:none}.executive-key-equipment .key-equipment-list>a>b{font-size:10px}
+  .twin-center-stage--hero .twin-center-heading{top:9px;left:10px;right:10px}.twin-center-stage--hero .twin-center-heading>div span,.twin-center-stage--hero .twin-center-heading>small{display:none}.twin-center-stage--hero .twin-center-heading>div strong{font-size:17px}.copper-zone-label{min-width:92px;padding:5px 7px}.copper-zone-label>span{font-size:11px}.copper-zone-label>b{display:none}.twin-focus-summary--image{left:9px;bottom:9px;width:200px;padding:7px 9px}.twin-focus-summary--image>small{display:none}.twin-focus-summary--image>span{font-size:10px}.twin-focus-summary--image>strong{font-size:14px}.twin-focus-summary--image>b{font-size:9px}.twin-legend--image{right:8px;bottom:8px;font-size:9px;padding:4px 6px}
+  .executive-gauge-layout{height:calc(100% - 34px);grid-template-rows:minmax(120px,1fr) minmax(90px,.85fr)}.executive-semi-gauges>.industrial-semi-gauge .industrial-gauge-title{font-size:11px;height:18px}.executive-semi-gauges>.industrial-semi-gauge svg{top:24px;height:68px}.executive-semi-gauges>.industrial-semi-gauge .industrial-gauge-reading{top:57px}.executive-semi-gauges>.industrial-semi-gauge .industrial-gauge-reading strong{font-size:19px}.executive-semi-gauges>.industrial-semi-gauge .industrial-gauge-foot{display:none}.executive-process-lines>.industrial-linear-gauge{padding:6px 7px}.twin-screen--executive .linear-gauge-head>span{font-size:10px}.twin-screen--executive .linear-gauge-head strong{font-size:14px}.twin-screen--executive .linear-gauge-scale,.twin-screen--executive .linear-gauge-scale small{font-size:8px}
+  .executive-safety-monitor{flex-basis:84px}.executive-safety-grid{height:calc(100% - 34px)}.executive-safety-grid span{font-size:10px}.executive-safety-grid strong{font-size:18px}.executive-alarm-panel{flex-basis:104px}.executive-alarm-panel .twin-alarm-list{height:calc(100% - 34px)}.executive-alarm-panel .twin-alarm-list strong{font-size:11px}.executive-alarm-panel .twin-alarm-list span{display:none}.executive-alarm-panel .twin-alarm-list time{font-size:9px}.executive-control-panel{flex-basis:92px;padding:6px 8px}.executive-control-panel>header span,.executive-control-panel>header strong,.executive-control-panel>header>b{font-size:9px}.executive-control-panel .twin-control-buttons{margin-top:5px;gap:3px}.executive-control-panel .twin-control-buttons button{height:28px;font-size:9px}
+  .twin-bottom-instruments--executive .executive-bottom-panel>header{height:28px;padding:0 7px}.twin-bottom-instruments--executive .executive-bottom-panel>header span{font-size:12px}.twin-bottom-instruments--executive .executive-bottom-panel>header b{display:none}.executive-bottom-production,.executive-bottom-lines,.executive-bottom-gauges,.twin-bottom-instruments--executive .bottom-process-panel>.industrial-status-matrix{height:calc(100% - 28px)}.executive-bottom-production{grid-template-columns:88px minmax(0,1fr)}.executive-bottom-production>.industrial-semi-gauge .industrial-gauge-title,.executive-bottom-production>.industrial-semi-gauge .industrial-gauge-foot{display:none}.executive-bottom-production>.industrial-semi-gauge svg{top:10px;height:57px}.executive-bottom-production>.industrial-semi-gauge .industrial-gauge-reading{top:37px}.executive-bottom-production>.industrial-semi-gauge .industrial-gauge-reading strong{font-size:15px}.executive-bottom-production>div:last-child{padding:6px}.executive-bottom-production>div:last-child span{font-size:10px}.executive-bottom-production>div:last-child strong{font-size:20px}.executive-bottom-gauges>.industrial-semi-gauge .industrial-gauge-title,.executive-bottom-gauges>.industrial-semi-gauge .industrial-gauge-foot{display:none}.executive-bottom-gauges>.industrial-semi-gauge svg{top:9px;height:57px}.executive-bottom-gauges>.industrial-semi-gauge .industrial-gauge-reading{top:37px}.executive-bottom-gauges>.industrial-semi-gauge .industrial-gauge-reading strong{font-size:15px}.executive-bottom-lines>.industrial-linear-gauge{padding:4px 7px}.twin-bottom-instruments--executive .status-matrix-item{padding:3px 5px}.twin-bottom-instruments--executive .status-matrix-item span,.twin-bottom-instruments--executive .status-matrix-item strong{font-size:9px}.twin-screen-footer--executive{font-size:9px;padding:0 8px;gap:10px}
+}
+
+/* Final readability lock for the common 850–960px-tall wide-screen captures.
+   Keep information legible by suppressing secondary copy before shrinking core text. */
+@media (min-height:821px) and (max-height:960px){
+  .twin-screen.twin-screen--executive{font-size:16px}
+  .twin-screen--executive .twin-screen-title>strong{font-size:31px}
+  .twin-screen--executive .twin-screen-context span{font-size:13px}
+  .twin-screen--executive .twin-screen-context strong{font-size:19px}
+  .twin-screen--executive .twin-info-section>header>span{font-size:19px}
+  .twin-screen--executive .twin-info-section>header>b{font-size:11px}
+
+  .executive-production-body>.industrial-semi-gauge .industrial-gauge-title{font-size:14px}
+  .executive-production-body>.industrial-semi-gauge .industrial-gauge-reading strong{font-size:30px}
+  .executive-production-body>.industrial-semi-gauge .industrial-gauge-foot{font-size:11px}
+  .executive-kpi-stack>div:first-child>span{font-size:14px}
+  .executive-kpi-stack>div:first-child>strong{font-size:34px}
+  .executive-production-context{display:none!important}
+
+  .executive-process-rail button>span{font-size:15px}
+  .executive-process-rail button>b{font-size:13px}
+  .executive-key-equipment .key-equipment-list strong{font-size:14px}
+  .executive-key-equipment .key-equipment-list span{font-size:12px}
+  .executive-key-equipment .key-equipment-list>a>b{font-size:12px}
+
+  .twin-center-stage--hero .twin-center-heading>div strong{font-size:22px}
+  .twin-center-stage--hero .twin-center-heading>div span{font-size:12px}
+  .copper-zone-label>span{font-size:14px}
+  .copper-zone-label>b{font-size:11px}
+  .twin-focus-summary--image>span{font-size:12px}
+  .twin-focus-summary--image>strong{font-size:19px}
+  .twin-focus-summary--image>small,.twin-focus-summary--image>b{font-size:11px}
+
+  .executive-semi-gauges>.industrial-semi-gauge .industrial-gauge-title{font-size:14px}
+  .executive-semi-gauges>.industrial-semi-gauge .industrial-gauge-reading strong{font-size:28px}
+  .executive-semi-gauges>.industrial-semi-gauge .industrial-gauge-foot{font-size:10.5px}
+  .twin-screen--executive .linear-gauge-head>span{font-size:13px}
+  .twin-screen--executive .linear-gauge-head strong{font-size:22px}
+  .twin-screen--executive .linear-gauge-scale,.twin-screen--executive .linear-gauge-scale small{font-size:10.5px}
+  .executive-safety-grid span{font-size:13px}
+  .executive-safety-grid strong{font-size:27px}
+  .executive-alarm-panel .twin-alarm-list strong{font-size:14px}
+  .executive-alarm-panel .twin-alarm-list span,.executive-alarm-panel .twin-alarm-list time{font-size:11px}
+  .executive-control-panel>header span,.executive-control-panel>header strong,.executive-control-panel>header>b{font-size:11px}
+  .executive-control-panel .twin-control-buttons button{font-size:12px}
+
+  .twin-bottom-instruments--executive .executive-bottom-panel>header span{font-size:16px}
+  .executive-bottom-production>div:last-child span{font-size:12px}
+  .executive-bottom-production>div:last-child strong{font-size:27px}
+  .executive-bottom-production>.industrial-semi-gauge .industrial-gauge-reading strong,
+  .executive-bottom-gauges>.industrial-semi-gauge .industrial-gauge-reading strong{font-size:20px}
+  .twin-bottom-instruments--executive .status-matrix-item span{font-size:12px}
+  .twin-bottom-instruments--executive .status-matrix-item strong{font-size:11px}
+}
+
+/* Low-height fallback: prioritize names, values and alarm/control labels; secondary
+   scales/metadata are hidden rather than reduced to 8–9px. */
+@media (max-height:820px){
+  .twin-screen.twin-screen--executive{font-size:14px}
+  .twin-screen--executive .twin-info-section>header>span{font-size:16px}
+  .executive-process-rail button>span{font-size:13px}
+  .executive-process-rail button>b{font-size:12px}
+  .executive-key-equipment .key-equipment-list strong{font-size:13px}
+  .executive-key-equipment .key-equipment-list>a>b{font-size:11px}
+  .copper-zone-label>span{font-size:12px}
+  .executive-semi-gauges>.industrial-semi-gauge .industrial-gauge-title{font-size:12px}
+  .executive-semi-gauges>.industrial-semi-gauge .industrial-gauge-reading strong{font-size:21px}
+  .twin-screen--executive .linear-gauge-head>span{font-size:12px}
+  .twin-screen--executive .linear-gauge-head strong{font-size:18px}
+  .twin-screen--executive .linear-gauge-scale{display:none}
+  .executive-safety-grid span{font-size:11px}
+  .executive-safety-grid strong{font-size:20px}
+  .executive-alarm-panel .twin-alarm-list strong{font-size:12px}
+  .executive-alarm-panel .twin-alarm-list time{font-size:10px}
+  .executive-control-panel .twin-control-buttons button{font-size:11px}
+  .twin-bottom-instruments--executive .executive-bottom-panel>header span{font-size:13px}
+  .twin-bottom-instruments--executive .status-matrix-item span{font-size:10.5px}
+  .twin-bottom-instruments--executive .status-matrix-item strong{display:none}
+  .twin-screen-footer--executive{font-size:10px}
+}

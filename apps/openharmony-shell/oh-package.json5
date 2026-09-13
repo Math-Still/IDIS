@@ -1,0 +1,7 @@
+{
+  "modelVersion": "5.0.0",
+  "name": "smart-factory-shell",
+  "version": "0.4.2",
+  "description": "Native shell for the cross-platform smart factory Web Core",
+  "dependencies": {}
+}
