@@ -4,7 +4,6 @@
 
 IDIS is an industrial monitoring and control platform built around a native C++ backend, a Vue 3 / TypeScript operator interface, and explicit adaptation boundaries for field devices, industrial protocols, and domestic operating systems. This repository snapshot corresponds to application version **1.8.0**.
 
-> 仓库定位：可阅读、可构建、可继续开发的源码仓库。Windows 一键启动脚本、安装日志、交付包校验文件和内部发布过程文件不属于源码主线，已从公开版本中移除。
 
 ![IDIS industrial HMI](docs/assets/overview-3440x1440.webp)
 
