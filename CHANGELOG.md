@@ -1,11 +1,39 @@
-# Changelog
+# 更新日志
 
 ## 1.8.0 — 2026-09-13
 
-- Consolidated the current royal-blue industrial HMI and ultrawide display layouts.
-- Retained the native C++ backend, historian, alarm/incident lifecycle, RBAC/audit model and command runtime.
-- Retained OpenHarmony/HongZOS and domestic-OS integration boundaries.
-- Converted the supplied Windows delivery archive into a source-oriented GitHub tree.
-- Removed one-click Windows launchers, installer logs, delivery validation residue and screenshot automation scripts.
-- Removed root npm commands that referenced an absent internal `scripts/` directory.
-- Removed reusable plaintext development credentials from the public repository path; public development authentication is disabled by default.
+### 工业 HMI 与展示界面
+
+- 采用宝蓝色工业视觉体系，统一监控、展示与管理界面的视觉语言；
+- 支持超宽屏工业大屏布局；
+- 完善实时监控、设备状态、告警、事件、报表与系统管理页面；
+- 强化工业场景中的数据层级、状态表达和信息可读性。
+
+### C++ 后端
+
+- 提供基于 C++20 的原生应用服务；
+- 支持 REST 与 WebSocket 通信；
+- 提供历史数据、报警、事件、报表、审计和权限能力；
+- 建立普通、实时和紧急三类指令执行域；
+- 提供 SQLite 数据持久化与存储维护能力。
+
+### 设备与协议适配
+
+- 建立设备注册与统一设备模型；
+- 提供 `DeviceAdapter` 设备适配边界；
+- 提供 `ProtocolAdapter` 协议与厂商适配边界；
+- 支持现场设备、PLC、DCS、传感器和执行器的扩展接入。
+
+### 国产操作系统适配
+
+- 提供 `OsAdapter` 操作系统适配边界；
+- 提供 OpenHarmony / HongZOS 应用壳；
+- 提供银河麒麟、统信 UOS 与通用 POSIX 环境部署结构；
+- 提供远程 SSH 目标机构建、部署与诊断支持。
+
+### 工程与安全
+
+- 提供 Docker 开发环境；
+- 提供示例化环境变量与认证配置；
+- 将真实凭据、现场配置和本地敏感文件与公开源码隔离；
+- 提供安全策略、贡献指南和部署文档。

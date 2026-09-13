@@ -1,25 +1,50 @@
-# Security Policy
+# 安全策略
 
-## Public repository rules
+## 适用范围
 
-This repository intentionally contains no real factory credentials, reusable default login tokens, private API keys, SSH keys or production network addresses.
+本策略适用于 IDIS 源码、配置文件、部署脚本、设备适配器、协议适配器、操作系统适配器以及与平台相关的公开技术文档。
 
-Development authentication is disabled by default in the public configuration. If authenticated local testing is required, create an untracked `backend-cpp/config/auth.local.json` from the provided factory-schema example and point a local configuration file to it.
+## 敏感信息管理
 
-## Production deployment baseline
+公开仓库不得包含：
 
-Before a factory deployment:
+- 真实工厂账号、密码和登录令牌；
+- API Key、访问令牌、SSH 私钥或证书私钥；
+- 生产网络地址、内部拓扑和未脱敏设备清单；
+- 现场数据库、生产日志或原始业务数据；
+- 可直接访问生产系统的固定凭据；
+- 未经授权公开的厂商 SDK、驱动或专有协议资料。
 
-- enable authentication and use independently generated high-entropy credentials;
-- store secrets outside Git and inject them through environment or platform secret management;
-- use HTTPS/WSS and a restricted origin policy;
-- disable the simulated device adapter;
-- validate real DeviceAdapter / ProtocolAdapter / OsAdapter implementations on the target hardware;
-- verify realtime scheduling privileges and failure behavior;
-- review exposed ports, service accounts, filesystem permissions, persistence and retention;
-- preserve independent PLC/DCS/SIS/ESD safety authority for safety-critical actions;
-- verify backup, restore, audit and incident-recovery procedures.
+本地认证配置可使用：
 
-## Reporting
+```text
+backend-cpp/config/auth.local.json
+```
 
-Do not place real credentials, factory topology or exploitable security details in a public issue. Use the repository owner's private contact path or GitHub private vulnerability reporting when available.
+该文件应保持在 Git 跟踪范围之外。
+
+## 生产环境安全基线
+
+生产环境至少应满足以下要求：
+
+- 启用身份认证与基于角色的访问控制；
+- 使用独立生成的高强度凭据，不使用固定默认口令；
+- 将密钥存储在 Git 之外，通过环境变量或平台密钥管理机制注入；
+- 使用 HTTPS / WSS 等加密通信；
+- 对 Web 来源、接口访问范围和跨域策略进行限制；
+- 关闭模拟设备适配器并启用经过验证的现场适配实现；
+- 对 `DeviceAdapter`、`ProtocolAdapter`、`OsAdapter` 进行目标机验证；
+- 检查服务端口、服务账号、文件系统权限和持久化目录权限；
+- 对实时任务验证调度权限、超时行为和故障恢复机制；
+- 保持 PLC、DCS、SIS、ESD 等现场控制与安全系统的独立控制权限；
+- 建立日志审计、数据备份、恢复和事件追踪机制。
+
+## 安全关键控制
+
+IDIS 可承载监测、告警、控制指令编排和工业数据交互，但不替代现场已有的独立安全联锁体系。涉及人身安全、设备保护和工艺联锁的控制，应由经过验证的 PLC、DCS、SIS、ESD 或等效安全控制系统承担最终安全权限。
+
+## 漏洞报告
+
+请勿在公开 Issue 中提交真实凭据、生产拓扑、可直接利用的漏洞细节或现场敏感数据。
+
+如需报告安全问题，应使用仓库所有者提供的私有联系方式，或使用 GitHub 支持的 Private Vulnerability Reporting 等私密渠道。
