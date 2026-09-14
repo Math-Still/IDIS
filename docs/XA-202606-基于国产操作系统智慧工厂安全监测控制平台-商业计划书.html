@@ -1,1185 +1,112 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>国产化智慧工厂安全监测平台 — 基于国产操作系统的铜冶炼场景安全监测控制平台</title>
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#eef2f7;--surface:#fff;--border:#dde3ed;--border2:#f1f5f9;
-  --text:#1e293b;--muted:#64748b;
-  --primary:#1d4ed8;--pl:#eff6ff;--pm:#3b82f6;--accent:#0ea5e9;
-  --toc:240px
-}
-html{scroll-behavior:smooth}
-body{
-  background:#ffffff;
-  background-attachment:fixed;
-  color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
-  font-size:15px;line-height:1.8;padding-top:56px
-}
-::-webkit-scrollbar{width:6px}
-::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
-
-/* ── Navbar ── */
-#navbar{
-  position:fixed;top:0;left:0;right:0;z-index:200;height:56px;
-  background:rgba(255,255,255,.95);backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;padding:0 32px;gap:12px
-}
-.nl{font-size:15px;font-weight:800;color:var(--primary);white-space:nowrap}
-.ns{color:#cbd5e1}
-.nm{font-size:13px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.nr{margin-left:auto}
-.nb{
-  padding:6px 16px;border-radius:6px;font-size:13px;font-weight:600;
-  background:var(--primary);color:#fff;text-decoration:none
-}
-.nb:hover{opacity:.85}
-
-/* ── Progress bar ── */
-#progress{position:fixed;top:56px;left:0;right:0;z-index:199;height:3px;background:#e2e8f0}
-#pb{height:100%;width:0%;background:linear-gradient(90deg,var(--primary),var(--accent));transition:width .1s}
-
-/* ── Hero ── */
-#hero{
-  position:relative;overflow:hidden;
-  background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 50%,#0f172a 100%);
-  padding:80px 40px 100px;text-align:center
-}
-.hm{
-  position:absolute;inset:0;z-index:0;
-  background-image:
-    linear-gradient(rgba(59,130,246,.08) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(59,130,246,.08) 1px,transparent 1px);
-  background-size:48px 48px;animation:mm 25s linear infinite
-}
-@keyframes mm{0%{transform:translateY(0)}100%{transform:translateY(48px)}}
-.hg{
-  position:absolute;inset:0;z-index:0;
-  background:radial-gradient(ellipse 70% 60% at 50% 40%,rgba(59,130,246,.15) 0%,transparent 70%)
-}
-.hi{position:relative;z-index:1;max-width:800px;margin:0 auto}
-.hbadge{
-  display:inline-flex;align-items:center;gap:8px;padding:6px 18px;border-radius:20px;
-  border:1px solid rgba(59,130,246,.4);background:rgba(59,130,246,.1);
-  color:#93c5fd;font-size:13px;font-weight:600;margin-bottom:28px
-}
-.hdot{width:6px;height:6px;border-radius:50%;background:#60a5fa;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.ht{font-size:clamp(28px,4vw,52px);font-weight:900;line-height:1.2;color:#fff;margin-bottom:16px}
-.ht span{
-  background:linear-gradient(135deg,#60a5fa,#38bdf8);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
-}
-.hsub{font-size:16px;color:#94a3b8;margin-bottom:40px;line-height:1.7}
-.hstats{
-  display:flex;justify-content:center;gap:40px;flex-wrap:wrap;
-  padding:24px 40px;border-radius:16px;
-  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)
-}
-.hsn{font-size:30px;font-weight:800;color:#60a5fa;font-family:"SF Mono",monospace}
-.hsl{font-size:12px;color:#94a3b8;margin-top:2px}
-
-/* ── Layout ── */
-#layout{display:flex;align-items:flex-start;max-width:1100px;margin:0 auto;padding:28px 20px;gap:24px}
-
-/* ── TOC ── */
-#toc{
-  width:var(--toc);flex-shrink:0;position:sticky;top:72px;
-  max-height:calc(100vh - 90px);overflow-y:auto;
-  background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 0;
-  box-shadow:0 2px 8px rgba(0,0,0,.06)
-}
-.tt{
-  font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;
-  padding:0 16px 10px;border-bottom:1px solid var(--border2);margin-bottom:6px
-}
-#toc ul{list-style:none}
-#toc a{
-  display:block;padding:5px 16px;font-size:12.5px;color:var(--muted);
-  text-decoration:none;border-left:2px solid transparent;transition:all .15s;line-height:1.5
-}
-#toc a:hover{color:var(--primary);background:var(--pl);border-left-color:var(--primary)}
-#toc a.active{color:var(--primary);font-weight:600;border-left-color:var(--primary);background:var(--pl)}
-
-/* ── Content ── */
-#content{flex:1;min-width:0;max-width:800px}
-.section-block{
-  background:var(--surface);border:1px solid var(--border);border-radius:14px;
-  padding:40px 48px;margin-bottom:18px;position:relative;
-  box-shadow:0 1px 4px rgba(0,0,0,.05),0 4px 16px rgba(0,0,0,.04);transition:box-shadow .2s
-}
-.section-block:hover{box-shadow:0 4px 24px rgba(0,0,0,.09)}
-
-/* ── Typography ── */
-h1{
-  font-size:24px;font-weight:800;padding-bottom:14px;margin-bottom:24px;
-  display:flex;align-items:center;gap:10px;position:relative
-}
-h1::before{
-  content:'';display:inline-block;width:4px;height:26px;
-  background:linear-gradient(180deg,var(--primary),var(--accent));
-  border-radius:2px;flex-shrink:0
-}
-h2{font-size:19px;font-weight:700;margin:28px 0 14px;padding-left:12px;position:relative}
-h3{font-size:16px;font-weight:700;color:var(--primary);margin:20px 0 10px}
-h4{font-size:15px;font-weight:700;margin:16px 0 8px}
-h5,h6{font-size:14px;font-weight:600;color:var(--muted);margin:14px 0 6px}
-p{margin-bottom:12px}
-strong{font-weight:700}
-em{font-style:italic;color:var(--muted)}
-a{color:var(--primary);text-decoration:none}
-a:hover{text-decoration:underline}
-code{background:#f1f5f9;padding:2px 6px;border-radius:4px;font-size:13px;font-family:"SF Mono",monospace}
-pre{background:#1e293b;color:#e2e8f0;padding:20px;border-radius:8px;overflow-x:auto;margin:16px 0}
-hr{border:none;border-top:1px solid var(--border);margin:24px 0}
-blockquote{
-  border-left:3px solid var(--pm);padding:10px 18px;
-  background:var(--pl);border-radius:0 8px 8px 0;margin:14px 0;color:var(--muted)
-}
-ul,ol{padding-left:22px;margin-bottom:12px}
-li{margin-bottom:5px;line-height:1.7}
-ol{list-style:none;counter-reset:ol-counter calc(var(--ol-start,1) - 1);padding-left:32px}
-ol>li{counter-increment:ol-counter;position:relative}
-ol>li::before{content:"（" counter(ol-counter) "）";position:absolute;left:-32px;color:var(--text);font-size:.95em}
-
-/* ── Tables ── */
-.table-wrap{overflow-x:auto;margin:16px 0;border-radius:8px;border:1px solid var(--border)}
-table{
-  width:100%;border-collapse:collapse;font-size:13.5px;margin:0;
-  table-layout:auto;word-break:break-word
-}
-th{
-  background:linear-gradient(135deg,#1e3a5f,#1d4ed8);color:#fff;
-  font-weight:600;padding:9px 12px;text-align:left;white-space:nowrap
-}
-td{padding:8px 12px;border-bottom:1px solid var(--border2);vertical-align:top;word-wrap:break-word}
-tr:last-child td{border-bottom:none}
-tr:nth-child(even) td{background:#f8faff}
-tr:hover td{background:var(--pl)}
-
-/* ── Images ── */
-img{
-  max-width:100%;height:auto;border-radius:8px;display:block;margin:16px auto;
-  border:1px solid var(--border);box-shadow:0 2px 12px rgba(0,0,0,.08)
-}
-figure{margin:20px 0;text-align:center}
-figcaption{
-  font-size:13px;color:var(--muted);margin-top:8px;
-  text-align:center;font-style:italic;
-}
-
-/* ── Table caption ── */
-caption{
-  font-size:13px;color:var(--muted);
-  text-align:center;font-style:italic;
-  padding:0 0 8px 0;caption-side:top;
-  font-weight:600;
-}
-
-/* ── 图/表 标签段落 ── */
-p.fig-label{
-  font-size:13px;color:var(--muted);
-  text-align:center;font-style:italic;
-  margin-top:4px;margin-bottom:16px
-}
-
-/* ── 背景纹理（点阵） ── */
-body::before{
-  display:none;
-}
-
-/* ── 打印目录块 ── */
-.toc-print h1{margin-bottom:16px}
-.toc-print .toc-grid{display:flex;flex-direction:column;gap:3px}
-.toc-print .toc-item{
-  text-decoration:none;color:var(--text);font-size:13.5px;
-  padding:5px 12px;border-radius:6px;transition:background .15s;
-  border-left:2px solid transparent;line-height:1.5
-}
-.toc-print .toc-item:hover{background:var(--pl);color:var(--primary);border-left-color:var(--primary)}
-.toc-print .toc-l2{font-weight:600;font-size:13px;color:var(--muted)}
-.toc-print .toc-l3{font-size:12.5px;color:var(--muted)}
-@media print{
-  .toc-print{break-after:page !important;page-break-after:always !important}
-}
-.section-block::before,.section-block::after{
-  content:'';position:absolute;width:18px;height:18px;
-  border-color:var(--primary);border-style:solid;opacity:.18;pointer-events:none;
-  transition:opacity .3s
-}
-.section-block::before{top:-1px;left:-1px;border-width:2px 0 0 2px;border-radius:4px 0 0 0}
-.section-block::after{bottom:-1px;right:-1px;border-width:0 2px 2px 0;border-radius:0 0 4px 0}
-.section-block:hover::before,.section-block:hover::after{opacity:.45}
-
-/* ── h1 底部渐变装饰线（替换原纯色 border-bottom） ── */
-h1{border-bottom:none;position:relative}
-h1::after{
-  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,var(--primary) 0%,var(--accent) 55%,transparent 100%);
-  border-radius:1px
-}
-
-/* ── h2 渐变左边框（替换原纯色 border-left） ── */
-h2{border-left:none;position:relative}
-h2::before{
-  content:'';position:absolute;left:0;top:2px;bottom:2px;width:3px;
-  background:linear-gradient(180deg,var(--primary),var(--accent));border-radius:2px
-}
-
-/* ── 卡片蓝色光晕 hover ── */
-.section-block:hover{
-  box-shadow:
-    0 4px 24px rgba(0,0,0,.09),
-    0 0 0 1px rgba(29,78,216,.12),
-    0 0 36px rgba(14,165,233,.12)
-}
-
-/* ── 彩色关键词标签 ── */
-.hl-blue{display:inline-block;padding:1px 7px;border-radius:4px;font-size:.88em;font-weight:700;
-  background:rgba(59,130,246,.12);color:#1d4ed8;border:1px solid rgba(59,130,246,.25)}
-.hl-cyan{display:inline-block;padding:1px 7px;border-radius:4px;font-size:.88em;font-weight:700;
-  background:rgba(14,165,233,.12);color:#0369a1;border:1px solid rgba(14,165,233,.25)}
-.hl-green{display:inline-block;padding:1px 7px;border-radius:4px;font-size:.88em;font-weight:700;
-  background:rgba(16,185,129,.12);color:#047857;border:1px solid rgba(16,185,129,.25)}
-.hl-gold{display:inline-block;padding:1px 7px;border-radius:4px;font-size:.88em;font-weight:700;
-  background:rgba(245,158,11,.12);color:#b45309;border:1px solid rgba(245,158,11,.25)}
-.hl-red{display:inline-block;padding:1px 7px;border-radius:4px;font-size:.88em;font-weight:700;
-  background:rgba(239,68,68,.12);color:#b91c1c;border:1px solid rgba(239,68,68,.25)}
-/* 纯数字 strong 自动药丸样式 */
-strong.num{display:inline-block;padding:1px 7px;border-radius:4px;font-size:.9em;
-  background:rgba(29,78,216,.10);color:#1d4ed8;border:1px solid rgba(29,78,216,.2);
-  font-family:"SF Mono",monospace}
-
-/* ── Animations ── */
-.fade-in{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
-.fade-in.visible{opacity:1;transform:translateY(0)}
-
-/* ── Responsive ── */
-@media(max-width:900px){
-  #toc{display:none}
-  #layout{padding:16px}
-  .section-block{padding:24px 20px}
-  #navbar{padding:0 16px}
-}
-@media(max-width:600px){
-  .hstats{gap:20px;padding:16px 20px}
-  .section-block{padding:20px 16px}
-}
-
-/* ── Landing page iframe ── */
-.landing-embed{
-  width:100%;height:600px;border:none;border-radius:12px;
-  margin:24px 0;box-shadow:0 4px 24px rgba(0,0,0,.12);
-  border:1px solid var(--border)
-}
-.landing-embed-wrap{margin:24px 0}
-.landing-embed-label{
-  font-size:12px;color:var(--muted);margin-bottom:8px;
-  display:flex;align-items:center;gap:6px
-}
-.landing-embed-label::before{
-  content:'';display:inline-block;width:3px;height:14px;
-  background:var(--primary);border-radius:2px
-}
-
-/* ── 封面页（仅打印可见） ── */
-#cover-page{display:none}
-
-/* ── Print / PDF 导出 ── */
-@media print{
-  @page cover{size:A4;margin:0}
-  @page{size:A4;margin:20mm 16mm 16mm 16mm}
-
-  html,body{
-    -webkit-print-color-adjust:exact;
-    print-color-adjust:exact
-  }
-  html{
-    background:#ffffff !important;
-    -webkit-print-color-adjust:exact;
-    print-color-adjust:exact
-  }
-
-  /* 移除 body::before，改用 html 背景铺满整页 */
-
-  #navbar,#progress,#hero{display:none !important}
-  body::before{display:none !important}
-  body{
-    padding-top:0 !important;
-    font-size:11pt;
-    line-height:1.6;
-    background:transparent !important
-  }
-  #toc{display:none !important}
-  #layout{
-    padding:0 !important;
-    max-width:100% !important;
-    display:block !important
-  }
-  #content{max-width:100% !important}
-  #hero{
-    padding:24px !important;
-    -webkit-print-color-adjust:exact;
-    print-color-adjust:exact
-  }
-  .hstats{display:none !important}
-  .section-block{
-    box-shadow:none !important;
-    border:1px solid #c8d8ee !important;
-    border-radius:8px !important;
-    break-inside:avoid-page;
-    margin-bottom:10px !important;
-    padding:20px 24px !important;
-    background:rgba(255,255,255,0.82) !important;
-    -webkit-print-color-adjust:exact;
-    print-color-adjust:exact
-  }
-  .fade-in{opacity:1 !important;transform:none !important}
-  img{
-    max-width:100% !important;
-    max-height:280px !important;
-    break-inside:avoid;
-    object-fit:contain
-  }
-  h1{font-size:16pt !important;break-after:avoid}
-  h2{font-size:13pt !important;break-after:avoid}
-  h3{font-size:11pt !important;break-after:avoid}
-  h4{font-size:10.5pt !important;break-after:avoid}
-  table{font-size:9pt !important;break-inside:avoid}
-  th,td{padding:5px 8px !important}
-  /* 表标题和表格不分页 */
-  .table-wrap{break-inside:avoid !important;page-break-inside:avoid !important}
-  .table-label-wrap{break-inside:avoid !important;page-break-inside:avoid !important}
-  .landing-embed-wrap{display:none !important}
-  .section-block::before,.section-block::after{display:none !important}
-  h1::after{background:var(--primary) !important}
-  h2::before{background:var(--pm) !important}
-  blockquote{break-inside:avoid}
-
-  /* 封面页 */
-  #cover-page{
-    display:block !important;
-    position:relative;
-    width:210mm;
-    height:297mm;
-    page-break-after:always;
-    break-after:page;
-    margin:0;padding:0;overflow:hidden;
-    page:cover
-  }
-  #cover-page img{
-    width:100% !important;height:100% !important;
-    object-fit:cover !important;display:block !important;
-    border:none !important;box-shadow:none !important;
-    border-radius:0 !important;margin:0 !important;max-height:none !important
-  }
-}
-
-/* ── 无导航栏模式（--no-nav） ── */
-body.no-nav{padding-top:0}
-body.no-nav #navbar,body.no-nav #progress{display:none}
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>龙台智控 — 国产化分布式工业智能平台 · 商业计划书</title><style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}:root{--bg:#eef2f7;--surface:#fff;--border:#dde3ed;--border2:#f1f5f9;--text:#1e293b;--muted:#64748b;--primary:#1d4ed8;--pl:#eff6ff;--pm:#3b82f6;--accent:#0ea5e9;--toc:240px}html{scroll-behavior:smooth}body{background:#fff;color:var(--text);font-family:"Noto Sans CJK SC","Microsoft YaHei","PingFang SC",sans-serif;font-size:15px;line-height:1.8;padding-top:56px}#navbar{position:fixed;top:0;left:0;right:0;z-index:200;height:56px;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 32px;gap:12px}.nl{font-size:15px;font-weight:800;color:var(--primary)}.ns{color:#cbd5e1}.nm{font-size:13px;color:var(--muted)}.nr{margin-left:auto}.nb{padding:6px 16px;border-radius:6px;font-size:13px;font-weight:600;background:var(--primary);color:#fff;text-decoration:none}#progress{position:fixed;top:56px;left:0;right:0;z-index:199;height:3px;background:#e2e8f0}#pb{height:100%;width:0;background:linear-gradient(90deg,var(--primary),var(--accent))}#hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 50%,#0f172a 100%);padding:80px 40px 100px;text-align:center}.hm{position:absolute;inset:0;background-image:linear-gradient(rgba(59,130,246,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,.08) 1px,transparent 1px);background-size:48px 48px}.hi{position:relative;max-width:800px;margin:auto}.hbadge{display:inline-flex;padding:6px 18px;border-radius:20px;border:1px solid rgba(59,130,246,.4);background:rgba(59,130,246,.1);color:#93c5fd;font-size:13px;font-weight:600;margin-bottom:28px}.ht{font-size:48px;font-weight:900;line-height:1.2;color:#fff;margin-bottom:30px}.ht span{display:block;font-size:34px;line-height:1.35;margin-top:14px;background:linear-gradient(135deg,#60a5fa,#38bdf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.hstats{display:flex;justify-content:center;gap:38px;flex-wrap:wrap;padding:24px 36px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)}.hsn{font-size:28px;font-weight:800;color:#60a5fa}.hsl{font-size:12px;color:#94a3b8}#layout{display:flex;align-items:flex-start;max-width:1100px;margin:auto;padding:28px 20px;gap:24px}#toc{width:var(--toc);flex-shrink:0;position:sticky;top:72px;max-height:calc(100vh - 90px);overflow-y:auto;background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 0;box-shadow:0 2px 8px rgba(0,0,0,.06)}.tt{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1.5px;padding:0 16px 10px;border-bottom:1px solid var(--border2);margin-bottom:6px}#toc ul{list-style:none}#toc li.l2{padding-left:12px}#toc li.l3{padding-left:26px}#toc a{display:block;padding:5px 16px;font-size:12.5px;color:var(--muted);text-decoration:none;border-left:2px solid transparent;line-height:1.5}#toc a:hover,#toc a.active{color:var(--primary);background:var(--pl);border-left-color:var(--primary)}#content{flex:1;min-width:0;max-width:800px}.section-block{background:#fff;border:1px solid var(--border);border-radius:14px;padding:40px 48px;margin-bottom:18px;box-shadow:0 1px 4px rgba(0,0,0,.05),0 4px 16px rgba(0,0,0,.04)}h1{font-size:24px;font-weight:800;padding-bottom:14px;margin-bottom:24px;border-bottom:2px solid var(--primary)}h2{font-size:19px;font-weight:700;margin:28px 0 14px;padding-left:12px;border-left:3px solid var(--pm)}h3{font-size:16px;font-weight:700;color:var(--primary);margin:20px 0 10px}p{margin-bottom:12px}blockquote{border-left:3px solid var(--pm);padding:10px 18px;background:var(--pl);border-radius:0 8px 8px 0;margin:14px 0;color:var(--muted)}ul,ol{padding-left:22px;margin-bottom:12px}li{margin-bottom:5px}.table-wrap{overflow-x:auto;margin:16px 0;border-radius:8px;border:1px solid var(--border)}table{width:100%;border-collapse:collapse;font-size:13.5px}th{background:linear-gradient(135deg,#1e3a5f,#1d4ed8);color:#fff;font-weight:600;padding:9px 12px;text-align:left;white-space:nowrap}td{padding:8px 12px;border-bottom:1px solid var(--border2);vertical-align:top}tr:nth-child(even) td{background:#f8faff}img{max-width:100%;height:auto;border-radius:8px;display:block;margin:16px auto;border:1px solid var(--border);box-shadow:0 2px 12px rgba(0,0,0,.08)}.fig-label{font-size:13px;color:var(--muted);text-align:center;font-style:italic;margin-top:4px;margin-bottom:16px}.toc-print{display:none}#cover-page{display:none}@media(max-width:900px){#toc{display:none}#layout{padding:16px}.section-block{padding:24px 20px}}@media print{@page cover{size:A4;margin:0}@page{size:A4;margin:20mm 16mm 16mm 16mm}#navbar,#progress,#hero,#toc{display:none!important}body{padding-top:0;font-size:11pt;line-height:1.6}#layout{padding:0;max-width:100%;display:block}#content{max-width:100%}.toc-print{display:block;break-after:page}.section-block{box-shadow:none;border:1px solid #c8d8ee;border-radius:8px;break-inside:avoid-page;margin-bottom:10px;padding:20px 24px}.fade-in{opacity:1!important}img{max-height:280px;break-inside:avoid;object-fit:contain}h1{font-size:16pt;break-after:avoid}h2{font-size:13pt;break-after:avoid}h3{font-size:11pt;break-after:avoid}table{font-size:9pt;break-inside:avoid}th,td{padding:5px 8px}.table-wrap{break-inside:avoid}.toc-grid{display:flex;flex-direction:column}.toc-item{text-decoration:none;color:var(--text);font-size:12.5px;padding:4px 8px}.toc-l2{padding-left:28px}.toc-l3{padding-left:48px}#cover-page{display:block!important;width:210mm;height:297mm;page-break-after:always;overflow:hidden;page:cover}#cover-page img{width:100%!important;height:100%!important;object-fit:cover!important;border:none!important;box-shadow:none!important;border-radius:0!important;margin:0!important;max-height:none!important}}
 </style>
-</head>
-<body>
+<style id="pdf-print-fix">
+@media print {
+  .toc-print{padding:14px 18px!important;margin-bottom:0!important;break-after:page!important}
+  .toc-print h1{font-size:15pt!important;margin-bottom:10px!important;padding-bottom:8px!important}
+  .toc-print .toc-grid{display:block!important;column-count:2!important;column-gap:18px!important;column-fill:auto!important}
+  .toc-print .toc-item{display:block!important;font-size:9.1pt!important;line-height:1.22!important;padding:1.5px 4px!important;break-inside:avoid!important;page-break-inside:avoid!important}
+  .toc-print .toc-l2{padding-left:12px!important}
+  .toc-print .toc-l3{padding-left:24px!important}
+  .section-block{break-inside:auto!important;page-break-inside:auto!important}
+  .toc-print{break-inside:avoid!important;page-break-inside:avoid!important}
+}
+</style>
 
-<div id="cover-page">
-  <img src="media/image1.png" alt="封面">
-</div>
-
-<div id="navbar">
-  <span class="nl">国产化智慧工厂安全监测平台</span>
-  <span class="ns">|</span>
-  <span class="nm">基于国产操作系统的铜冶炼场景安全监测控制平台</span>
-  <div class="nr"><a href="#hero" class="nb">回到顶部</a></div>
-</div>
-<div id="progress"><div id="pb"></div></div>
-
-
-<div id="hero">
-  <div class="hm"></div><div class="hg"></div>
-  <div class="hi">
-    <div class="hbadge"><span class="hdot"></span>挑战杯 · 揭榜挂帅 · 路演项目书</div>
-    <h1 class="ht">国产化智慧工厂安全监测平台<br><span>基于国产操作系统的铜冶炼场景安全监测控制平台</span></h1>
-    <div class="hstats"><div><div class="hsn">500ms</div><div class="hsl">危气采集链路</div></div><div><div class="hsn">99%</div><div class="hsl">采集准确率</div></div><div><div class="hsn">5大</div><div class="hsl">安全监测功能</div></div><div><div class="hsn">7天</div><div class="hsl">极简部署</div></div></div>
-  </div>
-</div>
-
-<div id="layout">
-  <nav id="toc"><div class="tt">目录</div><ul><li style="padding-left:0px"><a href="#一项目整体介绍">一、项目整体介绍</a></li><li style="padding-left:0px"><a href="#二项目背景">二、项目背景</a></li><li style="padding-left:14px"><a href="#行业现状与需求">2.1 行业现状与需求</a></li><li style="padding-left:14px"><a href="#痛点分析">2.2 痛点分析</a></li><li style="padding-left:0px"><a href="#三技术核心">三、技术核心</a></li><li style="padding-left:14px"><a href="#产品概述一个应用驱动的国产化平台">3.1 产品概述：一个应用驱动的国产化平台</a></li><li style="padding-left:14px"><a href="#应用层平台价值的直接呈现">3.2 应用层：平台价值的直接呈现</a></li><li style="padding-left:28px"><a href="#安全监测域五大功能题目必做">3.2.1 安全监测域：五大功能（题目必做）</a></li><li style="padding-left:28px"><a href="#可视化与控制域">3.2.2 可视化与控制域</a></li><li style="padding-left:28px"><a href="#智能分析域">3.2.3 智能分析域</a></li><li style="padding-left:28px"><a href="#生产运营域">3.2.4 生产运营域</a></li><li style="padding-left:28px"><a href="#设备与能源域">3.2.5 设备与能源域</a></li><li style="padding-left:28px"><a href="#知识支撑域工艺知识库">3.2.6 知识支撑域：工艺知识库</a></li><li style="padding-left:28px"><a href="#应用生态机制">3.2.7 应用生态机制</a></li><li style="padding-left:14px"><a href="#平台层标准化服务支撑">3.3 平台层：标准化服务支撑</a></li><li style="padding-left:14px"><a href="#硬件感知与协议对接层设备接入基础">3.4 硬件感知与协议对接层：设备接入基础</a></li><li style="padding-left:14px"><a href="#技术路线">3.5 技术路线</a></li><li style="padding-left:14px"><a href="#核心技术壁垒">3.6 核心技术壁垒</a></li><li style="padding-left:28px"><a href="#应用生态机制让平台有应用可用应用可扩展">3.6.1 应用生态机制：让平台”有应用可用、应用可扩展”</a></li><li style="padding-left:28px"><a href="#驱动插件生态工业硬件即插即用">3.6.2 驱动插件生态：工业硬件”即插即用”</a></li><li style="padding-left:28px"><a href="#国产-os-适配方法论让平台换系统就跑">3.6.3 国产 OS 适配方法论：让平台”换系统就跑”</a></li><li style="padding-left:14px"><a href="#核心应用场景">3.7 核心应用场景</a></li><li style="padding-left:28px"><a href="#安全监测场景五大功能全覆盖">3.7.1 安全监测场景：五大功能全覆盖</a></li><li style="padding-left:28px"><a href="#智能决策场景应用生态随需求生长">3.7.2 智能决策场景：应用生态随需求生长</a></li><li style="padding-left:14px"><a href="#项目实践时间线">4.1 项目实践（时间线）</a></li><li style="padding-left:14px"><a href="#项目落地验证与演示">4.2 项目落地（验证与演示）</a></li><li style="padding-left:14px"><a href="#实测数据与演示脚本">4.3 实测数据与演示脚本</a></li><li style="padding-left:0px"><a href="#五市场分析">五、市场分析</a></li><li style="padding-left:14px"><a href="#行业背景与痛点">5.1 行业背景与痛点</a></li><li style="padding-left:14px"><a href="#目标市场细分">5.2 目标市场细分</a></li><li style="padding-left:14px"><a href="#目标客户画像">5.3 目标客户画像</a></li><li style="padding-left:14px"><a href="#市场规模测算">5.4 市场规模测算</a></li><li style="padding-left:28px"><a href="#tam-sam-som-测算逻辑与假设">5.4.1 TAM-SAM-SOM 测算逻辑与假设</a></li><li style="padding-left:28px"><a href="#市场规模驱动因素">5.4.2 市场规模驱动因素</a></li><li style="padding-left:14px"><a href="#竞品分析">5.5 竞品分析</a></li><li style="padding-left:28px"><a href="#竞争格局">5.5.1 竞争格局</a></li><li style="padding-left:28px"><a href="#主要竞品对比分析">5.5.2 主要竞品对比分析</a></li><li style="padding-left:0px"><a href="#六商业模式">六、商业模式</a></li><li style="padding-left:14px"><a href="#产品与服务模式">6.1 产品与服务模式</a></li><li style="padding-left:28px"><a href="#核心资产应用生态-国产-os-适配能力-驱动插件生态">6.1.1 核心资产：应用生态 + 国产 OS 适配能力 + 驱动插件生态</a></li><li style="padding-left:28px"><a href="#产品形态与交付模式">6.1.2 产品形态与交付模式</a></li><li style="padding-left:28px"><a href="#极简部署流程">6.1.3 极简部署流程</a></li><li style="padding-left:14px"><a href="#定价与盈利模式">6.2 定价与盈利模式</a></li><li style="padding-left:28px"><a href="#定价体系总览">6.2.1 定价体系总览</a></li><li style="padding-left:28px"><a href="#客户-roi-论证测算示意">6.2.2 客户 ROI 论证（测算示意）</a></li><li style="padding-left:14px"><a href="#推广路径">6.3 推广路径</a></li><li style="padding-left:14px"><a href="#财务预测及分析">6.4 财务预测及分析</a></li><li style="padding-left:28px"><a href="#收入预测2026-2030">6.4.1 收入预测（2026-2030）</a></li><li style="padding-left:28px"><a href="#成本与利润预测">6.4.2 成本与利润预测</a></li><li style="padding-left:28px"><a href="#投资回收与敏感性">6.4.3 投资回收与敏感性</a></li><li style="padding-left:0px"><a href="#七项目团队">七、项目团队</a></li><li style="padding-left:14px"><a href="#团队概况">7.1 团队概况</a></li><li style="padding-left:14px"><a href="#团队成员">7.2 团队成员</a></li><li style="padding-left:14px"><a href="#指导教师团队">7.3 指导教师团队</a></li><li style="padding-left:0px"><a href="#八附件">八、附件</a></li></ul></nav>
-  <div id="content"><div class="section-block fade-in toc-print"><h1>目录</h1><div class="toc-grid"><a href="#一项目整体介绍" class="toc-item toc-l1" style="padding-left:8px">一、项目整体介绍</a><a href="#二项目背景" class="toc-item toc-l1" style="padding-left:8px">二、项目背景</a><a href="#行业现状与需求" class="toc-item toc-l2" style="padding-left:28px">2.1 行业现状与需求</a><a href="#痛点分析" class="toc-item toc-l2" style="padding-left:28px">2.2 痛点分析</a><a href="#三技术核心" class="toc-item toc-l1" style="padding-left:8px">三、技术核心</a><a href="#产品概述一个应用驱动的国产化平台" class="toc-item toc-l2" style="padding-left:28px">3.1 产品概述：一个应用驱动的国产化平台</a><a href="#应用层平台价值的直接呈现" class="toc-item toc-l2" style="padding-left:28px">3.2 应用层：平台价值的直接呈现</a><a href="#安全监测域五大功能题目必做" class="toc-item toc-l3" style="padding-left:48px">3.2.1 安全监测域：五大功能（题目必做）</a><a href="#可视化与控制域" class="toc-item toc-l3" style="padding-left:48px">3.2.2 可视化与控制域</a><a href="#智能分析域" class="toc-item toc-l3" style="padding-left:48px">3.2.3 智能分析域</a><a href="#生产运营域" class="toc-item toc-l3" style="padding-left:48px">3.2.4 生产运营域</a><a href="#设备与能源域" class="toc-item toc-l3" style="padding-left:48px">3.2.5 设备与能源域</a><a href="#知识支撑域工艺知识库" class="toc-item toc-l3" style="padding-left:48px">3.2.6 知识支撑域：工艺知识库</a><a href="#应用生态机制" class="toc-item toc-l3" style="padding-left:48px">3.2.7 应用生态机制</a><a href="#平台层标准化服务支撑" class="toc-item toc-l2" style="padding-left:28px">3.3 平台层：标准化服务支撑</a><a href="#硬件感知与协议对接层设备接入基础" class="toc-item toc-l2" style="padding-left:28px">3.4 硬件感知与协议对接层：设备接入基础</a><a href="#技术路线" class="toc-item toc-l2" style="padding-left:28px">3.5 技术路线</a><a href="#核心技术壁垒" class="toc-item toc-l2" style="padding-left:28px">3.6 核心技术壁垒</a><a href="#应用生态机制让平台有应用可用应用可扩展" class="toc-item toc-l3" style="padding-left:48px">3.6.1 应用生态机制：让平台”有应用可用、应用可扩展”</a><a href="#驱动插件生态工业硬件即插即用" class="toc-item toc-l3" style="padding-left:48px">3.6.2 驱动插件生态：工业硬件”即插即用”</a><a href="#国产-os-适配方法论让平台换系统就跑" class="toc-item toc-l3" style="padding-left:48px">3.6.3 国产 OS 适配方法论：让平台”换系统就跑”</a><a href="#核心应用场景" class="toc-item toc-l2" style="padding-left:28px">3.7 核心应用场景</a><a href="#安全监测场景五大功能全覆盖" class="toc-item toc-l3" style="padding-left:48px">3.7.1 安全监测场景：五大功能全覆盖</a><a href="#智能决策场景应用生态随需求生长" class="toc-item toc-l3" style="padding-left:48px">3.7.2 智能决策场景：应用生态随需求生长</a><a href="#项目实践时间线" class="toc-item toc-l2" style="padding-left:28px">4.1 项目实践（时间线）</a><a href="#项目落地验证与演示" class="toc-item toc-l2" style="padding-left:28px">4.2 项目落地（验证与演示）</a><a href="#实测数据与演示脚本" class="toc-item toc-l2" style="padding-left:28px">4.3 实测数据与演示脚本</a><a href="#五市场分析" class="toc-item toc-l1" style="padding-left:8px">五、市场分析</a><a href="#行业背景与痛点" class="toc-item toc-l2" style="padding-left:28px">5.1 行业背景与痛点</a><a href="#目标市场细分" class="toc-item toc-l2" style="padding-left:28px">5.2 目标市场细分</a><a href="#目标客户画像" class="toc-item toc-l2" style="padding-left:28px">5.3 目标客户画像</a><a href="#市场规模测算" class="toc-item toc-l2" style="padding-left:28px">5.4 市场规模测算</a><a href="#tam-sam-som-测算逻辑与假设" class="toc-item toc-l3" style="padding-left:48px">5.4.1 TAM-SAM-SOM 测算逻辑与假设</a><a href="#市场规模驱动因素" class="toc-item toc-l3" style="padding-left:48px">5.4.2 市场规模驱动因素</a><a href="#竞品分析" class="toc-item toc-l2" style="padding-left:28px">5.5 竞品分析</a><a href="#竞争格局" class="toc-item toc-l3" style="padding-left:48px">5.5.1 竞争格局</a><a href="#主要竞品对比分析" class="toc-item toc-l3" style="padding-left:48px">5.5.2 主要竞品对比分析</a><a href="#六商业模式" class="toc-item toc-l1" style="padding-left:8px">六、商业模式</a><a href="#产品与服务模式" class="toc-item toc-l2" style="padding-left:28px">6.1 产品与服务模式</a><a href="#核心资产应用生态-国产-os-适配能力-驱动插件生态" class="toc-item toc-l3" style="padding-left:48px">6.1.1 核心资产：应用生态 + 国产 OS 适配能力 + 驱动插件生态</a><a href="#产品形态与交付模式" class="toc-item toc-l3" style="padding-left:48px">6.1.2 产品形态与交付模式</a><a href="#极简部署流程" class="toc-item toc-l3" style="padding-left:48px">6.1.3 极简部署流程</a><a href="#定价与盈利模式" class="toc-item toc-l2" style="padding-left:28px">6.2 定价与盈利模式</a><a href="#定价体系总览" class="toc-item toc-l3" style="padding-left:48px">6.2.1 定价体系总览</a><a href="#客户-roi-论证测算示意" class="toc-item toc-l3" style="padding-left:48px">6.2.2 客户 ROI 论证（测算示意）</a><a href="#推广路径" class="toc-item toc-l2" style="padding-left:28px">6.3 推广路径</a><a href="#财务预测及分析" class="toc-item toc-l2" style="padding-left:28px">6.4 财务预测及分析</a><a href="#收入预测2026-2030" class="toc-item toc-l3" style="padding-left:48px">6.4.1 收入预测（2026-2030）</a><a href="#成本与利润预测" class="toc-item toc-l3" style="padding-left:48px">6.4.2 成本与利润预测</a><a href="#投资回收与敏感性" class="toc-item toc-l3" style="padding-left:48px">6.4.3 投资回收与敏感性</a><a href="#七项目团队" class="toc-item toc-l1" style="padding-left:8px">七、项目团队</a><a href="#团队概况" class="toc-item toc-l2" style="padding-left:28px">7.1 团队概况</a><a href="#团队成员" class="toc-item toc-l2" style="padding-left:28px">7.2 团队成员</a><a href="#指导教师团队" class="toc-item toc-l2" style="padding-left:28px">7.3 指导教师团队</a><a href="#八附件" class="toc-item toc-l1" style="padding-left:8px">八、附件</a></div></div>
-<div class="section-block fade-in"><h1 id="一项目整体介绍">一、项目整体介绍</h1>
-<p>　　工业控制系统是国家关键基础设施的”神经中枢”。长期以来，我国大量工控系统依赖国外操作系统与核心工业软件，存在供应链断供、后门漏洞、数据泄露等重大安全风险。与此同时，铜冶炼作为有色金属行业中技术密度最高、安全生产要求最严的工序之一，长期面临三大结构性痛点：<strong>安全风险高</strong>——SO₂、CO、天然气等危气泄漏与高温熔体作业威胁生产安全；<strong>数据孤岛</strong>——现场 DCS、PLC、工业相机、气体分析仪、AGV 等设备”七国八制”并存，协议异构导致智能化应用”无米下锅”；<strong>适配困难</strong>——智能化平台在国产操作系统上落地慢、兼容差，信创改造投入高、周期长。</p>
-<p>　　本项目”基于国产操作系统智慧工厂安全监测控制平台”以<strong>铜冶炼智慧工厂</strong>为落地场景，构建<strong>应用驱动的国产化工业安全监测控制平台</strong>。平台的价值核心在<strong>应用层</strong>——安全监测类应用（温湿度监控、红外照明、危气监测、AGV 避障、货物计数等）、可视化与控制类应用（数字可视化大屏、远程控制台）、AI 智能体应用（工艺数字员工、设备预测性维护、能耗优化等）、视觉 AI 应用（火焰识别、安全行为识别）、工业管理对接应用（MES/ERP/EMS、环保上报、报表统计）等，共同构成面向工厂用户的直接价值界面。应用层之下，<strong>平台层</strong>提供数据、消息、规则、AI 等标准化服务；<strong>硬件感知与协议对接层</strong>通过驱动插件生态兼容大多数工业设备、未兼容设备可快速开发新驱动；国产操作系统贯穿底层，实现全栈自主可控。</p>
-<p>　　平台覆盖题目要求的五大安全监测功能并延伸至铜冶炼特色场景，实现”监测—预警—控制—统计”全链路闭环，支持应用按需挂载、持续扩展——<strong>从单一安全监测，到智能决策，再到全厂数字化管理，应用生态随需求生长</strong>。</p>
-<p>　　<strong>平台的核心价值，直接对应工业企业最关心的四项收益：</strong></p>
-<ul>
-<li><strong>应用丰富，开箱即用</strong>：安全监测、可视化控制、AI 决策、管理对接四类应用齐备，按需挂载、随需求扩展，避免”买了平台没有应用可用”；</li>
-<li><strong>更安全</strong>：危气监测秒级预警、联动”排风—声光—断电”安全序列，异常响应从人工巡检的分钟级压缩至秒级；</li>
-<li><strong>更自主</strong>：全栈国产操作系统底座 + 驱动插件生态，摆脱国外 OS 与核心软件”卡脖子”风险，信创合规一步到位；</li>
-<li><strong>更省心</strong>：平台”兼容大多数、开发解决少数”，新设备接入无需改造产线、无需替换 DCS，7 天级极简部署。</li>
-</ul>
-<p>　　<strong>一句话定位：</strong> 一个”应用丰富、插上就用、换系统就跑”的国产化智慧工厂安全监测控制平台——从铜冶炼产线的危气预警，到全厂可视化与智能决策，让每一座工厂都安全、自主、高效。</p>
-</div>
-<div class="section-block fade-in"><h1 id="二项目背景">二、项目背景</h1>
+<style id="robust-pdf-font-and-page">
+@media print {
+  html,body,#content,.section-block,table,th,td,p,h1,h2,h3,li,blockquote{
+    font-family:"Noto Sans CJK SC",sans-serif !important;
+  }
+}
+@page {
+  size:A4;
+  margin:20mm 16mm 18mm 16mm;
+  @bottom-left {
+    content:"龙台智控 · 国产化分布式工业智能平台商业计划书";
+    font-family:"Noto Sans CJK SC",sans-serif;
+    font-size:8pt;
+    font-weight:600;
+    color:#1d4ed8;
+  }
+  @bottom-right {
+    content:counter(page) " / " counter(pages);
+    font-family:"Noto Sans CJK SC",sans-serif;
+    font-size:8pt;
+    color:#64748b;
+  }
+}
+@page cover {
+  size:A4;
+  margin:0;
+  @bottom-left { content:none; }
+  @bottom-right { content:none; }
+}
+</style>
+</head><body><div id="cover-page"><img src="media/image1.png" alt="封面"></div><div id="navbar"><span class="nl">龙台智控</span><span class="ns">|</span><span class="nm">国产化分布式工业智能平台 · 商业计划书</span><div class="nr"><a href="#hero" class="nb">回到顶部</a></div></div><div id="progress"><div id="pb"></div></div><div id="hero"><div class="hm"></div><div class="hi"><div class="hbadge">XA-202606 · 挑战杯揭榜挂帅</div><div class="ht">龙台智控<br><span>国产化分布式工业智能平台 · 商业计划书</span></div><div class="hstats"><div><div class="hsn">≤500ms</div><div class="hsl">危气采集链路</div></div><div><div class="hsn">≥99.5%</div><div class="hsl">计数准确率</div></div><div><div class="hsn">6大</div><div class="hsl">业务域</div></div><div><div class="hsn">3层</div><div class="hsl">总体架构</div></div></div></div></div><div id="layout"><nav id="toc"><div class="tt">目录</div><ul><li class="l1"><a href="#一项目整体介绍">一、项目整体介绍</a></li><li class="l1"><a href="#二项目背景">二、项目背景</a></li><li class="l2"><a href="#行业现状与需求">2.1 行业现状与需求</a></li><li class="l2"><a href="#痛点分析">2.2 痛点分析</a></li><li class="l3"><a href="#生态适配鸿沟">2.2.1 生态适配鸿沟</a></li><li class="l3"><a href="#智能能力鸿沟">2.2.2 智能能力鸿沟</a></li><li class="l3"><a href="#交付复制鸿沟">2.2.3 交付复制鸿沟</a></li><li class="l1"><a href="#三技术核心">三、技术核心</a></li><li class="l2"><a href="#产品概述一个应用驱动的国产化平台">3.1 产品概述：一个应用驱动的国产化平台</a></li><li class="l2"><a href="#应用层平台价值的直接呈现">3.2 应用层：平台价值的直接呈现</a></li><li class="l2"><a href="#平台层标准化服务支撑">3.3 平台层：标准化服务支撑</a></li><li class="l2"><a href="#硬件感知与协议对接层设备接入基础">3.4 硬件感知与协议对接层：设备接入基础</a></li><li class="l2"><a href="#技术路线">3.5 技术路线</a></li><li class="l3"><a href="#端边云协同">3.5.1 端—边—云协同</a></li><li class="l3"><a href="#国产操作系统适配">3.5.2 国产操作系统适配</a></li><li class="l3"><a href="#ai扩展路线">3.5.3 AI扩展路线</a></li><li class="l2"><a href="#核心技术壁垒">3.6 核心技术壁垒</a></li><li class="l2"><a href="#核心应用场景">3.7 核心应用场景</a></li><li class="l1"><a href="#四项目应用">四、项目应用</a></li><li class="l2"><a href="#项目实践时间线">4.1 项目实践（时间线）</a></li><li class="l2"><a href="#项目落地验证与演示">4.2 项目落地（验证与演示）</a></li><li class="l2"><a href="#实测数据与演示脚本">4.3 实测数据与演示脚本</a></li><li class="l1"><a href="#五市场分析">五、市场分析</a></li><li class="l2"><a href="#行业背景与痛点">5.1 行业背景与痛点</a></li><li class="l2"><a href="#目标市场细分">5.2 目标市场细分</a></li><li class="l2"><a href="#目标客户画像">5.3 目标客户画像</a></li><li class="l2"><a href="#市场规模测算">5.4 市场规模测算</a></li><li class="l2"><a href="#竞品分析">5.5 竞品分析</a></li><li class="l1"><a href="#六商业模式">六、商业模式</a></li><li class="l2"><a href="#产品与服务模式">6.1 产品与服务模式</a></li><li class="l2"><a href="#定价与盈利模式">6.2 定价与盈利模式</a></li><li class="l2"><a href="#推广路径">6.3 推广路径</a></li><li class="l2"><a href="#财务预测及分析">6.4 财务预测及分析</a></li><li class="l1"><a href="#七项目团队">七、项目团队</a></li><li class="l2"><a href="#团队概况">7.1 团队概况</a></li><li class="l2"><a href="#团队成员">7.2 团队成员</a></li><li class="l3"><a href="#王一然团队负责人兼技术主管">王一然｜团队负责人兼技术主管</a></li><li class="l3"><a href="#田杰文生产主管">田杰文｜生产主管</a></li><li class="l3"><a href="#张雯财务主管">张雯｜财务主管</a></li><li class="l3"><a href="#赵荣怡风控主管">赵荣怡｜风控主管</a></li><li class="l3"><a href="#杨森远战略规划主管">杨森远｜战略规划主管</a></li><li class="l3"><a href="#胡峰项目研发">胡峰｜项目研发</a></li><li class="l3"><a href="#何芸芸市场主管">何芸芸｜市场主管</a></li><li class="l2"><a href="#指导教师团队">7.3 指导教师团队</a></li></ul></nav><div id="content"><section class="section-block toc-print"><h1>目录</h1><div class="toc-grid"><a class="toc-item toc-l1" href="#一项目整体介绍">一、项目整体介绍</a><a class="toc-item toc-l1" href="#二项目背景">二、项目背景</a><a class="toc-item toc-l2" href="#行业现状与需求">2.1 行业现状与需求</a><a class="toc-item toc-l2" href="#痛点分析">2.2 痛点分析</a><a class="toc-item toc-l3" href="#生态适配鸿沟">2.2.1 生态适配鸿沟</a><a class="toc-item toc-l3" href="#智能能力鸿沟">2.2.2 智能能力鸿沟</a><a class="toc-item toc-l3" href="#交付复制鸿沟">2.2.3 交付复制鸿沟</a><a class="toc-item toc-l1" href="#三技术核心">三、技术核心</a><a class="toc-item toc-l2" href="#产品概述一个应用驱动的国产化平台">3.1 产品概述：一个应用驱动的国产化平台</a><a class="toc-item toc-l2" href="#应用层平台价值的直接呈现">3.2 应用层：平台价值的直接呈现</a><a class="toc-item toc-l2" href="#平台层标准化服务支撑">3.3 平台层：标准化服务支撑</a><a class="toc-item toc-l2" href="#硬件感知与协议对接层设备接入基础">3.4 硬件感知与协议对接层：设备接入基础</a><a class="toc-item toc-l2" href="#技术路线">3.5 技术路线</a><a class="toc-item toc-l3" href="#端边云协同">3.5.1 端—边—云协同</a><a class="toc-item toc-l3" href="#国产操作系统适配">3.5.2 国产操作系统适配</a><a class="toc-item toc-l3" href="#ai扩展路线">3.5.3 AI扩展路线</a><a class="toc-item toc-l2" href="#核心技术壁垒">3.6 核心技术壁垒</a><a class="toc-item toc-l2" href="#核心应用场景">3.7 核心应用场景</a><a class="toc-item toc-l1" href="#四项目应用">四、项目应用</a><a class="toc-item toc-l2" href="#项目实践时间线">4.1 项目实践（时间线）</a><a class="toc-item toc-l2" href="#项目落地验证与演示">4.2 项目落地（验证与演示）</a><a class="toc-item toc-l2" href="#实测数据与演示脚本">4.3 实测数据与演示脚本</a><a class="toc-item toc-l1" href="#五市场分析">五、市场分析</a><a class="toc-item toc-l2" href="#行业背景与痛点">5.1 行业背景与痛点</a><a class="toc-item toc-l2" href="#目标市场细分">5.2 目标市场细分</a><a class="toc-item toc-l2" href="#目标客户画像">5.3 目标客户画像</a><a class="toc-item toc-l2" href="#市场规模测算">5.4 市场规模测算</a><a class="toc-item toc-l2" href="#竞品分析">5.5 竞品分析</a><a class="toc-item toc-l1" href="#六商业模式">六、商业模式</a><a class="toc-item toc-l2" href="#产品与服务模式">6.1 产品与服务模式</a><a class="toc-item toc-l2" href="#定价与盈利模式">6.2 定价与盈利模式</a><a class="toc-item toc-l2" href="#推广路径">6.3 推广路径</a><a class="toc-item toc-l2" href="#财务预测及分析">6.4 财务预测及分析</a><a class="toc-item toc-l1" href="#七项目团队">七、项目团队</a><a class="toc-item toc-l2" href="#团队概况">7.1 团队概况</a><a class="toc-item toc-l2" href="#团队成员">7.2 团队成员</a><a class="toc-item toc-l3" href="#王一然团队负责人兼技术主管">王一然｜团队负责人兼技术主管</a><a class="toc-item toc-l3" href="#田杰文生产主管">田杰文｜生产主管</a><a class="toc-item toc-l3" href="#张雯财务主管">张雯｜财务主管</a><a class="toc-item toc-l3" href="#赵荣怡风控主管">赵荣怡｜风控主管</a><a class="toc-item toc-l3" href="#杨森远战略规划主管">杨森远｜战略规划主管</a><a class="toc-item toc-l3" href="#胡峰项目研发">胡峰｜项目研发</a><a class="toc-item toc-l3" href="#何芸芸市场主管">何芸芸｜市场主管</a><a class="toc-item toc-l2" href="#指导教师团队">7.3 指导教师团队</a></div></section><section class="section-block fade-in"><h1 id="一项目整体介绍">一、项目整体介绍</h1>
+<p>龙台智控面向铜冶炼等流程工业，在国产操作系统上连接PLC、DCS、传感器、气体分析仪、工业相机和边缘终端，并提供安全监测、设备管理、生产运营、知识服务和AI辅助分析。平台通过设备、协议和操作系统适配层兼容存量工业系统，使新增业务能够在不重构原有控制体系的情况下逐步部署。</p>
+<p>项目首先解决三类问题：不同品牌设备和协议难以统一接入，现有系统以数据展示和阈值报警为主，定制项目难以跨工厂复制。围绕这三类问题，平台采用“硬件层—平台层—应用层”三层架构：硬件层负责连接现场设备，平台层统一提供设备、数据、消息、规则、权限、审计和AI服务，应用层直接承载现场业务。</p>
+<blockquote>
+<p><strong>一个应用丰富、插上就用、换系统就跑的国产化分布式工业智能平台。</strong></p>
+</blockquote>
+<p>“插上就用”对应设备和协议的插件化接入，“换系统就跑”对应不同国产操作系统之间的快速迁移与适配。平台不替代DCS、PLC或SIS的核心控制职责，而是在既有自动化体系之上增加统一接入、业务协同和智能分析能力。</p>
+<p>平台核心软件采用原生C++后端与Vue 3 / TypeScript工业HMI，通过REST与WebSocket实现前后端通信，覆盖设备状态、历史数据、报警管理、事件处置、报表、RBAC权限、操作审计、命令记录和SQLite数据持久化。DeviceAdapter、ProtocolAdapter、OsAdapter分别承担设备、协议和操作系统适配，并支持OpenHarmony/HongZOS应用壳，以及银河麒麟、统信UOS、通用POSIX和远程SSH目标机部署。六大业务域建立在这一统一底座之上：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>业务域</th>
+<th>重点场景</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>安全监测</td>
+<td>温湿度、红外照明、SO₂/CO危气、AGV避障、货物计数</td>
+</tr>
+<tr class="even">
+<td>可视化与控制</td>
+<td>工业大屏、Web/App远程控制、报警应急联动</td>
+</tr>
+<tr class="odd">
+<td>智能分析</td>
+<td>异常分析、智能问答、视觉AI、预测维护、能耗优化</td>
+</tr>
+<tr class="even">
+<td>生产运营</td>
+<td>报表统计、人员安全、巡检与运营分析</td>
+</tr>
+<tr class="odd">
+<td>设备能源</td>
+<td>设备台账、点检、工单、能耗与双碳</td>
+</tr>
+<tr class="even">
+<td>知识支撑</td>
+<td>工艺知识库、规程案例、RAG检索</td>
+</tr>
+</tbody>
+</table></div>
+<p>人工智能承担数据分析、知识检索、异常研判和处置建议，关键生产控制、安全联锁和高风险设备动作仍由确定性规则、安全保护逻辑和授权人员共同约束。项目坚持<strong>人工最终决策</strong>。</p>
+<p>商业化采用“平台授权 + 驱动/协议接入 + 场景插件 + 现场实施 + 维保续费”的收入结构，从单场景验证进入标准车间，再扩展到全厂平台和集团多基地。</p>
+</section>
+<section class="section-block fade-in"><h1 id="二项目背景">二、项目背景</h1>
 <h2 id="行业现状与需求">2.1 行业现状与需求</h2>
-<p>　　全球制造业正加速向智能化、数字化、绿色化方向演进，智慧工厂已成为产业升级的核心载体。在我国”制造强国”“网络强国”“数字中国”战略引领下，构建安全、可靠、自主可控的工业基础软硬件体系已成为国家意志。《“十四五”智能制造发展规划》《有色金属行业碳达峰实施方案》等政策文件相继出台，明确要求加快工业软件国产化替代与数字化智能化改造。</p>
-<p>　　从产业格局看，我国大量工控系统依赖国外操作系统与核心工业软件，存在三大现实风险：<strong>供应链断供风险</strong>——制裁与禁运可能随时掐断系统更新与技术支持；<strong>后门漏洞风险</strong>——关键工业数据与控制系统存在被远程控制的安全隐患；<strong>数据泄露风险</strong>——冶炼工艺参数、能源数据等敏感信息面临外泄威胁。</p>
-<p>　　从技术演进看，三个方向值得关注：一是架构层面，从传统五层架构向”云边端”协同架构演进，边缘智能网关成为打通存量设备数据孤岛的关键枢纽；二是国产化层面，麒麟 OS、统信 UOS、OpenHarmony 等国产操作系统生态快速成熟，工业发行版（如诚迈 HongZOS）开始破解工业设备互联互通难题；三是应用层面，工业应用正从”单点工具”走向”应用生态”，AI 智能体与深度学习视觉正在从”辅助建议”走向”闭环控制”。</p>
-<p>　　然而，国产操作系统在工业场景的落地仍面临”<strong>适配难、兼容差、应用少</strong>”的现实瓶颈：智能化平台多为国外 OS 生态开发，迁移到国产 OS 需要重新编译、适配驱动、调优性能，周期长、成本高；即便平台迁移成功，<strong>缺乏可直接使用的工业应用</strong>也让企业”有平台、无应用”。<strong>一个”应用丰富、能快速适配国产 OS、能兼容大多数工业硬件”的平台化解决方案，是当前工业信创的迫切刚需。</strong></p>
+<p>制造业数字化、智能化和国产化同步推进，工业软件正在从单点工具转向自主可控、互联协同和智能化平台。对工业企业而言，国产化并不是简单更换操作系统，真正影响系统落地的是设备驱动、工业协议、运行环境、实时性、安全性和应用生态。</p>
+<p>铜冶炼等流程工业已经形成大量长期运行的DCS、PLC和专用设备。设备年代、厂商和通信接口差异明显，同时具有连续生产、高安全约束和存量系统不可轻易替换等特点。新增数字化系统必须能够兼容现有设备和控制体系，避免大规模停产改造。</p>
+<p>工业数字化的需求也从“看见数据”进一步转向“识别异常、辅助判断、联动处置和全过程留痕”。趋势曲线、报表和阈值报警仍是基础能力，但安全管理、设备运维和生产协同需要更完整的数据链路和业务闭环。</p>
 <h2 id="痛点分析">2.2 痛点分析</h2>
-<p>　　当前工业信创与铜冶炼智能化落地，普遍存在以下四类核心痛点：</p>
-<p><strong>1. 危气风险高，安全监测响应慢</strong></p>
-<p>　　铜冶炼涉及 SO₂ 烟气、CO（还原期）、天然气（还原剂）等危险因素，传统人工巡检周期为数分钟，小异常往往在演变为停炉事故后才被发现；危气泄漏处置依赖人工判断，联动动作（排风、断电）滞后，事故后果严重。</p>
-<blockquote>
-<p><strong>平台对应：</strong> 危气监测应用三级阈值分级预警（提示/预警/报警），报警联动”排风→声光→断电”安全序列秒级执行；趋势斜率预测算法变”超标报警”为”趋势预警”，提前处置。</p>
-</blockquote>
-<p><strong>2. 数据协议异构，设备互联互通难</strong></p>
-<p>　　铜冶炼企业普遍存在 DCS、PLC、工业相机、气体分析仪、AGV 等设备”七国八制”并存的问题。不同年代、不同品牌、不同标准的设备缺乏统一的数据交互协议，数据采集依赖人工抄表，实时性差、准确率低，智能化应用难以穿透至生产控制最底层。</p>
-<blockquote>
-<p><strong>平台对应：</strong> 驱动插件生态——将 Modbus、OPC UA、PROFINET、GB28181、HJ212 等主流协议统一封装为标准驱动插件，新设备接入只需注册一个插件；未内置驱动的设备通过 Driver SDK 快速开发，无需修改任何上层逻辑。</p>
-</blockquote>
-<p><strong>3. 国产 OS 适配难，信创改造投入产出难平衡</strong></p>
-<p>　　传统智能化改造往往需要停产改造、重新布线、替换 DCS，工程周期长达 3~6 个月，单项目投入动辄数百万；且改造后效果难以提前验证。智能化平台在国产操作系统上落地更是困难重重：驱动不兼容、运行库缺失、性能不达标，导致大量信创项目停留在”能开机、能看板”层面。</p>
-<blockquote>
-<p><strong>平台对应：</strong> 国产 OS 适配方法论（HAL 抽象层 + 容器化交付 + 构建适配矩阵）+ 旁路接入、不停产、不改造 DCS；7 天级极简部署，试用期内核心指标未达标免收服务费。</p>
-</blockquote>
-<p><strong>4. 有平台无应用，智能化深度不足</strong></p>
-<p>　　许多工业互联网平台”重连接、轻应用”：数据接进来了，但缺乏可直接使用的工业应用，可视化停留在看板层面，AI 能力难以落地到具体业务。工艺知识、设备维护、能耗管理等场景缺少可用的应用支撑。</p>
-<blockquote>
-<p><strong>平台对应：</strong> 应用层提供四类开箱即用应用（安全监测 / 可视化控制 / AI 智能体 / 管理对接），并可独立开发、挂载、卸载——数字员工只是 AI 智能体应用中的一类，平台应用生态随需求持续扩展。</p>
-</blockquote>
-</div>
-<div class="section-block fade-in"><h1 id="三技术核心">三、技术核心</h1>
+<h3 id="生态适配鸿沟">2.2.1 生态适配鸿沟</h3>
+<p>工业现场同时存在串口、以太网、CAN、现场总线、工业以太网、视频和环保数据等多类接口与协议。不同国产操作系统对驱动、SDK、协议栈和硬件BSP的支持程度不同，设备接入和系统迁移容易演变为重复开发。</p>
+<p>龙台智控把设备连接、协议解析和操作系统差异限制在适配边界内，上层业务通过统一接口访问现场设备，降低应用对具体厂商和系统环境的依赖。</p>
+<h3 id="智能能力鸿沟">2.2.2 智能能力鸿沟</h3>
+<p>传统工业系统大量功能停留在采集、展示、报表和阈值报警。复杂工况诊断、异常原因分析和跨系统协同仍依赖人员经验。</p>
+<p>平台把现场数据、知识库和AI辅助分析接入同一业务流程，使智能能力能够参与真实工业工作流，同时通过权限、规则和审计限制执行边界。</p>
+<h3 id="交付复制鸿沟">2.2.3 交付复制鸿沟</h3>
+<p>传统项目常把设备适配、协议配置和业务逻辑固化在单个项目代码中，进入下一工厂后仍需重新开发。龙台智控把共性部分沉淀为平台服务，把差异部分收敛到驱动、协议、应用和配置层，减少跨项目重复建设。</p>
+</section>
+<section class="section-block fade-in"><h1 id="三技术核心">三、技术核心</h1>
 <h2 id="产品概述一个应用驱动的国产化平台">3.1 产品概述：一个应用驱动的国产化平台</h2>
-<p>　　“基于国产操作系统智慧工厂安全监测控制平台”是一个<strong>以应用层为价值核心</strong>的国产化工业安全监测与智能控制平台。平台采用”<strong>应用层—平台层—硬件感知与协议对接层</strong>”三层架构，叙述逻辑自上而下：<strong>应用层</strong>是用户直接使用的价值界面（安全监测、可视化控制、AI 智能体、视觉识别、生产运营、设备能源等应用）；<strong>平台层</strong>是支撑应用的标准化服务；<strong>硬件感知与协议对接层</strong>是接入各类工业硬件的基础；<strong>国产操作系统</strong>贯穿底层，承载全栈。</p>
-<figure>
-<img loading="lazy" src="media/architecture.svg" alt="平台总体架构" />
-<figcaption aria-hidden="true">平台总体架构</figcaption>
-</figure>
-<h2 id="应用层平台价值的直接呈现">3.2 应用层：平台价值的直接呈现</h2>
-<p>　　应用层是平台”能干什么”的答案。平台按<strong>业务域</strong>组织应用，六大业务域覆盖工厂核心业务，每类应用解决一类业务问题，独立开发、独立挂载、独立升级：</p>
-<figure>
-<img loading="lazy" src="media/apps.svg" alt="应用层全景" />
-<figcaption aria-hidden="true">应用层全景</figcaption>
-</figure>
-<h3 id="安全监测域五大功能题目必做">3.2.1 安全监测域：五大功能（题目必做）</h3>
-<p>　　安全监测域是平台的基础能力层，五大功能完整覆盖题目要求，全部映射至铜冶炼真实场景，可实物沙盘演示。</p>
-<p><strong>（1）温湿度智能监控（精矿库/电解车间）</strong></p>
-<div class="table-wrap"><table>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<thead>
-<tr>
-<th>维度</th>
-<th>内容</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>功能</td>
-<td>温湿度实时采集，超出工艺阈值自动联动除湿/通风/加热，维持最佳储存与工艺条件</td>
-</tr>
-<tr>
-<td>数据流</td>
-<td>SHT30 传感器 → I2C → 网关滤波校准 → MQTT 上报 → 规则引擎 → 联动执行 / TDengine 入库 / 大屏曲线</td>
-</tr>
-<tr>
-<td>技术实现</td>
-<td>双传感器冗余（A/B 工位）取均值；滑动中值滤波抑制毛刺；联动指令经继电器下发</td>
-</tr>
-<tr>
-<td>关键指标</td>
-<td>采集周期 ≤ 1s；联动响应 ≤ 2s；温度 ±0.5℃、湿度 ±3%RH；历史曲线可查</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>（2）红外感应照明（车间安全照明）</strong></p>
-<div class="table-wrap"><table>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<thead>
-<tr>
-<th>维度</th>
-<th>内容</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>功能</td>
-<td>红外感应检测人员活动自动开灯，无人延时关灯节能；夜间自动开启高危通道照明</td>
-</tr>
-<tr>
-<td>数据流</td>
-<td>HC-SR501 感应 → GPIO 中断 → 照明控制器 → 继电器 → LED；状态上报平台</td>
-</tr>
-<tr>
-<td>技术实现</td>
-<td>感应信号边沿触发；延时定时器可配置（30s–5min）；与视觉 AI 人员异常检测联动开灯</td>
-</tr>
-<tr>
-<td>关键指标</td>
-<td>开灯响应 ≤ 500ms；感应距离 3–7m；节能看板统计节电估算</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>（3）危气监测（SO₂/CO/天然气）</strong></p>
-<div class="table-wrap"><table>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<thead>
-<tr>
-<th>维度</th>
-<th>内容</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>功能</td>
-<td>SO₂/CO/天然气浓度实时监测，三级阈值分级预警，报警联动”排风→声光→断电”安全序列</td>
-</tr>
-<tr>
-<td>数据流</td>
-<td>气体传感器 → 驱动插件采集 → 校准补偿 → 规则引擎分级判定 → 报警联动 + 大屏预警 + 远程推送</td>
-</tr>
-<tr>
-<td>技术实现</td>
-<td>电化学传感器温湿度补偿、零点漂移校正；双传感器交叉验证防误报；趋势斜率预测变”超标报警”为”趋势预警”</td>
-</tr>
-<tr>
-<td>关键指标</td>
-<td>采集链路 ≤ 500ms；联动响应 ≤ 1s；三级阈值（提示/预警/报警）分级处置</td>
-</tr>
-</tbody>
-</table></div>
-<figure>
-<img loading="lazy" src="media/datastream.svg" alt="危气监测数据流" />
-<figcaption aria-hidden="true">危气监测数据流</figcaption>
-</figure>
-<p><strong>（4）AGV 避障（阳极板/阴极铜搬运）</strong></p>
-<div class="table-wrap"><table>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<thead>
-<tr>
-<th>维度</th>
-<th>内容</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>功能</td>
-<td>多路超声波为 AGV 提供避障，距离分级决策（急停/减速/巡航），保障物料运输安全</td>
-</tr>
-<tr>
-<td>数据流</td>
-<td>超声波测距 → 车载 MCU 实时决策 → PWM 调速/转向 → 电机执行；状态经网关上报平台</td>
-</tr>
-<tr>
-<td>技术实现</td>
-<td>前向 2 路 + 侧向 2 路超声波交叉融合取最小值；失效自动降级红外通道并上报”传感器降级”告警</td>
-</tr>
-<tr>
-<td>关键指标</td>
-<td>避障响应 ≤ 100ms；&gt;60cm 巡航 / 30–60cm 减速 / &lt;30cm 急停；大屏实时显示轨迹</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>（5）货物感应计数（阳极板/阴极铜产量）</strong></p>
-<div class="table-wrap"><table>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<thead>
-<tr>
-<th>维度</th>
-<th>内容</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>功能</td>
-<td>光电传感器在浇铸线/打包线自动计数，按班次统计，联动产量与库存看板</td>
-</tr>
-<tr>
-<td>数据流</td>
-<td>光电开关 → GPIO 中断 → 计数状态机（去抖）→ 计数服务 → 产量看板 / 库存联动</td>
-</tr>
-<tr>
-<td>技术实现</td>
-<td>软件消抖 10ms + 两次边沿确认，每次完整遮挡-恢复记 1 件；支持手动修正误计</td>
-</tr>
-<tr>
-<td>关键指标</td>
-<td>计数准确率 ≥ 99.5%；按班次/产线分组统计；与库存看板联动</td>
-</tr>
-</tbody>
-</table></div>
-<h3 id="可视化与控制域">3.2.2 可视化与控制域</h3>
-<p><strong>（1）数字可视化大屏</strong></p>
-<div class="table-wrap"><table>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<thead>
-<tr>
-<th>维度</th>
-<th>内容</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>功能</td>
-<td>产线实时态势（五工序点位、危气热力、AGV 轨迹）、报警中心、数据看板（温湿度曲线、危气仪表盘、产量统计、能耗看板）、3D 车间视图</td>
-</tr>
-<tr>
-<td>数据流</td>
-<td>平台数据 → WebSocket 增量推送 → 大屏组件渲染</td>
-</tr>
-<tr>
-<td>技术实现</td>
-<td>Vue3 + ECharts + Three.js；增量推送仅传变更字段、二进制压缩帧；Canvas/WebGL 渲染优化</td>
-</tr>
-<tr>
-<td>关键指标</td>
-<td>数据刷新 ≤ 1s；报警弹窗 + 声光提醒；支持 2D/3D 车间视图切换</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>（2）远程控制台</strong></p>
-<div class="table-wrap"><table>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<thead>
-<tr>
-<th>维度</th>
-<th>内容</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>功能</td>
-<td>Web/移动端远程监控与控制（照明、排风、报警复位、AGV 启停、阈值参数配置）</td>
-</tr>
-<tr>
-<td>数据流</td>
-<td>远程端 → HTTPS/WebSocket → 鉴权 → 指令下发（MQTT cmd 主题）→ 网关执行 → ack 回执 → 前端状态刷新</td>
-</tr>
-<tr>
-<td>技术实现</td>
-<td>指令幂等、超时重试；权限分级（管理员/操作员/观察员）；操作审计留痕</td>
-</tr>
-<tr>
-<td>关键指标</td>
-<td>指令下发到执行 ≤ 2s；支持 PC/平板/移动端自适应</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>（3）报警应急联动</strong></p>
-<div class="table-wrap"><table>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<thead>
-<tr>
-<th>维度</th>
-<th>内容</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>功能</td>
-<td>分级报警（提示/预警/报警）、多渠道推送（大屏/短信/语音/邮件）、应急联动序列、处置闭环记录</td>
-</tr>
-<tr>
-<td>技术实现</td>
-<td>规则引擎触发 + 联动动作编排；报警状态锁定部分危险操作（互锁）；处置过程全记录可追溯</td>
-</tr>
-<tr>
-<td>关键指标</td>
-<td>报警推送 ≤ 1s；联动序列（排风→声光→断电）自动执行；支持远程/现场复位</td>
-</tr>
-</tbody>
-</table></div>
-<h3 id="智能分析域">3.2.3 智能分析域</h3>
-<p><strong>（1）AI 智能体应用（多类，工艺数字员工是其中一类）</strong></p>
-<div class="table-wrap"><table>
-<colgroup>
-<col style="width: 31%" />
-<col style="width: 25%" />
-<col style="width: 17%" />
-<col style="width: 25%" />
-</colgroup>
-<thead>
-<tr>
-<th>智能体应用</th>
-<th>业务场景</th>
-<th>能力</th>
-<th>数据来源</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>工艺数字员工（配料/熔炼/吹炼/精炼/调度）</td>
-<td>铜冶炼五道工序</td>
-<td>炉况监测、终点判断、节奏协同</td>
-<td>温度/SO₂/火焰/品位软测量</td>
-</tr>
-<tr>
-<td>设备预测性维护智能体</td>
-<td>设备健康管理</td>
-<td>振动/温度/电流趋势分析、故障早期预警、维修工单生成</td>
-<td>设备传感器/PLC</td>
-</tr>
-<tr>
-<td>能耗优化智能体</td>
-<td>双碳管理</td>
-<td>能耗统计、能效异常识别、节能建议</td>
-<td>能源计量/电表</td>
-</tr>
-<tr>
-<td>环保合规智能体</td>
-<td>环保监测</td>
-<td>烟气/废水汇总、HJ212 上报、排放预警</td>
-<td>烟气分析仪</td>
-</tr>
-<tr>
-<td>安全巡检智能体</td>
-<td>安全管理</td>
-<td>巡检编排、异常识别、整改闭环</td>
-<td>摄像头/传感器</td>
-</tr>
-</tbody>
-</table></div>
-<div class="table-wrap"><table>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<thead>
-<tr>
-<th>维度</th>
-<th>内容</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>功能</td>
-<td>多类智能体面向不同业务场景独立运行、按需挂载；新场景只需开发新智能体应用</td>
-</tr>
-<tr>
-<td>技术实现</td>
-<td>ReAct（Reasoning + Acting）范式：思考→行动→观察→再思考；共享平台 AI 服务（大模型推理/向量检索/工具调用）；多智能体间传递”基于预测模型的未来状态估计”，实现跨工序动态决策闭环</td>
-</tr>
-<tr>
-<td>关键指标</td>
-<td>推理决策秒级（1–3s）；中高风险操作人工审批后执行；全程留痕审计</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>（2）视觉 AI 应用</strong></p>
-<div class="table-wrap"><table>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<thead>
-<tr>
-<th>维度</th>
-<th>内容</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>功能</td>
-<td>火焰视觉识别（辅助终点判断）；安全行为识别（安全帽检测、危区闯入、人员倒地）</td>
-</tr>
-<tr>
-<td>数据流</td>
-<td>工业相机/摄像头 → RTSP/ONVIF/GB28181 → 边缘 NPU 推理 → 结果上报平台 → 联动报警</td>
-</tr>
-<tr>
-<td>技术实现</td>
-<td>CNN（ResNet 轻量版）火焰颜色/形态特征，融合 SO₂ 曲线与温度曲线；YOLO 轻量模型行为识别；ONNX 导出 + RK3568 NPU 推理</td>
-</tr>
-<tr>
-<td>关键指标</td>
-<td>边缘推理 ≥ 15fps；识别结果联动报警与区域照明</td>
-</tr>
-</tbody>
-</table></div>
-<h3 id="生产运营域">3.2.4 生产运营域</h3>
-<p><strong>（1）报表与统计</strong></p>
-<div class="table-wrap"><table>
-<thead>
-<tr>
-<th>维度</th>
-<th>内容</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>功能</td>
-<td>产量/报警/能耗报表，班次统计，数据导出</td>
-</tr>
-<tr>
-<td>技术实现</td>
-<td>TDengine 聚合查询；按班次/日/月维度；CSV/Excel 导出</td>
-</tr>
-<tr>
-<td>关键指标</td>
-<td>阳极板/阴极铜产量统计；报警事件统计；能耗报表</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>（2）人员安全管理</strong></p>
-<div class="table-wrap"><table>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<thead>
-<tr>
-<th>维度</th>
-<th>内容</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>功能</td>
-<td>电子围栏、人员定位、巡检轨迹管理、危区闯入报警</td>
-</tr>
-<tr>
-<td>技术实现</td>
-<td>视觉 AI 识别 + 定位标签（UWB/蓝牙可选）；与红外照明、报警联动</td>
-</tr>
-<tr>
-<td>关键指标</td>
-<td>闯入报警响应 ≤ 2s；巡检轨迹可回溯</td>
-</tr>
-</tbody>
-</table></div>
-<h3 id="设备与能源域">3.2.5 设备与能源域</h3>
-<p><strong>（1）设备管理应用</strong></p>
-<div class="table-wrap"><table>
-<thead>
-<tr>
-<th>维度</th>
-<th>内容</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>功能</td>
-<td>设备台账、点巡检、维修工单、备件管理</td>
-</tr>
-<tr>
-<td>技术实现</td>
-<td>设备生命周期管理；与设备预测性维护智能体联动自动生成工单</td>
-</tr>
-<tr>
-<td>关键指标</td>
-<td>台账完整率 100%；工单闭环可追溯</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>（2）能耗与双碳应用</strong></p>
-<div class="table-wrap"><table>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<thead>
-<tr>
-<th>维度</th>
-<th>内容</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>功能</td>
-<td>能耗监测、能效看板、碳排放核算、节能建议</td>
-</tr>
-<tr>
-<td>技术实现</td>
-<td>能源计量数据接入（Modbus/电表）；能效异常识别；碳排核算模型</td>
-</tr>
-<tr>
-<td>关键指标</td>
-<td>能耗数据采集 ≤ 5s；碳排核算报告自动生成</td>
-</tr>
-</tbody>
-</table></div>
-<h3 id="知识支撑域工艺知识库">3.2.6 知识支撑域：工艺知识库</h3>
-<div class="table-wrap"><table>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<thead>
-<tr>
-<th>维度</th>
-<th>内容</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>功能</td>
-<td>工艺规程/操作规程/历史案例向量化入库，RAG 检索增强，支撑智能体决策有据可依</td>
-</tr>
-<tr>
-<td>技术实现</td>
-<td>文档分块 + 向量化（Milvus/Qdrant）；相似度检索；支持 PDF/Word/TXT/HTML</td>
-</tr>
-<tr>
-<td>关键指标</td>
-<td>检索响应 ≤ 1s；知识库与智能体联动</td>
-</tr>
-</tbody>
-</table></div>
-<h3 id="应用生态机制">3.2.7 应用生态机制</h3>
-<div class="table-wrap"><table>
-<colgroup>
-<col style="width: 50%" />
-<col style="width: 50%" />
-</colgroup>
-<thead>
-<tr>
-<th>机制</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>应用商店</td>
-<td>应用独立打包、版本管理、一键挂载/卸载，互不影响</td>
-</tr>
-<tr>
-<td>低代码画布</td>
-<td>拖拽节点（数据读取、AI 模型、规则判断、执行动作、人工审批）编排业务应用，工艺工程师无需专职开发团队</td>
-</tr>
-<tr>
-<td>开放 API</td>
-<td>应用通过平台开放接口接入，第三方可开发应用上架</td>
-</tr>
-</tbody>
-</table></div>
-<h2 id="平台层标准化服务支撑">3.3 平台层：标准化服务支撑</h2>
-<p>　　平台层是应用运行的”水电管线”，向下屏蔽硬件差异，向上为应用提供标准化服务，<strong>可快速深度融合嵌入国产操作系统</strong>：</p>
-<div class="table-wrap"><table>
-<colgroup>
-<col style="width: 25%" />
-<col style="width: 22%" />
-<col style="width: 51%" />
-</colgroup>
-<thead>
-<tr>
-<th>服务域</th>
-<th>服务</th>
-<th>兼容/可选实现</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>设备域</td>
-<td>设备管理（设备影子/台账/在线状态）</td>
-<td>自研</td>
-</tr>
-<tr>
-<td>数据域</td>
-<td>时序数据服务</td>
-<td>TDengine（推荐）/ InfluxDB</td>
-</tr>
-<tr>
-<td>数据域</td>
-<td>关系数据服务</td>
-<td>PostgreSQL / MySQL / SQLite</td>
-</tr>
-<tr>
-<td>数据域</td>
-<td>缓存服务</td>
-<td>Redis</td>
-</tr>
-<tr>
-<td>消息域</td>
-<td>消息服务</td>
-<td>EMQX（MQTT）/ RabbitMQ / Kafka</td>
-</tr>
-<tr>
-<td>规则域</td>
-<td>规则引擎（阈值/滑动窗口/趋势）</td>
-<td>自研轻量引擎</td>
-</tr>
-<tr>
-<td>AI 域</td>
-<td>大模型推理服务</td>
-<td>vLLM / Ollama（Qwen、DeepSeek 蒸馏版）</td>
-</tr>
-<tr>
-<td>AI 域</td>
-<td>视觉推理服务</td>
-<td>ONNX Runtime / OpenVINO</td>
-</tr>
-<tr>
-<td>AI 域</td>
-<td>向量检索/RAG</td>
-<td>Milvus / Qdrant</td>
-</tr>
-<tr>
-<td>AI 域</td>
-<td>智能体编排</td>
-<td>自研编排引擎 / Flowise 二次开发</td>
-</tr>
-<tr>
-<td>应用域</td>
-<td>低代码画布</td>
-<td>React Flow 二次开发</td>
-</tr>
-<tr>
-<td>安全域</td>
-<td>认证鉴权 / 国密服务</td>
-<td>Keycloak / 国密 SM2/SM3/SM4</td>
-</tr>
-<tr>
-<td>运行域</td>
-<td>容器与集群 / 微服务 / 监控运维</td>
-<td>Docker / K8s / Spring Cloud / Prometheus</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>平台层核心能力：</strong></p>
-<ul>
-<li><strong>数据采集服务</strong>：多线程采集引擎 + 数据质量保障（滑动滤波、坏值剔除、校准补偿、时间戳统一）+ 断网续传；</li>
-<li><strong>消息服务</strong>：主题分级（data/alarm/cmd/ack/log），QoS1 保证送达，TLS/国密加密；</li>
-<li><strong>规则引擎</strong>：阈值规则、滑动窗口统计、趋势斜率预测、多条件组合、动作联动；</li>
-<li><strong>AI 服务</strong>：模型注册、推理 API、结果回写，支撑智能体与视觉应用；</li>
-<li><strong>低代码编排</strong>：工艺工程师可拖拽封装业务应用。</li>
-</ul>
-<h2 id="硬件感知与协议对接层设备接入基础">3.4 硬件感知与协议对接层：设备接入基础</h2>
-<p>　　本层是整个平台”兼容大多数、开发解决少数”承诺的落地层：</p>
-<ul>
-<li><strong>标准设备模型</strong>：所有硬件经驱动抽象为统一设备模型（测点、属性、命令、事件），上层应用只面对标准化接口；</li>
-<li><strong>驱动插件化</strong>：每个协议/设备一个独立驱动插件，独立注册、独立升级、互不影响，支持热加载；</li>
-<li><strong>拖拽式接入</strong>：选择驱动 → 填写连接参数 → 自动发现测点 → 即可接入平台，无需编码；</li>
-<li><strong>Driver SDK</strong>：未覆盖的硬件可快速开发新驱动插件，注册进驱动市场，生态持续累积。</li>
-</ul>
-<p><strong>协议对接矩阵：</strong></p>
-<div class="table-wrap"><table>
-<colgroup>
-<col style="width: 20%" />
-<col style="width: 34%" />
-<col style="width: 44%" />
-</colgroup>
-<thead>
-<tr>
-<th>类别</th>
-<th>协议/标准</th>
-<th>对接硬件示例</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>工业总线/控制</td>
-<td>Modbus RTU/TCP、OPC UA、PROFINET、EtherNet/IP、EtherCAT</td>
-<td>DCS、PLC、温湿度变送器、继电器模组</td>
-</tr>
-<tr>
-<td>视频/视觉</td>
-<td>海康/大华 SDK、RTSP/ONVIF、GB28181</td>
-<td>工业相机、摄像头、视频平台</td>
-</tr>
-<tr>
-<td>气体/环保</td>
-<td>烟气分析仪私有/Modbus 协议、SO₂/CO 传感器、HJ212</td>
-<td>烟气分析仪、气体传感器、环保上报</td>
-</tr>
-<tr>
-<td>无线物联网</td>
-<td>LoRa、NB-IoT、4G/5G、ZigBee、WiFi/蓝牙</td>
-<td>无线传感器节点、AGV 车载终端</td>
-</tr>
-<tr>
-<td>自研 SDK</td>
-<td>Driver SDK 插件框架</td>
-<td>任何未内置驱动的设备</td>
-</tr>
-</tbody>
-</table></div>
-<figure>
-<img loading="lazy" src="media/deploy.svg" alt="物理部署拓扑" />
-<figcaption aria-hidden="true">物理部署拓扑</figcaption>
-</figure>
-<h2 id="技术路线">3.5 技术路线</h2>
-<div class="table-wrap"><table>
-<colgroup>
-<col style="width: 18%" />
-<col style="width: 27%" />
-<col style="width: 27%" />
-<col style="width: 27%" />
-</colgroup>
-<thead>
-<tr>
-<th>阶段</th>
-<th>核心任务</th>
-<th>关键产出</th>
-<th>时间节点</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>阶段一：需求分析与方案设计</td>
-<td>深入铜冶炼场景梳理安全生产痛点，确定三层架构与国产 OS 适配矩阵</td>
-<td>场景需求文档、总体方案、国产 OS 调研报告</td>
-<td>2026年6月</td>
-</tr>
-<tr>
-<td>阶段二：硬件与驱动研发</td>
-<td>传感器/AGV/工业相机接入，驱动插件框架与协议栈开发</td>
-<td>硬件沙盘、驱动插件库（Modbus/OPC UA/视频/气体等）</td>
-<td>2026年7月</td>
-</tr>
-<tr>
-<td>阶段三：平台与应用研发</td>
-<td>采集服务、MQTT、TDengine、规则引擎；六大业务域应用开发</td>
-<td>平台原型、应用生态、多智能体与视觉应用</td>
-<td>2026年8月</td>
-</tr>
-<tr>
-<td>阶段四：联调与国产 OS 验证</td>
-<td>全链路联调、麒麟/UOS/HongZOS 真机部署验证、性能调优</td>
-<td>真机部署截图、《国产 OS 适配报告》、对比测试数据</td>
-<td>2026年9月上</td>
-</tr>
-<tr>
-<td>阶段五：交付与拓展（展望）</td>
-<td>参赛提交、产业化拓展至铅锌镍等多金属场景</td>
-<td>完整作品包、产业化路线图</td>
-<td>2026年9月后</td>
-</tr>
-</tbody>
-</table></div>
-<h2 id="核心技术壁垒">3.6 核心技术壁垒</h2>
-<blockquote>
-<p><strong>这三项壁垒，分别对应第二章三大核心痛点的技术解法——正是它们的联合支撑，才使平台能承载丰富的工业应用、快速适配国产操作系统、兼容大多数工业硬件，实现”通用平台”到”行业可复制产品”的跨越。</strong></p>
-</blockquote>
+<p>龙台智控采用“应用驱动、平台支撑、插件连接、国产运行”的技术体系。</p>
 <div class="table-wrap"><table>
 <colgroup>
 <col style="width: 33%" />
@@ -1187,371 +114,49 @@ body.no-nav #navbar,body.no-nav #progress{display:none}
 <col style="width: 33%" />
 </colgroup>
 <thead>
-<tr>
-<th>技术壁垒</th>
-<th>解决的痛点</th>
-<th>核心成果</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>3.6.1 应用生态机制</td>
-<td>有平台无应用、智能化深度不足</td>
-<td>六大业务域开箱即用应用 + 应用商店 + 低代码画布 + 开放 API</td>
-</tr>
-<tr>
-<td>3.6.2 驱动插件生态（硬件即插即用）</td>
-<td>数据协议异构、互联互通难</td>
-<td>内置主流协议驱动，兼容大多数硬件；Driver SDK 快速开发新驱动</td>
-</tr>
-<tr>
-<td>3.6.3 国产 OS 适配方法论</td>
-<td>适配难、投入产出难平衡</td>
-<td>HAL 抽象 + 容器化 + 适配矩阵，7 天级部署，真机验证</td>
-</tr>
-</tbody>
-</table></div>
-<h3 id="应用生态机制让平台有应用可用应用可扩展">3.6.1 应用生态机制：让平台”有应用可用、应用可扩展”</h3>
-<p>　　许多工业互联网平台”重连接、轻应用”——数据接进来了，却没有可直接使用的应用。平台在应用层构建完整应用生态机制：<strong>六大业务域开箱即用应用</strong>（安全监测/可视化控制/智能分析/生产运营/设备能源/知识支撑）覆盖工厂核心业务；<strong>应用商店</strong>实现应用的独立打包、挂载、升级；<strong>低代码画布</strong>让工艺工程师无需专职开发团队即可封装新应用；<strong>开放 API</strong> 支撑第三方应用开发。<strong>新增一个业务场景，只需开发或挂载一个新应用，无需改动平台与底层设备</strong>——这是平台区别于”看板型工业互联网平台”的核心差异。</p>
-<h3 id="驱动插件生态工业硬件即插即用">3.6.2 驱动插件生态：工业硬件”即插即用”</h3>
-<p>　　工业现场设备品牌繁杂、通信协议多达十余种，传统集成方式下，每接入一种新设备都需要专项定制开发。平台设计标准化驱动插件架构，将”设备能力”与”平台逻辑”彻底分离：所有硬件经驱动抽象为统一设备模型，上层应用只面对标准化接口；每个协议/设备一个独立驱动插件，支持热加载。平台已规划覆盖<strong>工业总线/控制、视频/视觉、气体/环保、无线物联网</strong>四大类协议，<strong>新增一台设备只需开发并注册一个驱动插件，无需修改任何已上线应用的代码</strong>——这一特性使平台可低成本横向扩展至铅、锌、镍等其他冶炼品种及更广泛的流程工业。</p>
-<h3 id="国产-os-适配方法论让平台换系统就跑">3.6.3 国产 OS 适配方法论：让平台”换系统就跑”</h3>
-<p>　　平台构建了一套可复用的国产 OS 适配方法论：<strong>第一层</strong>，硬件抽象层（HAL）统一封装设备访问接口，屏蔽不同 OS 的驱动差异；<strong>第二层</strong>，容器化交付，平台整体以 Docker 镜像交付，麒麟 OS/统信 UOS 上直接运行，支持国产 CPU 架构（ARM/龙芯/飞腾）；<strong>第三层</strong>，构建适配矩阵，建立”源码—交叉编译—打包—部署”流水线自动产出各 OS 平台安装包；<strong>第四层</strong>，性能与实时性验证，采集周期、端到端时延、消息吞吐等多平台同口径对比测试。开发调试阶段采用 Docker 容器化模拟国产 OS 环境快速迭代；<strong>最终交付物在统信 UOS、麒麟 OS、OpenHarmony、诚迈 HongZOS 真机环境完成部署与验收，提供真机运行截图与《国产 OS 适配报告》</strong>。</p>
-<h2 id="核心应用场景">3.7 核心应用场景</h2>
-<h3 id="安全监测场景五大功能全覆盖">3.7.1 安全监测场景：五大功能全覆盖</h3>
-<p>　　<strong>温湿度智能监控（精矿库/电解车间）</strong>：实时采集温度湿度，超出工艺阈值自动联动除湿/通风/加热，维持最佳储存与工艺条件；双传感器冗余校验，历史曲线可查。</p>
-<p>　　<strong>红外感应照明（车间安全照明）</strong>：红外感应器检测人员活动自动开灯（≤500ms），无人延时关灯节能；夜间自动开启高危通道照明，视觉 AI 检测人员异常时联动照明与报警。</p>
-<p>　　<strong>危气监测（SO₂/CO/天然气）</strong>：电化学传感器实时监测，三级阈值分级处置；报警时自动执行”排风→声光→断电”安全序列，支持远程/现场复位，SO₂ 烟气数据可汇总生成环保报表。</p>
-<p>　　<strong>AGV 避障（阳极板/阴极铜搬运）</strong>：多路超声波融合避障，距离分级决策（急停/减速/巡航），失效自动降级红外通道并上报告警。</p>
-<p>　　<strong>货物感应计数（阳极板/阴极铜产量）</strong>：光电传感器状态机去抖计数，按班次统计，联动产量与库存看板，计数准确率 ≥ 99.5%。</p>
-<h3 id="智能决策场景应用生态随需求生长">3.7.2 智能决策场景：应用生态随需求生长</h3>
-<p>　　<strong>工艺数字员工（AI 智能体应用）</strong>：为配料、熔炼、吹炼、精炼、调度五道工序配置专属智能体——炉况监测与异常预警、造渣/造铜终点判断、氧化/还原终点判断、全流程节奏协同。多智能体协作解决跨工序动态决策耦合：熔炼工检测到炉况波动主动推送吹炼工调整参数预期；调度工基于各智能体实时预测主动计算节奏匹配方案。<strong>这只是 AI 智能体应用的一类，设备预测性维护、能耗优化、环保合规、安全巡检等智能体应用均可按需挂载。</strong></p>
-<p>　　<strong>设备预测性维护（AI 智能体应用）</strong>：基于设备振动、温度、电流数据趋势分析，识别早期故障征兆，自动生成维修工单，变”事后维修”为”预测维护”。</p>
-<p>　　<strong>能耗与双碳管理（AI 智能体应用）</strong>：能耗统计、能效异常识别、碳排放核算，支撑企业双碳合规与节能降耗。</p>
-<p>　　<strong>视觉识别（视觉 AI 应用）</strong>：火焰视觉识别辅助终点判断；安全行为识别（安全帽检测、危区闯入、人员倒地）联动报警与区域照明。 # 四、项目应用</p>
-<h2 id="项目实践时间线">4.1 项目实践（时间线）</h2>
-<p>　　<strong>2026年5月：选题立项与方案设计</strong></p>
-<p>　　团队针对”挑战杯”揭榜挂帅赛题（XA-202606 诚迈科技”基于国产操作系统智慧工厂安全监测控制平台”）完成选题立项。深入调研铜冶炼场景安全生产需求，完成国产操作系统（麒麟 OS、统信 UOS、OpenHarmony、诚迈 HongZOS）平台调研与选型分析，确定”应用层—平台层—硬件感知与协议对接层”三层架构总体方案。</p>
-<p>　　<strong>2026年6-7月：硬件搭建与驱动研发</strong></p>
-<p>　　搭建铜冶炼沙盘：温湿度、危气（SO₂/CO/天然气）、红外感应、超声波、光电等传感器接入 RK3568 边缘网关；完成 AGV 小车组装；开发驱动插件框架与 Modbus/OPC UA 等协议驱动；工业相机接入视觉识别链路。</p>
-<p>　　<strong>2026年7-8月：平台与应用研发</strong></p>
-<p>　　完成采集服务、MQTT 消息总线、TDengine 时序存储、规则引擎；开发安全监测、可视化大屏、远程控制等应用；开发 AI 智能体应用（工艺数字员工、预测性维护）与火焰/行为视觉应用。</p>
-<p>　　<strong>2026年9月：联调与国产 OS 真机验证</strong></p>
-<p>　　全链路联调与性能调优；在麒麟 OS（工业版）、统信 UOS、OpenHarmony/HongZOS 真机环境完成部署验证；输出《国产 OS 适配报告》与多平台对比测试数据；完成全部参赛材料（PPT、演示视频、设计/开发/测试文档、总结报告、源代码、声明函）并提交。</p>
-<h2 id="项目落地验证与演示">4.2 项目落地（验证与演示）</h2>
-<p>　　<strong>实物沙盘 + 软件大屏双演示体系：</strong></p>
-<ul>
-<li><strong>实物沙盘</strong>：铜冶炼工艺沙盘集成温湿度、危气、红外、超声波、光电等真实传感器 + AGV 小车 + RK3568 边缘网关（国产 OS），现场可真实演示五大功能与联动处置；</li>
-<li><strong>软件大屏</strong>：数字可视化大屏实时呈现产线态势、报警中心、智能应用状态、AGV 轨迹、产量统计，支持远程控制；</li>
-<li><strong>国产 OS 真机演示</strong>：麒麟 OS / 统信 UOS / HongZOS 真机部署运行截图，作为”国产化落地”的直接证据。</li>
-</ul>
-<p>　　<strong>核心指标自测目标（团队实测，杜绝引用外部数据）：</strong></p>
-<div class="table-wrap"><table>
-<thead>
-<tr>
-<th>指标</th>
-<th>目标值</th>
-<th>验证方式</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>危气采集链路</td>
-<td>≤ 500ms</td>
-<td>打点统计</td>
-</tr>
-<tr>
-<td>报警联动响应</td>
-<td>≤ 1s</td>
-<td>事件时间戳</td>
-</tr>
-<tr>
-<td>计数准确率</td>
-<td>≥ 99.5%</td>
-<td>标准件比对</td>
-</tr>
-<tr>
-<td>视觉推理帧率</td>
-<td>≥ 15fps（RK3568 NPU）</td>
-<td>边缘实测</td>
-</tr>
-<tr>
-<td>国产 OS 真机部署</td>
-<td>麒麟/统信/HongZOS 全通过</td>
-<td>部署验证记录</td>
-</tr>
-</tbody>
-</table></div>
-<h2 id="实测数据与演示脚本">4.3 实测数据与演示脚本</h2>
-<p>　　为现场擂台赛设计 5 分钟标准演示流程：危气泄漏 → 自动联动（排风/声光/断电）→ 大屏告警 → 远程处置 → 恢复正常，确保功能完整性与技术先进性可被评委直观感知。演示脚本覆盖：平台登录、大屏总览、五大功能逐项演示、智能应用演示（数字员工/视觉识别）、远程控制、国产 OS 真机展示六个环节。</p>
-</div>
-<div class="section-block fade-in"><h1 id="五市场分析">五、市场分析</h1>
-<h2 id="行业背景与痛点">5.1 行业背景与痛点</h2>
-<p>　　工业软件与工业操作系统国产化是国家”信创”战略的核心阵地。据行业研究机构数据，我国工业软件市场规模已超千亿元，但国产化率长期偏低，尤其在研发设计与生产控制类高端工业软件领域，国外产品占据主导。随着《“十四五”智能制造发展规划》和信创政策持续推进，工业操作系统与工业软件的国产化替代已从党政办公延伸至能源、冶金、制造等关键工业领域，进入加速落地期。</p>
-<p>　　与此同时，铜冶炼行业正处于”规模扩张”向”高质量发展”转型的关键节点：原料加工费持续下行、能耗与环保指标收紧、一线操作人员老龄化加剧，倒逼企业通过数字化、智能化手段挖掘存量效益。行业智能化渗透率不足 30%，大量中小冶炼企业仍处于自动化补课与信息化起步阶段，市场空间广阔。</p>
-<p>　　行业当前面临的核心痛点已在第二章详述：危气风险高响应慢、数据协议异构难互通、国产 OS 适配难投入大、有平台无应用智能化浅。<strong>“国产化 + 安全监测 + 应用生态”三位一体的平台化解决方案，正处于政策与市场的双重窗口期。</strong></p>
-<h2 id="目标市场细分">5.2 目标市场细分</h2>
-<p>　　“基于国产操作系统智慧工厂安全监测控制平台”的市场空间由三部分叠加构成：<strong>信创改造市场</strong>（国产 OS 迁移与适配）、<strong>工业安全监测市场</strong>（危气/环境/设备监测）、<strong>工业应用软件市场</strong>（可视化/AI 智能体/管理对接应用）。按客户规模与需求特征，可划分为三大细分市场：</p>
-<div class="table-wrap"><table>
-<colgroup>
-<col style="width: 25%" />
-<col style="width: 25%" />
-<col style="width: 25%" />
-<col style="width: 25%" />
-</colgroup>
-<thead>
-<tr>
-<th>细分市场</th>
-<th>典型客户</th>
-<th>核心需求</th>
-<th>匹配产品</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>大型冶炼集团（年产 40 万吨+）</td>
-<td>江西铜业、铜陵有色、云南铜业等</td>
-<td>信创合规 + 全流程智能协同 + 私有化部署</td>
-<td>私有化平台 + 增量效益分成</td>
-</tr>
-<tr>
-<td>中小型冶炼企业（年产 5-40 万吨）</td>
-<td>各省级民营冶炼企业</td>
-<td>安全监测 + 低成本智能化升级</td>
-<td>SaaS 订阅 + 应用按需购买</td>
-</tr>
-<tr>
-<td>其他流程工业（铅锌镍、化工、建材等）</td>
-<td>有色/化工/建材企业</td>
-<td>危气安全监测 + 国产化适配</td>
-<td>平台复制 + 行业应用定制</td>
-</tr>
-</tbody>
-</table></div>
-<h2 id="目标客户画像">5.3 目标客户画像</h2>
-<p><strong>（1）价值引爆型客户：大型冶炼集团</strong></p>
-<p>　　他们是年产规模超 40 万吨的国有或头部民营冶炼企业，拥有完善的自动化产线和数据采集基础，但面临两大刚性需求：一是信创合规压力——关键工控系统国产化替代有明确时间表；二是利润压力——加工费下行倒逼精细化管控。他们需要的不只是一套软件，而是一个<strong>能通过信创验收、又真正产生效益的国产化平台</strong>——安全监测应用解决合规，AI 智能体应用创造效益。增量效益分成模式与其”效果为先”的决策逻辑高度契合。</p>
-<p><strong>（2）升级替代型客户：中小型冶炼企业</strong></p>
-<p>　　他们是年产 5-40 万吨的中型民营冶炼企业，机制灵活、决策务实，但信息化基础弱、缺乏自有技术团队。其核心痛点高度集中在安全与成本：危气监测靠人工、智能化改造成本高。<strong>“订阅试用 + 应用按需购买 + 7 天极简部署”</strong>的低门槛模式，与中小企业”怕投入、怕绑定、怕停产”的决策心理精准匹配——先买安全监测应用解决刚需，再逐步加购 AI 智能体等增值应用。</p>
-<p><strong>（3）准入门户型客户：其他流程工业与观望企业</strong></p>
-<p>　　他们遍布于铅锌镍、化工、建材等流程工业，对国产化安全监测平台有潜在需求但仍在观望。订阅试用服务以轻量投入在其自有产线验证效果，当安全预警与节能数据实实在在跑出来，观望者便自然生长为坚定的升级者。</p>
-<h2 id="市场规模测算">5.4 市场规模测算</h2>
-<h3 id="tam-sam-som-测算逻辑与假设">5.4.1 TAM-SAM-SOM 测算逻辑与假设</h3>
-<div class="table-wrap"><table>
-<colgroup>
-<col style="width: 20%" />
-<col style="width: 20%" />
-<col style="width: 30%" />
-<col style="width: 30%" />
-</colgroup>
-<thead>
-<tr>
+<tr class="header">
 <th>层级</th>
-<th>定义</th>
-<th>测算范围</th>
-<th>关键假设</th>
+<th>主要内容</th>
+<th>作用</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td>TAM（潜在市场总额）</td>
-<td>中国工业安全监测 + 信创适配 + 工业应用软件市场</td>
-<td>有色冶金行业数字化改造 + 流程工业安全监测</td>
-<td>有色冶金智能化渗透率 &lt;30%，政策驱动加速</td>
+<tr class="odd">
+<td>应用层</td>
+<td>安全监测、可视化控制、设备管理、报表分析、AI辅助等</td>
+<td>直接面向现场人员和管理人员</td>
 </tr>
-<tr>
-<td>SAM（可服务市场）</td>
-<td>平台技术可覆盖的市场</td>
-<td>中国铜冶炼企业 + 有色冶炼企业</td>
-<td>以铜冶炼为主战场，逐步辐射铅锌镍</td>
+<tr class="even">
+<td>平台层</td>
+<td>设备、数据、消息、规则、权限、审计、AI、运行服务</td>
+<td>为应用提供公共能力</td>
 </tr>
-<tr>
-<td>SOM（可获得市场）</td>
-<td>项目在 5 年内可实际获取的市场</td>
-<td>基于竞争格局和推广能力估算</td>
-<td>2026-2030 年累计渗透率目标</td>
+<tr class="odd">
+<td>硬件/协议层</td>
+<td>PLC、DCS、传感器、气体分析仪、工业相机、AGV及各类工业协议</td>
+<td>连接现场设备并统一接口</td>
 </tr>
 </tbody>
 </table></div>
-<h3 id="市场规模驱动因素">5.4.2 市场规模驱动因素</h3>
-<div class="table-wrap"><table>
-<colgroup>
-<col style="width: 26%" />
-<col style="width: 26%" />
-<col style="width: 47%" />
-</colgroup>
-<thead>
-<tr>
-<th>驱动因素</th>
-<th>影响方向</th>
-<th>对市场空间的作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>信创政策刚性推进（关键基础设施国产化）</td>
-<td>↑↑</td>
-<td>国产 OS 平台需求爆发，市场基数扩大</td>
-</tr>
-<tr>
-<td>双碳目标与环保监管趋严</td>
-<td>↑↑</td>
-<td>危气监测、环保上报（HJ212）成为合规刚需</td>
-</tr>
-<tr>
-<td>加工费下行倒逼冶炼精细化管控</td>
-<td>↑↑</td>
-<td>企业智能化付费意愿增强</td>
-</tr>
-<tr>
-<td>国产 OS 工业发行版成熟（HongZOS 等）</td>
-<td>↑</td>
-<td>技术可行性提升，落地门槛下降</td>
-</tr>
-<tr>
-<td>应用生态带动二次销售</td>
-<td>↑</td>
-<td>存量客户 ARPU 提升，获客成本下降</td>
-</tr>
-</tbody>
-</table></div>
-<h2 id="竞品分析">5.5 竞品分析</h2>
-<h3 id="竞争格局">5.5.1 竞争格局</h3>
-<p>　　工业安全监测与工业智能化赛道竞争格局呈现”头部集中、长尾分散”特征：第一梯队为具备全链路解决方案能力的综合服务商（工业互联网平台厂商）；第二梯队为专注于特定工艺环节或特定品类的专业厂商；第三梯队为技术积累较浅的新兴企业。主流厂商竞争围绕<strong>感知、决策、执行</strong>三大核心能力展开，其中具备”国产化适配 + 安全闭环 + 应用生态”全栈能力的厂商愈发受到青睐。</p>
-<h3 id="主要竞品对比分析">5.5.2 主要竞品对比分析</h3>
-<div class="table-wrap"><table>
-<colgroup>
-<col style="width: 17%" />
-<col style="width: 11%" />
-<col style="width: 27%" />
-<col style="width: 43%" />
-</colgroup>
-<thead>
-<tr>
-<th>竞品类型</th>
-<th>代表</th>
-<th>产品定位与优势</th>
-<th>差异化分析（我们的优势）</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>工业互联网平台厂商</td>
-<td>卡奥斯 COSMOPlat、浪潮云洲</td>
-<td>跨行业通用平台，擅长数据连接，但”重连接、轻应用”</td>
-<td>我们以应用层为核心：安全监测/可视化/AI 智能体/管理对接四类应用开箱即用，直接解决业务问题</td>
-</tr>
-<tr>
-<td>工控/自动化厂商</td>
-<td>和利时、宝信软件</td>
-<td>DCS/PLC 控制执行能力强，全国产化积淀深</td>
-<td>他们强于”执行”与硬件，我们强于应用生态 + 多协议即插即用接入，二者可互补集成</td>
-</tr>
-<tr>
-<td>工业 AI/智能体厂商</td>
-<td>华院计算、数商云等</td>
-<td>算法与认知模型领先，侧重智能分析诊断</td>
-<td>智能体只是我们应用层的一类；我们以平台承载多类应用，且底座全国产化</td>
-</tr>
-<tr>
-<td>国际工业软件</td>
-<td>西门子、罗克韦尔等</td>
-<td>全栈能力强，但非国产化</td>
-<td>供应链断供风险 + 信创合规不达标，国产化替代是政策刚需</td>
-</tr>
-<tr>
-<td>传统安全监测系统</td>
-<td>各类安监软件</td>
-<td>功能单一，仅报警展示</td>
-<td>我们实现”监测—预警—控制—统计”闭环 + 应用生态扩展，能力边界更宽</td>
-</tr>
-</tbody>
-</table></div>
-<p>　　各主要竞品在单一维度上或许具备各自的特色优势——有的在控制执行层面技术雄厚，有的在 AI 算法层面有所专长，有的在工业互联网平台层面覆盖面广——但能够将”<strong>应用生态、国产 OS 全栈适配、多协议即插即用、安全监测控制闭环</strong>”四大能力同时集于一身的厂商，目前在市场上极为稀缺。这正是本项目核心差异化定位所在：<strong>以应用层为价值核心</strong>，通过系统性的能力集成和开放的平台生态，构建贯穿”设备接入—安全监测—应用生态—国产化落地”全链路的差异化护城河。</p>
-</div>
-<div class="section-block fade-in"><h1 id="六商业模式">六、商业模式</h1>
-<h2 id="产品与服务模式">6.1 产品与服务模式</h2>
-<p>　　平台的核心商业模式逻辑是：<strong>以”应用 + 平台 + 驱动生态”的产品形态，将”应用能力”与”适配能力”产品化、可复制化，实现”一次研发、多次复用”的规模化盈利</strong>。</p>
-<p>　　平台本质上是一个应用驱动的国产化软件平台：应用层提供开箱即用的工业应用（安全监测/可视化控制/AI 智能体/管理对接），平台层提供标准化服务支撑，硬件协议对接层以驱动插件生态解决设备接入。<strong>新增一个业务场景只需挂载一个应用，新增一台设备只需开发一个驱动插件——边际成本极低，这是平台规模化复制的核心逻辑。</strong></p>
-<h3 id="核心资产应用生态-国产-os-适配能力-驱动插件生态">6.1.1 核心资产：应用生态 + 国产 OS 适配能力 + 驱动插件生态</h3>
-<p>　　平台的核心资产由三部分构成：<strong>应用生态</strong>（四类开箱即用应用 + 应用商店 + 低代码画布 + 开放 API）让平台”有应用可用、应用可扩展”；<strong>国产 OS 适配方法论</strong>（HAL 抽象层 + 容器化交付 + 适配矩阵）让平台能快速部署到麒麟 OS、统信 UOS、OpenHarmony/HongZOS 等任意国产操作系统；<strong>驱动插件库</strong>让平台能快速接入各种主流工业设备。三项资产均可跨行业复用——从铜冶炼到铅锌镍，从有色到化工、建材，<strong>应用与适配能力是平台可复制性的基石</strong>。</p>
-<h3 id="产品形态与交付模式">6.1.2 产品形态与交付模式</h3>
-<div class="table-wrap"><table>
-<colgroup>
-<col style="width: 37%" />
-<col style="width: 25%" />
-<col style="width: 37%" />
-</colgroup>
-<thead>
-<tr>
-<th>产品形态</th>
-<th>内容</th>
-<th>适用客群</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>标准平台（私有化部署）</td>
-<td>三层架构平台 + 安全监测应用 + 大屏 + 远程控制 + 国产 OS 适配</td>
-<td>大型企业、信创项目</td>
-</tr>
-<tr>
-<td>行业应用包（铜冶炼版）</td>
-<td>标准平台 + 工艺数字员工/预测性维护/能耗优化等行业应用</td>
-<td>铜冶炼企业</td>
-</tr>
-<tr>
-<td>SaaS 订阅</td>
-<td>云端平台 + 应用按需挂载，7 天极简部署</td>
-<td>中小企业</td>
-</tr>
-<tr>
-<td>单项应用/驱动插件</td>
-<td>单个应用（如危气监测、能耗优化）、单个驱动插件单独销售</td>
-<td>存量平台客户</td>
-</tr>
-</tbody>
-</table></div>
-<h3 id="极简部署流程">6.1.3 极简部署流程</h3>
-<p>　　传统智能化改造往往需要停产改造、重新布线，周期动辄 3~6 个月。平台以”低侵入、快交付”为核心原则，<strong>旁路接入、不停产、不改造 DCS</strong>：</p>
-<div class="table-wrap"><table>
-<colgroup>
-<col style="width: 25%" />
-<col style="width: 17%" />
-<col style="width: 25%" />
-<col style="width: 31%" />
-</colgroup>
-<thead>
-<tr>
-<th>实施阶段</th>
-<th>耗时</th>
-<th>具体工作</th>
-<th>客户侧影响</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>第一步：驱动接入</td>
-<td>1-3 天</td>
-<td>部署边缘网关，通过标准协议驱动读取传感器/DCS/PLC 数据</td>
-<td>生产不停顿，仅读取数据</td>
-</tr>
-<tr>
-<td>第二步：平台部署</td>
-<td>1-2 天</td>
-<td>容器化部署平台服务（国产 OS），接入大屏与远程控制</td>
-<td>无停产需求</td>
-</tr>
-<tr>
-<td>第三步：应用上线</td>
-<td>1-2 天</td>
-<td>挂载安全监测应用与 AI 智能体应用，进入”影子模式”试运行</td>
-<td>人工操作，AI 辅助参考</td>
-</tr>
-</tbody>
-</table></div>
-<h2 id="定价与盈利模式">6.2 定价与盈利模式</h2>
-<h3 id="定价体系总览">6.2.1 定价体系总览</h3>
+<figure>
+<img loading="lazy" src="media/architecture-overview.png" alt="图3-1 总体三层架构" />
+<figcaption aria-hidden="true">图3-1 总体三层架构</figcaption>
+</figure>
+<p>平台的产品关系可以概括为：<strong>大屏是入口，插件是能力，平台是底座。</strong></p>
+<h2 id="应用层平台价值的直接呈现">3.2 应用层：平台价值的直接呈现</h2>
+<p>应用层以设备状态、历史数据、报警、事件、报表、权限审计和命令记录等基础能力为支撑，组织安全监测、可视化与控制、生产运营、设备能源、知识支撑和智能分析等业务。</p>
+<figure>
+<img loading="lazy" src="media/six-domains.png" alt="图3-2 六大业务域全景" />
+<figcaption aria-hidden="true">图3-2 六大业务域全景</figcaption>
+</figure>
+<p>扩展应用采用独立打包、插件挂载、开放API和低代码编排思路。其目标是让新增业务尽量复用既有设备接入、数据、权限、消息和规则服务，而不是重新建设一套系统。</p>
+<h2 id="平台层标准化服务支撑">3.3 平台层：标准化服务支撑</h2>
+<p>平台层围绕设备、数据、消息、规则、权限、审计和运行管理组织公共服务。原生C++应用服务通过REST和WebSocket与Vue 3 / TypeScript HMI通信；SQLite承担配置与业务数据持久化；RBAC、操作审计和命令记录贯穿用户操作和控制链路。</p>
+<p>设备注册表、指令运行时以及设备、协议、操作系统三类适配边界把业务界面与现场环境隔离。普通、实时和紧急三类指令执行域用于区分不同执行要求，并保留完整命令记录。</p>
+<p>AI能力作为可选服务接入平台。知识库、工具调用和多智能体协作沿统一权限和审计框架扩展，不改变关键工业控制由确定性系统承担的基本边界。</p>
+<h2 id="硬件感知与协议对接层设备接入基础">3.4 硬件感知与协议对接层：设备接入基础</h2>
+<p>平台通过DeviceAdapter、ProtocolAdapter等适配边界承载现场设备与协议接入，面向Modbus、OPC UA、PROFINET、GB28181、HJ212等常见工业通信需求，并可扩展至CAN、工业以太网和厂商协议。</p>
+<p>协议兼容性采用“成熟生态—工程适配—专项开发”三级评价。该分级描述不同操作系统和硬件条件下的适配路径，不等同于操作系统原生预装，也不等同于全部协议与硬件组合均已完成项目实测。</p>
 <div class="table-wrap"><table>
 <colgroup>
 <col style="width: 25%" />
@@ -1560,495 +165,477 @@ body.no-nav #navbar,body.no-nav #progress{display:none}
 <col style="width: 25%" />
 </colgroup>
 <thead>
-<tr>
-<th>收费项目</th>
-<th>针对客群</th>
-<th>定价标准</th>
-<th>战略定位</th>
+<tr class="header">
+<th>工业接口/协议</th>
+<th>麒麟/UOS</th>
+<th>OpenHarmony/行业版</th>
+<th>主要工程条件</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td>订阅试用服务费</td>
-<td>全部客群</td>
-<td>中小企业 5 万/期；大型企业 20 万/期</td>
-<td>降低决策门槛，积累工况数据</td>
+<tr class="odd">
+<td>RS-232 / RS-485 / UART</td>
+<td>成熟生态</td>
+<td>工程适配</td>
+<td>串口驱动、HDF/BSP</td>
 </tr>
-<tr>
-<td>私有化部署费</td>
-<td>大型企业</td>
-<td>100~300 万/项（按场景复杂度分档）</td>
-<td>满足信创与深度定制需求</td>
+<tr class="even">
+<td>Modbus RTU / TCP</td>
+<td>成熟生态</td>
+<td>行业版可适配</td>
+<td>协议栈、点表、字节序、超时</td>
 </tr>
-<tr>
-<td>SaaS 订阅</td>
-<td>中小企业</td>
-<td>5~10 万/年</td>
-<td>产生持续收入，建立长期关系</td>
-</tr>
-<tr>
-<td>行业应用包</td>
-<td>铜冶炼企业</td>
-<td>50~100 万/项</td>
-<td>垂直场景价值变现</td>
-</tr>
-<tr>
-<td>单项应用/驱动插件</td>
-<td>存量客户</td>
-<td>1~10 万/个</td>
-<td>生态持续变现</td>
-</tr>
-<tr>
-<td>增量效益分成</td>
-<td>大型企业</td>
-<td>创效额的 20%~30%</td>
-<td>核心爆发点，利益深度绑定</td>
-</tr>
-</tbody>
-</table></div>
-<p>　　定价逻辑遵循一个核心原则：<strong>让客户为可量化的价值买单</strong>。大型企业以”私有化部署 + 增量效益分成”为主——系统帮客户每多省/多赚 100 万，平台拿 20-30 万，无增量收益不付费，风险共担、利益共享；中小企业以”SaaS 订阅 + 应用按需购买”为主——先买安全监测应用解决刚需，再逐步加购 AI 智能体等增值应用，低门槛、快部署、按需购买。</p>
-<h3 id="客户-roi-论证测算示意">6.2.2 客户 ROI 论证（测算示意）</h3>
-<p>　　<strong>大型企业（私有化部署）ROI 测算示意：</strong></p>
-<div class="table-wrap"><table>
-<thead>
-<tr>
-<th>测算项目</th>
-<th>数值</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>私有化部署费</td>
-<td>200 万</td>
-<td>平台 + 国产 OS 适配 + 行业应用包</td>
-</tr>
-<tr>
-<td>年安全与效率收益</td>
-<td>500 万+</td>
-<td>危气事故避免 + 能耗下降 + 协同提产</td>
-</tr>
-<tr>
-<td>投资回收期</td>
-<td>约 5 个月</td>
-<td>200 万 ÷ (500 万÷12)</td>
-</tr>
-<tr>
-<td>年度 ROI</td>
-<td>1:2.5</td>
-<td>500 万 ÷ 200 万</td>
-</tr>
-</tbody>
-</table></div>
-<p>　　<strong>中小企业（SaaS）ROI 测算示意：</strong></p>
-<div class="table-wrap"><table>
-<thead>
-<tr>
-<th>测算项目</th>
-<th>数值</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>首年投入</td>
-<td>8 万</td>
-<td>SaaS 订阅 + 安全监测应用</td>
-</tr>
-<tr>
-<td>年安全收益</td>
-<td>40 万+</td>
-<td>危气预警避免事故损失 + 节能</td>
-</tr>
-<tr>
-<td>投资回收期</td>
-<td>极短</td>
-<td>年收益远超首年投入</td>
-</tr>
-</tbody>
-</table></div>
-<blockquote>
-<p>注：以上为产业化测算示意，具体数值待真实客户验证后校准；参赛作品核心指标以团队实测数据为准。</p>
-</blockquote>
-<h2 id="推广路径">6.3 推广路径</h2>
-<p>　　“由点及面、标杆牵引”，围绕”三步走”递进式路径展开：</p>
-<p><strong>第一步：标杆建立信任。</strong> 依托参赛作品与高校产学研资源，在合作冶炼企业或实训基地打造”国产化安全监测平台样板间”，组织”走进样板”观摩会，用真实运行的产线数据建立信任——目标客户的总工与厂长可亲眼看到危气预警、联动处置、可视化大屏与智能应用的完整演示。</p>
-<p><strong>第二步：品牌扩大认知。</strong> 借力”挑战杯”揭榜挂帅赛事平台与有色金属行业协会，发布《国产操作系统工业安全监测平台应用白皮书》与技术文章，在行业年会输出”应用生态”“国产 OS 适配方法论”“驱动插件生态”等核心卖点，建立”国产化安全监测平台 = 我们”的心智标签。</p>
-<p><strong>第三步：精准触达转化。</strong> 依托高校产学研网络直接触达目标企业技术决策层；借助信创政策申报渠道接触明确改造意愿的企业；通过已签约客户内部推荐触达上下游。初次沟通直接呈现针对该企业的具体分析（产能、炉型、痛点、适配方案），而非通用介绍。</p>
-<p><strong>销售漏斗与获客成本：</strong> 从”行业认知”（品牌）到”兴趣验证”（样板观摩）到”商务转化”（精准触达），每一层均有明确转化目标。随着已签约客户增加，标杆案例说服力增强、内部推荐增多、品牌认知提升，获客成本持续下降。</p>
-<h2 id="财务预测及分析">6.4 财务预测及分析</h2>
-<blockquote>
-<p>以下为基于参赛作品产业化的<strong>测算展望</strong>（保守情景），用于论证商业可行性；参赛阶段不涉及真实融资，具体财务模型待产业化启动后按实际经营数据校准。</p>
-</blockquote>
-<h3 id="收入预测2026-2030">6.4.1 收入预测（2026-2030）</h3>
-<div class="table-wrap"><table>
-<colgroup>
-<col style="width: 29%" />
-<col style="width: 14%" />
-<col style="width: 14%" />
-<col style="width: 14%" />
-<col style="width: 14%" />
-<col style="width: 14%" />
-</colgroup>
-<thead>
-<tr>
-<th>收入类型（万元）</th>
-<th>2026年</th>
-<th>2027年</th>
-<th>2028年</th>
-<th>2029年</th>
-<th>2030年</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>私有化部署/行业应用包</td>
-<td>100</td>
-<td>300</td>
-<td>600</td>
-<td>1,200</td>
-<td>2,000</td>
-</tr>
-<tr>
-<td>SaaS 订阅</td>
-<td>30</td>
-<td>120</td>
-<td>300</td>
-<td>600</td>
-<td>1,200</td>
-</tr>
-<tr>
-<td>单项应用/驱动插件</td>
-<td>10</td>
-<td>40</td>
-<td>100</td>
-<td>200</td>
-<td>400</td>
-</tr>
-<tr>
-<td>增量效益分成</td>
-<td>0</td>
-<td>60</td>
-<td>200</td>
-<td>500</td>
-<td>1,000</td>
-</tr>
-<tr>
-<td><strong>营业总收入</strong></td>
-<td><strong>140</strong></td>
-<td><strong>520</strong></td>
-<td><strong>1,200</strong></td>
-<td><strong>2,500</strong></td>
-<td><strong>4,600</strong></td>
-</tr>
-</tbody>
-</table></div>
-<blockquote>
-<p>测算假设：2026 年完成 1-2 个示范项目；2027 年起标准化复制，客户数逐年翻倍；增量分成自 2027 年起启动，随存量客户增长成为主导收入。</p>
-</blockquote>
-<h3 id="成本与利润预测">6.4.2 成本与利润预测</h3>
-<div class="table-wrap"><table>
-<thead>
-<tr>
-<th>项目（万元）</th>
-<th>2026年</th>
-<th>2027年</th>
-<th>2028年</th>
-<th>2029年</th>
-<th>2030年</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>营业总收入</td>
-<td>140</td>
-<td>520</td>
-<td>1,200</td>
-<td>2,500</td>
-<td>4,600</td>
-</tr>
-<tr>
-<td>营业成本（硬件/算力/实施）</td>
-<td>90</td>
-<td>240</td>
-<td>500</td>
-<td>950</td>
-<td>1,700</td>
-</tr>
-<tr>
-<td>研发费用</td>
-<td>120</td>
-<td>150</td>
-<td>200</td>
-<td>280</td>
-<td>360</td>
-</tr>
-<tr>
-<td>销售与管理费用</td>
-<td>60</td>
-<td>120</td>
-<td>220</td>
-<td>400</td>
-<td>650</td>
-</tr>
-<tr>
-<td><strong>净利润</strong></td>
-<td><strong>-130</strong></td>
-<td><strong>10</strong></td>
-<td><strong>280</strong></td>
-<td><strong>870</strong></td>
-<td><strong>1,890</strong></td>
-</tr>
-</tbody>
-</table></div>
-<blockquote>
-<p>2026 年为投入期（战略性亏损），2027 年实现盈亏平衡，此后进入规模化盈利期。毛利水平随产品化率提升与驱动生态复用持续改善（2028 年起毛利率超 50%），体现”一次研发、多次复用”的平台经济特征。</p>
-</blockquote>
-<h3 id="投资回收与敏感性">6.4.3 投资回收与敏感性</h3>
-<div class="table-wrap"><table>
-<thead>
-<tr>
-<th>情景</th>
-<th>假设</th>
-<th>2030年营收</th>
-<th>2030年净利润</th>
-<th>投资回收期</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>基准</td>
-<td>客户增长符合预期</td>
-<td>4,600 万</td>
-<td>1,890 万</td>
-<td>约 3 年</td>
-</tr>
-<tr>
-<td>轻度压力</td>
-<td>客单价下降 10%</td>
-<td>4,180 万</td>
-<td>1,660 万</td>
-<td>约 3.2 年</td>
-</tr>
-<tr>
-<td>重度压力</td>
-<td>客单价下降 30%</td>
-<td>3,220 万</td>
-<td>1,140 万</td>
-<td>约 3.8 年</td>
-</tr>
-</tbody>
-</table></div>
-<blockquote>
-<p>即使在重度压力情景下，项目仍可在 4 年内收回投资，体现平台模式较强的抗风险能力。</p>
-</blockquote>
-</div>
-<div class="section-block fade-in"><h1 id="七项目团队">七、项目团队</h1>
-<h2 id="团队概况">7.1 团队概况</h2>
-<p>　　本项目团队是一支为”国产化工业安全监测 + 智能化平台”专项组建的跨学科复合型攻关团队。团队构建了”<strong>指导教师领航方向、核心成员攻坚技术、专项成员保障执行</strong>”的全梯队体系，深度融合计算机、自动化、冶金、工业设计等多学科专业背景，覆盖硬件接入、平台研发、应用开发、AI 算法、可视化、测试文档等完整能力链条。</p>
-<p>　　团队核心攻关方向围绕”<strong>国产操作系统适配 + 工业安全监测 + 应用生态</strong>”展开协同攻关，致力于打破传统工业控制系统的”信息孤岛”与”数据烟囱”，将国产化底座与智能应用能力深度结合。经过前期磨合与技术积累，团队已构筑起”硬件接入 → 平台研发 → 应用开发 → 系统集成 → 演示交付”的完整能力链条，兼具技术深度、执行效率与工程落地能力。</p>
-<h2 id="团队成员">7.2 团队成员</h2>
-<blockquote>
-<p>以下为建议架构（按 9 人示例），成员信息待定，提交前替换为真实信息。</p>
-</blockquote>
-<div class="table-wrap"><table>
-<colgroup>
-<col style="width: 33%" />
-<col style="width: 33%" />
-<col style="width: 33%" />
-</colgroup>
-<thead>
-<tr>
-<th>角色</th>
-<th>人数</th>
-<th>职责</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>队长/项目经理</td>
-<td>1</td>
-<td>进度、资源、对外联络、方案统筹</td>
-</tr>
-<tr>
-<td>硬件工程师</td>
-<td>2</td>
-<td>传感器/AGV/工业相机接线调试、驱动联调</td>
-</tr>
-<tr>
-<td>系统/嵌入式工程师</td>
-<td>2</td>
-<td>国产 OS 适配、采集服务、驱动插件框架、实时性优化</td>
-</tr>
-<tr>
-<td>后端/平台工程师</td>
-<td>1</td>
-<td>MQTT、TDengine、规则引擎、微服务、开放 API</td>
-</tr>
-<tr>
-<td>应用/AI 工程师</td>
-<td>1</td>
-<td>智能体应用、视觉应用开发与边缘部署</td>
-</tr>
-<tr>
-<td>前端/可视化工程师</td>
-<td>1</td>
-<td>大屏、远程控制台、低代码画布</td>
-</tr>
-<tr>
-<td>测试/文档工程师</td>
-<td>1</td>
-<td>测试方案与执行、全部文档与视频材料</td>
-</tr>
-</tbody>
-</table></div>
-<h2 id="指导教师团队">7.3 指导教师团队</h2>
-<blockquote>
-<p>指导教师信息待定（≤3 人），提交前替换为真实信息。建议配置：操作系统/信创方向 1 名、工业物联网/AI 方向 1 名、冶金工艺/工业安全方向 1 名。</p>
-</blockquote>
-</div>
-<div class="section-block fade-in"><h1 id="八附件">八、附件</h1>
-<p><strong>附件 A：术语表</strong></p>
-<div class="table-wrap"><table>
-<thead>
-<tr>
-<th>术语</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>UOS</td>
-<td>统信操作系统，国产桌面/服务器操作系统</td>
-</tr>
-<tr>
-<td>麒麟 OS</td>
-<td>银河麒麟操作系统，国产桌面/服务器操作系统</td>
-</tr>
-<tr>
-<td>OpenHarmony</td>
-<td>开源鸿蒙，开放原子基金会孵化的开源操作系统</td>
-</tr>
-<tr>
-<td>HongZOS</td>
-<td>诚迈科技发布的基于 OpenHarmony 的国产工业操作系统</td>
-</tr>
-<tr>
-<td>HAL</td>
-<td>Hardware Abstraction Layer，硬件抽象层</td>
-</tr>
-<tr>
-<td>MQTT</td>
-<td>轻量级发布/订阅消息协议</td>
-</tr>
-<tr>
+<tr class="odd">
 <td>OPC UA</td>
-<td>工业自动化统一架构通信标准</td>
+<td>成熟生态</td>
+<td>工程适配</td>
+<td>SDK、节点、订阅、证书</td>
 </tr>
-<tr>
-<td>GB28181</td>
-<td>公共安全视频监控联网国家标准</td>
+<tr class="even">
+<td>MQTT / HTTP / WebSocket</td>
+<td>成熟生态</td>
+<td>成熟生态</td>
+<td>TCP/TLS、会话与重连</td>
 </tr>
-<tr>
-<td>HJ212</td>
-<td>环保数据在线传输标准</td>
+<tr class="odd">
+<td>CAN / CAN FD</td>
+<td>成熟生态</td>
+<td>工程适配</td>
+<td>控制器驱动、SocketCAN或对应驱动</td>
 </tr>
-<tr>
-<td>TDengine</td>
-<td>国产时序数据库</td>
+<tr class="even">
+<td>PROFINET / EtherNet/IP / EtherCAT</td>
+<td>工程适配</td>
+<td>专项开发</td>
+<td>协议栈、通信卡、实时性验证</td>
 </tr>
-<tr>
-<td>ReAct</td>
-<td>Reasoning + Acting，智能体推理范式</td>
+<tr class="odd">
+<td>IEC 60870 / IEC 61850 / HJ212</td>
+<td>工程适配</td>
+<td>工程适配或专项开发</td>
+<td>报文、链路、SCL、时延与安全要求</td>
 </tr>
-<tr>
-<td>AGV</td>
-<td>Automated Guided Vehicle，自动导引车</td>
+<tr class="even">
+<td>PLC厂商协议</td>
+<td>工程适配</td>
+<td>专项开发</td>
+<td>按品牌、型号和协议栈验证</td>
 </tr>
 </tbody>
 </table></div>
-<p><strong>附件 B：参考资源</strong></p>
-<ul>
-<li>挑战杯官网（“揭榜挂帅”擂台赛报名入口）：<a href="https://www.tiaozhanbei.net" class="uri">https://www.tiaozhanbei.net</a></li>
-<li>发榜单位：诚迈科技股份有限公司（深交所 300598）</li>
-<li>统信软件：<a href="https://www.uniontech.com" class="uri">https://www.uniontech.com</a></li>
-<li>麒麟软件：<a href="https://www.kylinos.cn" class="uri">https://www.kylinos.cn</a></li>
-<li>开放原子开源基金会 OpenHarmony：<a href="https://www.openharmony.cn" class="uri">https://www.openharmony.cn</a></li>
-<li>团队国产操作系统调研报告：《XA-202606-国产操作系统平台调研报告》（os-agent/docs 目录）</li>
-</ul>
-<p><strong>附件 C：版本记录</strong></p>
+<p></p>
+<h2 id="技术路线">3.5 技术路线</h2>
+<h3 id="端边云协同">3.5.1 端—边—云协同</h3>
+<p>终端和边缘侧承担设备接入、协议适配、实时数据、规则和低时延处理，中心平台承担跨设备数据汇聚、生产运营、设备能源、知识服务和AI分析。低时延与强现场依赖任务尽量靠近设备执行，跨域管理和知识类任务由中心平台承担。</p>
+<figure>
+<img loading="lazy" src="media/edge-cloud.png" alt="图3-3 端—边—云协同架构" />
+<figcaption aria-hidden="true">图3-3 端—边—云协同架构</figcaption>
+</figure>
+<h3 id="国产操作系统适配">3.5.2 国产操作系统适配</h3>
+<p>银河麒麟、统信UOS等Linux类国产操作系统重点复用成熟用户态协议栈和Linux设备生态；OpenHarmony及行业版重点结合HDF、BSP、设备服务和行业扩展能力完成终端与边缘侧适配。上层应用通过OsAdapter等适配边界减少对具体系统API的直接依赖。</p>
+<h3 id="ai扩展路线">3.5.3 AI扩展路线</h3>
+<p>AI能力按照“数据访问—知识检索—工具调用—受控执行”逐步接入平台。ReAct机制用于组织感知、分析、工具选择和结果反馈；MCP工具和知识库负责连接真实数据与业务资源；关键动作进入权限校验、规则约束和人工确认。</p>
+<h2 id="核心技术壁垒">3.6 核心技术壁垒</h2>
+<p>龙台智控的技术壁垒集中在四个方面：第一，跨国产操作系统、国产CPU和工业现场设备的组合适配；第二，设备、协议和操作系统三类适配边界带来的可迁移性；第三，安全监测、设备管理、事件处置和控制审计共享同一平台底座；第四，AI能力能够在权限、规则和审计约束下进入真实工业工作流。</p>
+<p>这些能力共同决定平台能否从一次项目交付转向跨场景、跨工厂复用。</p>
+<h2 id="核心应用场景">3.7 核心应用场景</h2>
+<p>五类安全场景采用统一的验收指标口径：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>场景</th>
+<th>验收指标</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>危气监测</td>
+<td>采集链路≤500 ms，报警/联动响应≤1 s</td>
+</tr>
+<tr class="even">
+<td>温湿度监控</td>
+<td>采集≤1 s，温度±0.5°C，湿度±3%RH</td>
+</tr>
+<tr class="odd">
+<td>红外感应照明</td>
+<td>响应≤500 ms，感应距离3—7 m</td>
+</tr>
+<tr class="even">
+<td>AGV避障</td>
+<td>响应≤100 ms</td>
+</tr>
+<tr class="odd">
+<td>货物计数</td>
+<td>准确率≥99.5%</td>
+</tr>
+<tr class="even">
+<td>视觉AI</td>
+<td>推理帧率≥15 fps</td>
+</tr>
+</tbody>
+</table></div>
+</section>
+<section class="section-block fade-in"><h1 id="四项目应用">四、项目应用</h1>
+<h2 id="项目实践时间线">4.1 项目实践（时间线）</h2>
+<div class="table-wrap"><table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>时间</th>
+<th>项目进展</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2026年5月</td>
+<td>完成参赛方案v2.0和国产操作系统平台调研，明确铜冶炼场景、五类安全监测功能、国产OS适配方向和总体技术路线</td>
+</tr>
+<tr class="even">
+<td>2026年9月</td>
+<td>完成1.8.0核心版本，形成Vue 3 / TypeScript工业HMI、原生C++后端、设备/协议/OS三类适配边界及目标系统部署框架</td>
+</tr>
+<tr class="odd">
+<td>2026年9月13日</td>
+<td>C++核心软件完成构建，CTest自动化测试10项通过、0项失败</td>
+</tr>
+</tbody>
+</table></div>
+<p>项目已从参赛方案阶段进入平台源码、部署框架和产品方案同步完善阶段。</p>
+<h2 id="项目落地验证与演示">4.2 项目落地（验证与演示）</h2>
+<p>龙台智控以铜冶炼为首个综合应用场景，形成“6大业务域、5类安全场景、国产化平台支撑”的应用结构。现场设备通过边缘侧接入，平台统一处理设备状态、历史数据、报警、事件、报表、权限、审计和控制记录，上层业务再按场景组合。</p>
+<p>C++核心软件完成构建验证，CTest自动化测试结果为<strong>10项通过、0项失败</strong>。平台配套Vue前端、OpenHarmony/HongZOS应用壳，以及银河麒麟、统信UOS、POSIX和远程SSH部署框架。</p>
+<p>危气监测业务链路为：</p>
+<p><strong>多源采集 → 数据校验 → 实时呈现 → 阈值判定 → 分级告警 → 岗位推送 → 人工确认 → 处置反馈 → 留痕归档</strong></p>
+<figure>
+<img loading="lazy" src="media/copper-smelting-scene.png" alt="图4-1 铜冶炼生产运行场景" />
+<figcaption aria-hidden="true">图4-1 铜冶炼生产运行场景</figcaption>
+</figure>
+<blockquote>
+<p>行业厂区和国产硬件示意图片用于说明典型场景与设备形态，不作为项目实际部署现场或采购证明。</p>
+</blockquote>
+<h2 id="实测数据与演示脚本">4.3 实测数据与演示脚本</h2>
+<p>项目演示围绕“功能完整、国产化运行、跨场景复用”三项能力展开，3.7所列指标作为场景验收口径。</p>
+<p>演示顺序为：平台总览 → 危气监测 → 分级报警 → 人工确认 → 受控联动 → AI辅助分析 → 其他安全场景 → 国产化运行环境 → 应用扩展。</p>
+</section>
+<section class="section-block fade-in"><h1 id="五市场分析">五、市场分析</h1>
+<h2 id="行业背景与痛点">5.1 行业背景与痛点</h2>
+<p>龙台智控位于国产化工业软件、工业互联网、智能制造和工业安全数字化的交叉市场。客户采购需求主要来自四个方向：国产运行环境替换或新增、存量设备持续接入、安全与生产数据统一管理，以及AI进入真实工业工作流。</p>
+<p>平台的购买价值集中在三点：<strong>不推倒重建现有自动化系统、减少多品牌设备和协议的重复集成、把新增安全和智能应用建立在同一平台上。</strong> 对连续生产企业而言，这种增量式建设方式比重新建设独立系统更容易控制改造范围和后续维护成本。</p>
+<h2 id="目标市场细分">5.2 目标市场细分</h2>
+<p>第一层市场是<strong>铜冶炼及有色冶金</strong>。该类企业具有高温、危气、连续生产和设备异构等典型特征，与项目首发场景匹配度最高。</p>
+<p>第二层市场是<strong>钢铁、化工等流程工业</strong>。其共同特征是自动化基础较强、现场协议复杂、安全约束高，对设备接入、报警联动、运维和知识服务存在相似需求。</p>
+<p>第三层市场是<strong>能源、工业园区及其他高风险工业场景</strong>。该类客户更关注跨区域设备接入、集中监控、国产化部署和平台化运维。</p>
+<p>项目采用“先在铜冶炼形成样板，再向相邻流程工业复制”的行业进入路径，避免早期产品线过度分散。</p>
+<h2 id="目标客户画像">5.3 目标客户画像</h2>
+<div class="table-wrap"><table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>决策角色</th>
+<th>主要问题</th>
+<th>龙台智控对应价值</th>
+<th>典型切入点</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>安全/环保负责人</td>
+<td>报警分散、事件处置难追溯</td>
+<td>统一监测、分级报警、处置留痕</td>
+<td>危气、环境与人员安全</td>
+</tr>
+<tr class="even">
+<td>自动化/信息化负责人</td>
+<td>多协议、多品牌、国产化迁移复杂</td>
+<td>适配层、统一接口、国产OS部署</td>
+<td>设备接入与平台底座</td>
+</tr>
+<tr class="odd">
+<td>生产/设备负责人</td>
+<td>状态、报警、工单和报表分散</td>
+<td>统一设备状态和业务数据</td>
+<td>设备管理、巡检、报表</td>
+</tr>
+<tr class="even">
+<td>企业管理层</td>
+<td>单点系统重复建设、难复制</td>
+<td>平台复用、场景扩展、集团复制</td>
+<td>标准车间或全厂平台</td>
+</tr>
+</tbody>
+</table></div>
+<p>客户为什么会买，不取决于单个算法指标，而取决于平台能否兼容存量系统、降低重复集成、形成清晰的安全与运营闭环，并在后续新增场景时继续复用。</p>
+<h2 id="市场规模测算">5.4 市场规模测算</h2>
+<p>项目采用“目标客户数量 × 产品档位”的项目单元法测算市场容量。按照标准车间<strong>180—300万元/项目</strong>的价格区间：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th style="text-align: right;">标准车间数量</th>
+<th style="text-align: right;">对应市场容量</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">10个</td>
+<td style="text-align: right;">1800—3000万元</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">50个</td>
+<td style="text-align: right;">0.9—1.5亿元</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">100个</td>
+<td style="text-align: right;">1.8—3.0亿元</td>
+</tr>
+</tbody>
+</table></div>
+<p>按照全厂平台<strong>400—800万元/项目</strong>的价格区间：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th style="text-align: right;">全厂客户数量</th>
+<th style="text-align: right;">对应市场容量</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">10家</td>
+<td style="text-align: right;">0.4—0.8亿元</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">50家</td>
+<td style="text-align: right;">2—4亿元</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">100家</td>
+<td style="text-align: right;">4—8亿元</td>
+</tr>
+</tbody>
+</table></div>
+<p>上述换算用于展示单位客户池对应的商业规模，不等同于全国目标客户数量。项目的可获取市场取决于实际可触达企业数量、试点转化率、交付能力和行业复制速度。</p>
+<p>公开交易案例中，<strong>铜陵郊区经开区智慧园区（二期）工业互联网平台及行业大脑建设项目</strong>（项目编号TLCG2026F004）预算及最高限价为<strong>249.60516万元</strong>，最终合同金额为<strong>224万元</strong>；合同约定平台建设期为120个日历天，运营维护期为3年。该项目采购范围与龙台智控不同，仅用于参照工业互联网平台项目的交易量级与服务周期。</p>
+<h2 id="竞品分析">5.5 竞品分析</h2>
+<p>市场上的相关解决方案可归纳为现场监控与可视化、生产管理与业务协同、流程工业智能优化、工业互联与场景应用四类。龙台智控的差异集中在国产化运行环境、统一设备接入、五类安全场景、控制审计和AI工作流的组合。</p>
 <div class="table-wrap"><table style="width:100%;">
 <colgroup>
-<col style="width: 22%" />
-<col style="width: 22%" />
-<col style="width: 33%" />
-<col style="width: 22%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
 </colgroup>
 <thead>
-<tr>
-<th>版本</th>
-<th>日期</th>
-<th>修改说明</th>
-<th>作者</th>
+<tr class="header">
+<th>对比维度</th>
+<th>龙台智控</th>
+<th>现场监控类</th>
+<th>生产管理类</th>
+<th>流程工业智能优化类</th>
+<th>工业互联类</th>
 </tr>
 </thead>
 <tbody>
-<tr>
-<td>v1.0</td>
-<td>2026-05</td>
-<td>初稿：按 bp 工作流模式生成商业计划书</td>
-<td>参赛团队</td>
+<tr class="odd">
+<td>国产化</td>
+<td>多国产OS适配路线</td>
+<td>以PC/Windows方案较多</td>
+<td>可提供信创适配</td>
+<td>通常围绕特定运行环境</td>
+<td>可结合国产网关或自研OS</td>
 </tr>
-<tr>
-<td>v1.1</td>
-<td>2026-05</td>
-<td>重构：以应用层为价值核心展开，数字员工降级为 AI 智能体应用之一</td>
-<td>参赛团队</td>
+<tr class="even">
+<td>现场接入</td>
+<td>设备/协议适配边界</td>
+<td>多品牌PLC、多协议</td>
+<td>以业务系统数据为主</td>
+<td>OPC/实时数据库接入较多</td>
+<td>多协议边缘网关</td>
+</tr>
+<tr class="odd">
+<td>AI</td>
+<td>异常分析、知识问答、受控工具调用</td>
+<td>AI助手为主</td>
+<td>排程、配料等业务AI</td>
+<td>趋势预测、异常诊断</td>
+<td>视觉质检、故障诊断</td>
+</tr>
+<tr class="even">
+<td>安全闭环</td>
+<td>监测、报警、确认、联动、审计</td>
+<td>报警为主</td>
+<td>需与现场系统集成</td>
+<td>以预警和指导为主</td>
+<td>以场景联动为主</td>
+</tr>
+<tr class="odd">
+<td>扩展方式</td>
+<td>平台 + 适配 + 场景插件</td>
+<td>工程配置</td>
+<td>模块扩展</td>
+<td>模型/业务模块扩展</td>
+<td>网关和应用扩展</td>
 </tr>
 </tbody>
 </table></div>
-</div>
-</div>
-</div>
+<p>龙台智控不替代成熟DCS、MES或EAM，而是连接这些存量系统，在国产化底座上增加统一接入、安全监测、业务协同和智能分析。</p>
+</section>
+<section class="section-block fade-in"><h1 id="六商业模式">六、商业模式</h1>
+<h2 id="产品与服务模式">6.1 产品与服务模式</h2>
+<p>收入由五部分组成：</p>
+<ol type="1">
+<li><strong>平台授权</strong>：基础平台、核心服务和管理能力；</li>
+<li><strong>驱动/协议接入</strong>：按现场设备和协议范围完成接入与适配；</li>
+<li><strong>场景插件</strong>：提供安全、视觉、设备、能源、生产等业务应用；</li>
+<li><strong>现场实施</strong>：完成部署、配置、数据治理、联调、测试和培训；</li>
+<li><strong>维保续费</strong>：提供版本升级、巡检、技术支持和持续运维。</li>
+</ol>
+<p>这种结构使首次合同解决“能不能用”，后续扩展合同解决“还能增加什么”，维保合同解决“长期怎么运行”。</p>
+<h2 id="定价与盈利模式">6.2 定价与盈利模式</h2>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>产品档位</th>
+<th style="text-align: right;">预测价格</th>
+<th>典型范围</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>场景验证</td>
+<td style="text-align: right;">60—100万元/项目</td>
+<td>单场景、1—2种协议</td>
+</tr>
+<tr class="even">
+<td>标准车间</td>
+<td style="text-align: right;">180—300万元/项目</td>
+<td>3—5种协议、2—4个插件</td>
+</tr>
+<tr class="odd">
+<td>全厂平台</td>
+<td style="text-align: right;">400—800万元/项目</td>
+<td>多节点、系统接口</td>
+</tr>
+<tr class="even">
+<td>集团多基地</td>
+<td style="text-align: right;">800—1500万元以上/项目</td>
+<td>多工厂、集中运维</td>
+</tr>
+</tbody>
+</table></div>
+<p>以<strong>240万元</strong>标准车间为例：</p>
+<div class="table-wrap"><table>
+<thead>
+<tr class="header">
+<th>项目</th>
+<th style="text-align: right;">金额（万元）</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>平台授权</td>
+<td style="text-align: right;">60</td>
+</tr>
+<tr class="even">
+<td>协议接入</td>
+<td style="text-align: right;">40</td>
+</tr>
+<tr class="odd">
+<td>场景插件</td>
+<td style="text-align: right;">80</td>
+</tr>
+<tr class="even">
+<td>数据治理与系统联调</td>
+<td style="text-align: right;">45</td>
+</tr>
+<tr class="odd">
+<td>测试培训</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="even">
+<td>合计</td>
+<td style="text-align: right;">240</td>
+</tr>
+</tbody>
+</table></div>
+<p>免费维保期结束后，年维保续费按合同额的<strong>12%—18%</strong>测算。240万元项目对应年维保收入约<strong>28.8—43.2万元</strong>。</p>
+<p>标准报价不包含传感器、工业网络及PLC/DCS/SIS等核心控制系统的大规模改造，新增硬件、网络施工和自动化改造独立核算。</p>
+<h2 id="推广路径">6.3 推广路径</h2>
+<p>商业化采用“<strong>样板场景—标准车间—全厂平台—集团多基地</strong>”四级路径。</p>
+<p>第一阶段以危气监测、视觉安全或设备接入等明确问题形成样板项目，用较小范围证明兼容性、响应速度和现场价值。第二阶段在同一车间复用已经完成的设备接入和平台服务，增加更多场景插件。第三阶段向多车间扩展，统一权限、数据、报警、规则和运维。第四阶段在集团内部复用已有适配和应用资产，形成跨基地部署。</p>
+<p>销售重点首先面向安全、自动化、信息化和设备部门建立技术入口，再通过已验证场景向生产运营和集团级平台扩展。行业合作伙伴和系统集成商可承担部分本地实施与设备接入工作，平台方集中维护核心软件、适配资产和版本体系。</p>
+<h2 id="财务预测及分析">6.4 财务预测及分析</h2>
+<p>三年收入采用基准情景测算。项目数量属于商业模型假设，不代表已签订单；场景验证、标准车间和全厂平台分别采用80万元、240万元和500—600万元的典型客单价。维保模型假设项目交付首年处于免费维保期，自次年起按原合同额的12%进入付费维保，并在测算期内持续续费。</p>
+<div class="table-wrap"><table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 26%" />
+<col style="width: 26%" />
+<col style="width: 26%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>年度</th>
+<th style="text-align: right;">新增项目收入</th>
+<th style="text-align: right;">付费维保收入</th>
+<th style="text-align: right;">预计收入</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>第1年</td>
+<td style="text-align: right;">2项场景验证×80万 + 1项标准车间×240万 = 400万</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;"><strong>400万元</strong></td>
+</tr>
+<tr class="even">
+<td>第2年</td>
+<td style="text-align: right;">2项场景验证×80万 + 2项标准车间×240万 + 1项全厂平台×500万 = 1140万</td>
+<td style="text-align: right;">第1年合同400万×12% = 48万</td>
+<td style="text-align: right;"><strong>1188万元</strong></td>
+</tr>
+<tr class="odd">
+<td>第3年</td>
+<td style="text-align: right;">3项场景验证×80万 + 3项标准车间×240万 + 1项全厂平台×600万 = 1560万</td>
+<td style="text-align: right;">前两年累计新增合同1540万×12% = 184.8万</td>
+<td style="text-align: right;"><strong>1744.8万元</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>三年累计收入约<strong>3332.8万元</strong>，其中新增项目收入3100万元、付费维保收入232.8万元。该情景未计入集团多基地项目，也未计入硬件销售和大型自动化改造收入。</p>
+<p>成本主要由研发适配、现场实施、差旅、测试培训、第三方软硬件和维保工时构成。项目盈利能力取决于驱动、协议和场景插件的复用程度：复用率提高后，新项目中的重复研发和现场实施投入下降，平台授权和标准化软件收入占比相应提高。</p>
+<p>三年商业化重点跟踪合同额、标准化产品收入占比、插件复用率、实施人天、续费率和客户扩展收入。</p>
+</section>
+<section class="section-block fade-in"><h1 id="七项目团队">七、项目团队</h1>
+<h2 id="团队概况">7.1 团队概况</h2>
+<p>团队覆盖技术研发、生产场景、财务、风险、战略和市场等职能，并由冶金过程、数字化等专业教师提供指导。团队具有软件平台、算法建模、全栈系统、边缘AI、冶炼智能化项目和市场分析等经验。</p>
+<p>团队及项目相关成果包括1部2025年度有色金属工业科技进步奖推荐书、2件实用新型专利、6项计算机软件著作权、9篇论文和23件发明专利，其中包括团队成员既有成果、项目相关成果和项目直接成果。</p>
+<h2 id="团队成员">7.2 团队成员</h2>
+<h3 id="王一然团队负责人兼技术主管">王一然｜团队负责人兼技术主管</h3>
+<p>发表SCI论文2篇，拥有发明专利2件、软件著作权2项；以第一负责人获得国家级高水平竞赛奖项6项；具备智慧养老、居家监管等全栈项目经验，并参与山东电网财务平台、Scratch编程教育平台等系统建设。</p>
+<h3 id="田杰文生产主管">田杰文｜生产主管</h3>
+<p>参与多个冶炼智能化相关横向项目，已申请专利1件，曾获节能减排竞赛国家二等奖，负责生产场景与工业需求衔接。</p>
+<h3 id="张雯财务主管">张雯｜财务主管</h3>
+<p>曾获“互联网+”校赛奖项，依托财务专业承担量化模型和商业测算工作。</p>
+<h3 id="赵荣怡风控主管">赵荣怡｜风控主管</h3>
+<p>曾获全国高校BIM设计毕业设计创新大赛三等奖、云南省市场调查与分析大赛三等奖，承担风险识别、项目合规和市场调研工作。</p>
+<h3 id="杨森远战略规划主管">杨森远｜战略规划主管</h3>
+<p>曾任国家级创新创业立项项目负责人，获市场调查大赛省级一等奖，拥有软件著作权2项，承担项目战略规划工作。</p>
+<h3 id="胡峰项目研发">胡峰｜项目研发</h3>
+<p>参与开发氧化还原终点判断系统5套，获研究生数学建模“华为杯”国赛三等奖，承担复杂系统建模、算法和研发工作。</p>
+<h3 id="何芸芸市场主管">何芸芸｜市场主管</h3>
+<p>在市场分析领域发表学术论文1篇，具有四年学生干部经历，承担市场研究、外部协作和推广工作。</p>
+<h2 id="指导教师团队">7.3 指导教师团队</h2>
+<p>顾问与指导教师团队包括王华、徐建新、陈志芳等。</p>
+<p>王华长期从事冶金过程强化与节能减碳研究，获国家科技进步一等奖1项、二等奖1项，以及云南省杰出贡献奖和多项省部级科技奖励，研究方向包括低温余热高效利用、多相流强化传热、冶金过程数字化与智能化。</p>
+</section>
 
-<script>
-// Progress bar
-window.addEventListener('scroll', () => {
-  const d = document.documentElement;
-  document.getElementById('pb').style.width =
-    (d.scrollTop / (d.scrollHeight - d.clientHeight) * 100) + '%';
-});
-
-// TOC active highlight
-const hs = document.querySelectorAll('h1[id], h2[id], h3[id]');
-const tls = document.querySelectorAll('#toc a');
-const tocObs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      tls.forEach(a => a.classList.remove('active'));
-      const a = document.querySelector('#toc a[href="#' + e.target.id + '"]');
-      if (a) { a.classList.add('active'); a.scrollIntoView({ block: 'nearest' }); }
-    }
-  });
-}, { rootMargin: '-10% 0px -75% 0px' });
-hs.forEach(h => tocObs.observe(h));
-
-// Fade in on scroll
-const fadeObs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold: 0.03 });
-document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
-
-// Smooth scroll with fixed nav offset
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener('click', e => {
-    const t = document.querySelector(a.getAttribute('href'));
-    if (t) {
-      e.preventDefault();
-      window.scrollTo({ top: t.getBoundingClientRect().top + window.scrollY - 72, behavior: 'smooth' });
-    }
-  });
-});
-</script>
-</body>
-</html>
+</div></div><script>window.addEventListener('scroll',()=>{const d=document.documentElement;document.getElementById('pb').style.width=(d.scrollTop/(d.scrollHeight-d.clientHeight)*100)+'%'});const hs=document.querySelectorAll('h1[id],h2[id],h3[id]');const links=document.querySelectorAll('#toc a');const o=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){links.forEach(a=>a.classList.remove('active'));const a=document.querySelector('#toc a[href="#'+e.target.id+'"]');if(a)a.classList.add('active')}}),{rootMargin:'-10% 0px -75% 0px'});hs.forEach(h=>o.observe(h));</script></body></html>
